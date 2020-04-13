@@ -1,0 +1,1 @@
+final String kLogoForcaPoS = "assets/images/logo_forcapos.png";
