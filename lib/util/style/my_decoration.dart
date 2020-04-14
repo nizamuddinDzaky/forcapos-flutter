@@ -30,4 +30,32 @@ class MyDecoration {
               ]
             : null);
   }
+
+  static decorationInputTextField({prefixIconData, min = 0}) {
+    return InputDecoration(
+        contentPadding: prefixIconData != null
+            ? EdgeInsets.symmetric(vertical: 0, horizontal: 10)
+            : EdgeInsets.symmetric(vertical: 15.5 - min, horizontal: 20),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(MyDimen.circularInput()),
+            borderSide: BorderSide(color: MyColor.getAqua())
+        ),
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(MyDimen.circularInput()),
+            borderSide: BorderSide(color: MyColor.getBgFieldBorder())
+        ),
+        filled: true,
+        prefixIcon: prefixIconData != null
+            ? Icon(
+          prefixIconData,
+          size: 15,
+        )
+            : null,
+        hintStyle: TextStyle(color: Colors.grey[800]),
+        fillColor: MyColor.getBgField());
+  }
+
+  static styleFieldLogin() {
+    return TextStyle(fontSize: 14);
+  }
 }

@@ -11,4 +11,11 @@ class MyLogo {
       fit: BoxFit.cover,
     );
   }
+
+  static Widget logoForcaPoSColor() {
+    return Image.asset(
+      kLogoForcaPoS,
+      fit: BoxFit.cover,
+    );
+  }
 }

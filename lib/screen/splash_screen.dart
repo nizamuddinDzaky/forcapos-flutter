@@ -45,7 +45,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Stack(
           children: <Widget>[
             Center(
-              child: MyLogo.logoForcaPoS(large: true),
+              child: Hero(
+                tag: 'logoForcaPoS',
+                child: MyLogo.logoForcaPoS(large: true),
+              ),
             ),
           ],
         ),
