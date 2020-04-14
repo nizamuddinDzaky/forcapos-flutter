@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/login/forgot_password_screen.dart';
 import 'package:posku/screen/login/login_screen.dart';
 import 'package:posku/screen/splash_screen.dart';
@@ -7,6 +8,7 @@ import 'package:posku/screen/splash_screen.dart';
 const String root = "/";
 const loginScreen = "/LoginScreen";
 const forgotPasswordScreen = "/ForgotPasswordScreen";
+const homeScreen = "/HomeScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -25,7 +27,14 @@ class MyRouter {
       case forgotPasswordScreen:
         return GetRoute(
           settings: settings,
+          transition: Transition.rightToLeft,
           page: ForgotPasswordScreen(),
+        );
+      case homeScreen:
+        return GetRoute(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: HomeScreen(),
         );
       default:
         return GetRoute(

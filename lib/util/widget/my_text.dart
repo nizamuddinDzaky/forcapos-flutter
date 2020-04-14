@@ -23,6 +23,7 @@ class MyText {
       text ?? "~",
       maxLines: maxLine,
       overflow: txtOverflow,
+      textAlign: TextAlign.center,
       style: TextStyle(
           fontSize: 14,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal),

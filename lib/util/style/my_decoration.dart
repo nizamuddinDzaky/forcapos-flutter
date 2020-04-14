@@ -9,11 +9,15 @@ class MyDecoration {
         borderRadius:
             withRounded ? BorderRadius.circular(MyDimen.circularMedium) : null,
         gradient: LinearGradient(
-          colors: [
-            MyColor.mainBlue,
-            MyColor.getBlue(),
-//            MyColor.getAqua(),
-          ],
+          colors: top2bottom
+              ? [
+                  MyColor.gradient1,
+                  MyColor.gradient2,
+                ]
+              : [
+                  MyColor.mainBlue,
+                  MyColor.getBlue(),
+                ],
           begin: top2bottom
               ? FractionalOffset.topCenter
               : FractionalOffset.centerLeft,
@@ -38,18 +42,16 @@ class MyDecoration {
             : EdgeInsets.symmetric(vertical: 15.5 - min, horizontal: 20),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(MyDimen.circularInput()),
-            borderSide: BorderSide(color: MyColor.getAqua())
-        ),
+            borderSide: BorderSide(color: MyColor.getAqua())),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(MyDimen.circularInput()),
-            borderSide: BorderSide(color: MyColor.getBgFieldBorder())
-        ),
+            borderSide: BorderSide(color: MyColor.getBgFieldBorder())),
         filled: true,
         prefixIcon: prefixIconData != null
             ? Icon(
-          prefixIconData,
-          size: 15,
-        )
+                prefixIconData,
+                size: 15,
+              )
             : null,
         hintStyle: TextStyle(color: Colors.grey[800]),
         fillColor: MyColor.getBgField());

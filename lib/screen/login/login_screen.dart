@@ -153,7 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 'MASUK',
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Get.offNamed(homeScreen);
+              },
             ),
           ),
           Center(

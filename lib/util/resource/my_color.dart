@@ -9,6 +9,9 @@ class MyColor {
   static Color txtField = Color(0xFF666666);
   static Color lineTxtField = Color(0xFF00B0FF);
 
+  static Color gradient1 = Color(0xFF76D4FF);
+  static Color gradient2 = Color(0xFFF1FBFF);
+
   static Color getBlue() => Color(0xFF007FFF);
   static Color getAqua() => Color(0xFF00C5FF);
   static Color getBgFieldBorder() => Color(0xFFD3D3D3);
