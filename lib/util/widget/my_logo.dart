@@ -12,9 +12,17 @@ class MyLogo {
     );
   }
 
-  static Widget logoForcaPoSColor() {
+  static Widget logoForcaPoSColor({double width}) {
     return Image.asset(
       kLogoForcaPoS,
+      fit: BoxFit.cover,
+      width: width,
+    );
+  }
+
+  static Widget forgotPassword() {
+    return Image.asset(
+      kForgotPassword,
       fit: BoxFit.cover,
     );
   }

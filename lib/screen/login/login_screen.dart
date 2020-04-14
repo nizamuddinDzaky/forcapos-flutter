@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:posku/app/my_router.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/resource/my_dimen.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -37,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: MyDimen.marginLayout(),
                   child: TextFormField(
                     maxLength: 30,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       contentPadding: MyDimen.paddingTxtField(),
                       labelText: 'Nama Pengguna',
@@ -132,7 +134,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 14,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(forgotPasswordScreen);
+                        },
                       ),
                     ],
                   ),
@@ -177,42 +181,47 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: constraints.copyWith(
-                minHeight: constraints.maxHeight,
-                maxHeight: double.infinity,
-              ),
-              child: SafeArea(
-                child: IntrinsicHeight(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: Get.height * 0.25,
-                        child: Center(
-                          child: Hero(
-                            tag: 'logoForcaPoS',
-                            child: MyLogo.logoForcaPoSColor(),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: constraints.copyWith(
+                  minHeight: constraints.maxHeight,
+                  maxHeight: double.infinity,
+                ),
+                child: SafeArea(
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: Get.height * 0.25,
+                          child: Center(
+                            child: Hero(
+                              tag: 'logoForcaPoS',
+                              child: MyLogo.logoForcaPoSColor(),
+                            ),
                           ),
                         ),
-                      ),
-                      formLayout,
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: MyText.textBlackSmall(
-                              'Ⓒ 2020 PT SISI, All Right Reserved.'),
+                        formLayout,
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: MyText.textBlackSmall(
+                                'Ⓒ 2020 PT SISI, All Right Reserved.'),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

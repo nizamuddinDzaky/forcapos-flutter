@@ -8,9 +8,9 @@ class MiddleWare {
     ///If you need to enter any of these 3 events directly here,
     ///you must specify that the event is != Than you are trying to do.
     if (routing.current == loginScreen && routing.isSnackbar == false) {
-      Get.snackbar("Hi", "You are on second route");
+      //Get.snackbar("Hi", "You are on second route");
     } else if (routing.current == root) {
-      print('last route called');
+      //print('last route called');
     }
   }
 }
