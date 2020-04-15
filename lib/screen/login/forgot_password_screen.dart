@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:posku/screen/login/forgot_password_view_model.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/resource/my_dimen.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -12,9 +13,7 @@ class ForgotPasswordScreen extends StatefulWidget {
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+class _ForgotPasswordScreenState extends ForgotPasswordViewModel {
   @override
   Widget build(BuildContext context) {
     var formLayout = Container(
@@ -51,6 +50,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Container(
                   padding: MyDimen.marginLayout(),
                   child: TextFormField(
+                    onSaved: (value) => email = value,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       contentPadding: MyDimen.paddingTxtField(),
@@ -83,7 +83,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       'Perbarui Kata Sandi',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () {},
+                    onPressed: showDialogProgress,
                   ),
                 ),
               ],

@@ -17,6 +17,11 @@ typedef APIErrorCallback = dynamic Function(String title, String message);
 typedef APIFailedCallback = dynamic Function(String title, String message);
 
 class ApiClient {
+  static addInterceptor() {
+    dio.interceptors.add(
+        LogInterceptor(request: true, responseBody: true, requestBody: true));
+  }
+
 /*
   static addInterceptor() {
 //    dio.interceptors.add(LogInterceptor(request: true, responseBody: true, requestBody: true));
@@ -88,6 +93,7 @@ class ApiClient {
     APIErrorCallback onError,
     APIFailedCallback onFailed,
     APIAfterCallback onAfter,
+    bool customHandle = false,
   }) async {
     var responseApi = ApiResponse(
       ResponseStatus.progress,
@@ -114,9 +120,12 @@ class ApiClient {
       });
     } on DioError catch (error) {
       var title = 'Komunikasi gagal';
-      if (error.type == DioErrorType.DEFAULT)
+      if (error.type == DioErrorType.DEFAULT) {
         responseApi._setError(title, 'Cek koneksi kemudian coba lagi.');
-      else {
+      } else if (customHandle) {
+        responseApi._setFailed(
+            error.response.statusCode.toString(), error.response.toString());
+      } else {
         var statusCode = error.response.statusCode;
         if (statusCode == 405) {
           responseApi._setFailed(title, 'Akses informasi tidak valid.');
