@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/screen/dashboard/report_screen.dart';
+import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/resource/my_image.dart';
 import 'package:posku/util/style/my_decoration.dart';
@@ -16,6 +17,33 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   var heightTop = 0.0;
+
+  _dialogLogout() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => new CupertinoAlertDialog(
+        title: new Text("Konfirmasi"),
+        content: new Text("Keluar akun?"),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () async {
+              await MyPref.logout();
+              Get.back();
+              Get.offNamed(loginScreen);
+            },
+            child: Text("Ya", style: TextStyle(color: MyColor.mainRed),),
+          ),
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Get.back();
+            },
+            child: Text("Tidak", style: TextStyle(fontWeight: FontWeight.bold),),
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   CupertinoButton(
                     child:
                         MyText.textWhite('Keluar', fontSize: FontSize.medium),
-                    onPressed: () {
-                      Get.offNamed(loginScreen);
-                    },
+                      onPressed: _dialogLogout,
                   ),
                 ]),
             new SliverAppBar(
