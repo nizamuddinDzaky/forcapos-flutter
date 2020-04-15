@@ -14,23 +14,18 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   _changePage() async {
-//    SharedPreferences prefs = await SharedPreferences.getInstance();
-//    String token = prefs.getString('isLogin');
-//    bool isVerified = prefs.getBool('isVerified');
-//    print("token $token $isVerified ${token?.isEmpty} ${token?.isNotEmpty}");
+    await MyPref.init();
+    var token = MyPref.getForcaToken();
+    var isLogin = token != null && token.isNotEmpty;
+    print('forcatoken $token');
     Future.delayed(Duration(seconds: MyDimen.timerSplash), () {
-      Get.offNamed(loginScreen);
-//      Navigator.of(context).pushReplacement(
-////          MaterialPageRoute(builder: (context) => !isVerified ? LoginScreen() : MainScreen()));
-////          MaterialPageRoute(builder: (context) => isVerified ? MainScreen() : (token?.isNotEmpty == true ? VerificationScreen() : LoginScreen())));
-//          MaterialPageRoute(builder: (context) => isVerified == true ? MainScreen() : LoginScreen()));
+      Get.offNamed(isLogin ? homeScreen : loginScreen);
     });
   }
 
   @override
   void initState() {
     super.initState();
-    MyPref.init();
     _changePage();
   }
 

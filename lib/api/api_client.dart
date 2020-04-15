@@ -8,11 +8,16 @@ import 'package:posku/util/resource/my_string.dart';
 
 var dio = Dio();
 
+enum ResponseStatus { progress, success, failed, error, done }
+
+typedef APIBeforeCallback = dynamic Function(ResponseStatus status);
+typedef APIAfterCallback = dynamic Function(ResponseStatus status);
 typedef APISuccessCallback = dynamic Function(Map<String, dynamic> data);
-typedef APIErrorCallback = dynamic Function(String message);
-typedef APIFailedCallback = dynamic Function(String message);
+typedef APIErrorCallback = dynamic Function(String title, String message);
+typedef APIFailedCallback = dynamic Function(String title, String message);
 
 class ApiClient {
+/*
   static addInterceptor() {
 //    dio.interceptors.add(LogInterceptor(request: true, responseBody: true, requestBody: true));
 //    dio.interceptors.add(LogInterceptor(request: false, requestBody: false, requestHeader: false, responseBody: true));
@@ -50,6 +55,7 @@ class ApiClient {
       return e;
     }));
   }
+*/
 
   static methodGet(
     String url,
@@ -64,86 +70,109 @@ class ApiClient {
       if (onSuccess != null && statusCode == 200) {
         onSuccess(jsonResponse);
       } else if (onFailed != null) {
-        onFailed(response.statusMessage);
+        onFailed('', response.statusMessage);
       }
     }).catchError((error) {
       if (onError != null) {
-        onError(error.toString());
+        onError('', error.toString());
       }
     });
   }
 
-  static Future<ResponseApi> methodPost(
+  static Future<ApiResponse> methodPost(
     String url,
     dynamic body,
     Map<String, dynamic> params, {
+    APIBeforeCallback onBefore,
     APISuccessCallback onSuccess,
     APIErrorCallback onError,
     APIFailedCallback onFailed,
+    APIAfterCallback onAfter,
   }) async {
-    var responseApi = ResponseApi(
+    var responseApi = ApiResponse(
       ResponseStatus.progress,
+      onBefore,
       onSuccess,
       onFailed,
       onError,
+      onAfter,
     );
-    await dio
-        .post<String>(url,
-            data: body,
-            queryParameters: params,
-            options: Options(contentType: Headers.jsonContentType))
-        .then((response) {
-      var statusCode = response.statusCode;
-      var data = jsonDecode(response.data);
-      if (onSuccess != null && statusCode == 200) {
-        responseApi._setSuccess(data);
-      } else if (onFailed != null) {
-        responseApi._setFailed(response.statusMessage);
+    try {
+      await dio
+          .post<String>(url,
+              data: body,
+              queryParameters: params,
+              options: Options(contentType: Headers.jsonContentType))
+          .then((response) {
+        var statusCode = response.statusCode;
+        if (onSuccess != null && statusCode == 200) {
+          var data = jsonDecode(response.data);
+          responseApi._setSuccess(data);
+        } else if (onFailed != null) {
+          responseApi._setFailed('', response.statusMessage);
+        }
+      });
+    } on DioError catch (error) {
+      var title = 'Komunikasi gagal';
+      if (error.type == DioErrorType.DEFAULT)
+        responseApi._setError(title, 'Cek koneksi kemudian coba lagi.');
+      else {
+        var statusCode = error.response.statusCode;
+        if (statusCode == 405) {
+          responseApi._setFailed(title, 'Akses informasi tidak valid.');
+        } else if (statusCode == 400) {
+          responseApi._setFailed(
+              title, 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
+        } else {
+          print('error gan $error ${error.response}');
+        }
       }
-    }).catchError((error) {
-      if (onError != null) {
-        responseApi._setError(error.toString());
-      }
-    });
+    }
     return responseApi;
   }
 }
 
-enum ResponseStatus { progress, success, failed, error }
-
-class ResponseApi {
+class ApiResponse {
   ResponseStatus responseStatus;
   Map<String, dynamic> dataResponse;
+  String title;
   String message;
+  APIBeforeCallback onBefore;
   APISuccessCallback onSuccess;
   APIErrorCallback onError;
   APIFailedCallback onFailed;
+  APIAfterCallback onAfter;
 
-  ResponseApi(this.responseStatus, this.onSuccess, this.onFailed, this.onError,
-      {this.dataResponse, this.message});
+  ApiResponse(this.responseStatus, this.onBefore, this.onSuccess, this.onFailed,
+      this.onError, this.onAfter,
+      {this.dataResponse, this.title, this.message});
 
   _setSuccess(Map<String, dynamic> dataResponse) {
     this.responseStatus = ResponseStatus.success;
     this.dataResponse = dataResponse;
   }
 
-  _setFailed(String message) {
+  _setFailed(String title, String message) {
     this.responseStatus = ResponseStatus.failed;
+    this.title = title;
     this.message = message;
   }
 
-  _setError(String message) {
+  _setError(String title, String message) {
     this.responseStatus = ResponseStatus.error;
+    this.title = title;
     this.message = message;
   }
 
-  execute() {
+  execute() async {
+    if (onBefore != null) onBefore(responseStatus);
     if (responseStatus == ResponseStatus.success) {
-      onSuccess(dataResponse);
+      if (onSuccess != null) await onSuccess(dataResponse);
     } else if (responseStatus == ResponseStatus.failed) {
-      onFailed(message);
+      if (onFailed != null) onFailed(title, message);
     } else if (responseStatus == ResponseStatus.error) {
-      onError(message);
+      if (onError != null) onError(title, message);
     }
+    if (onAfter != null) onAfter(responseStatus);
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
+import 'package:posku/helper/empty_app_bar.dart';
+import 'package:posku/screen/login/login_view_model.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/resource/my_dimen.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -14,17 +16,9 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  var isShow = false;
-  var isRemember = false;
-
+class _LoginScreenState extends LoginViewModel {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-      statusBarBrightness: Brightness.light,
-    ));
-
     var formLayout = Container(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -37,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   padding: MyDimen.marginLayout(),
                   child: TextFormField(
+                    onSaved: (userName) => currentData.username = userName,
+                    initialValue: currentData.username,
                     maxLength: 30,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
@@ -64,6 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   padding: MyDimen.marginLayout(),
                   child: TextFormField(
+                    onSaved: (password) => currentData.password = password,
+                    initialValue: currentData.password,
                     maxLength: 30,
                     obscureText: !isShow,
                     decoration: InputDecoration(
@@ -153,9 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 'MASUK',
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () {
-                Get.offNamed(homeScreen);
-              },
+              onPressed: showDialogProgress,
             ),
           ),
           Center(
@@ -183,6 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
+      appBar: EmptyAppBar(),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();

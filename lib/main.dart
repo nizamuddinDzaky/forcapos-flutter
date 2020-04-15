@@ -6,6 +6,6 @@ import 'package:timeago/timeago.dart' as timeAGo;
 
 void main() {
   timeAGo.setLocaleMessages('id', timeAGo.IdMessages());
-  ApiClient.addInterceptor();
+//  ApiClient.addInterceptor();
   return runApp(MyApp());
 }
