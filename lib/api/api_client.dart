@@ -18,20 +18,20 @@ typedef APIFailedCallback = dynamic Function(String title, String message);
 
 class ApiClient {
   static addInterceptor() {
+//    addInterceptor1();
+    addInterceptor2();
+  }
+
+  static addInterceptor1() {
     dio.interceptors.add(
         LogInterceptor(request: true, responseBody: true, requestBody: true));
   }
 
-/*
-  static addInterceptor() {
-//    dio.interceptors.add(LogInterceptor(request: true, responseBody: true, requestBody: true));
-//    dio.interceptors.add(LogInterceptor(request: false, requestBody: false, requestHeader: false, responseBody: true));
+  static addInterceptor2() {
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
       if (options.uri.toString().contains('auth/login') == false) {
         var token = MyPref.getForcaToken();
-//        var token = '';
-//            options.headers.addAll({MyString.forcaToken: 'MHZDeWprTXJMVkg1d0hwTUtyRUtNL3pENnlOMUkwWCtTL2VxMDdxNXNUbz06Oq6JsfLg3cMucEM64dSy3pc6OoeQ8IgrX7Tsh7sGMw=='});
         options.headers.addAll(
             {MyString.forcaToken: token?.isNotEmpty == true ? token : ''});
       }
@@ -60,28 +60,59 @@ class ApiClient {
       return e;
     }));
   }
-*/
 
-  static methodGet(
-    String url,
-    Map<String, dynamic> params, {
+  static Future<ApiResponse> methodGet(
+    String url, {
+    Map<String, dynamic> params,
+    APIBeforeCallback onBefore,
     APISuccessCallback onSuccess,
     APIErrorCallback onError,
     APIFailedCallback onFailed,
-  }) {
-    dio.get<String>(url, queryParameters: params).then((response) {
-      var statusCode = response.statusCode;
-      var jsonResponse = jsonDecode(response.data);
-      if (onSuccess != null && statusCode == 200) {
-        onSuccess(jsonResponse);
-      } else if (onFailed != null) {
-        onFailed('', response.statusMessage);
+    APIAfterCallback onAfter,
+    bool customHandle = false,
+  }) async {
+    var responseApi = ApiResponse(
+      ResponseStatus.progress,
+      onBefore,
+      onSuccess,
+      onFailed,
+      onError,
+      onAfter,
+    );
+    try {
+      await dio
+          .get<String>(url,
+              queryParameters: params,
+              options: Options(contentType: Headers.jsonContentType))
+          .then((response) {
+        var statusCode = response.statusCode;
+        if (onSuccess != null && statusCode == 200) {
+          var data = jsonDecode(response.data);
+          responseApi._setSuccess(data);
+        } else if (onFailed != null) {
+          responseApi._setFailed('', response.statusMessage);
+        }
+      });
+    } on DioError catch (error) {
+      var title = 'Komunikasi gagal';
+      if (error.type == DioErrorType.DEFAULT) {
+        responseApi._setError(title, 'Cek koneksi kemudian coba lagi.');
+      } else if (customHandle) {
+        responseApi._setFailed(
+            error.response.statusCode.toString(), error.response.toString());
+      } else {
+        var statusCode = error.response.statusCode;
+        if (statusCode == 405) {
+          responseApi._setFailed(title, 'Akses informasi tidak valid.');
+        } else if (statusCode == 400) {
+          responseApi._setFailed(
+              title, 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
+        } else {
+          print('error gan $error ${error.response}');
+        }
       }
-    }).catchError((error) {
-      if (onError != null) {
-        onError('', error.toString());
-      }
-    });
+    }
+    return responseApi;
   }
 
   static Future<ApiResponse> methodPost(

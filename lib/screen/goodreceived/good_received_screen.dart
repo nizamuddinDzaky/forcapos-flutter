@@ -1,8 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:posku/api/api_client.dart';
+import 'package:posku/api/api_config.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
+import 'package:posku/model/BaseResponse.dart';
+import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/util/resource/my_color.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class GoodReceiveScreen extends StatefulWidget {
   @override
@@ -16,6 +22,10 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
   final FocusNode _searchFocusNode = FocusNode();
   Animation _animation;
   AnimationController _animationController;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+  bool isFirst = true;
+  List<GoodReceived> listGoodReceived = [];
 
   @override
   void initState() {
@@ -33,6 +43,9 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
         _animationController.forward();
       }
     });
+//    WidgetsBinding.instance
+//        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+    _actionRefresh();
     super.initState();
   }
 
@@ -52,59 +65,112 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
       child: Scaffold(
         appBar: EmptyAppBar(),
         body: SafeArea(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              CupertinoSliverNavigationBar(
-                transitionBetweenRoutes: false,
-                heroTag: 'logoForcaPoS',
-                middle: CupertinoSlidingSegmentedControl(
-                  children: {
-                    0: Container(child: Text('Mengirim')),
-                    1: Container(child: Text('Diterima')),
-                  },
-                  groupValue: _sliding,
-                  onValueChanged: (newValue) {
-                    setState(() {
-                      _sliding = newValue;
-                    });
-                  },
-                ),
-                trailing: CupertinoButton(
-                  minSize: 16,
-                  padding: EdgeInsets.all(0.0),
-                  onPressed: () {},
-                  child: Icon(
-                    Icons.filter_list,
-                    size: 32,
-                  ),
-                ),
-                largeTitle: IOSSearchBar(
-                  controller: _searchTextController,
-                  focusNode: _searchFocusNode,
-                  animation: _animation,
-                  onCancel: _cancelSearch,
-                  onClear: _clearSearch,
-                ),
-              ),
-              SliverPadding(
-                padding: EdgeInsets.all(16),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return listItem(index);
+          child: NestedScrollView(
+            headerSliverBuilder: (ctx, innerBoxIsScrolled) {
+              return [
+                CupertinoSliverNavigationBar(
+                  transitionBetweenRoutes: false,
+                  heroTag: 'logoForcaPoS',
+                  middle: CupertinoSlidingSegmentedControl(
+                    children: {
+                      0: Container(child: Text('Mengirim')),
+                      1: Container(child: Text('Diterima')),
                     },
-                    childCount: 8,
+                    groupValue: _sliding,
+                    onValueChanged: (newValue) {
+                      setState(() {
+                        _sliding = newValue;
+                      });
+                    },
+                  ),
+                  trailing: CupertinoButton(
+                    minSize: 16,
+                    padding: EdgeInsets.all(0.0),
+                    onPressed: () {
+                      _refreshIndicatorKey.currentState.show();
+//                      _actionRefresh();
+                    },
+                    child: Icon(
+                      Icons.filter_list,
+                      size: 32,
+                    ),
+                  ),
+                  largeTitle: IOSSearchBar(
+                    controller: _searchTextController,
+                    focusNode: _searchFocusNode,
+                    animation: _animation,
+                    onCancel: _cancelSearch,
+                    onClear: _clearSearch,
                   ),
                 ),
-              ),
-            ],
+              ];
+            },
+            body: isFirst
+                ? Center(
+                    child: CupertinoActivityIndicator(),
+                  )
+                : RefreshIndicator(
+                    key: _refreshIndicatorKey,
+                    onRefresh: _actionRefresh,
+                    child: listGoodReceived.length == 0
+                        ? LayoutBuilder(
+                            builder: (BuildContext context,
+                                BoxConstraints viewportConstraints) {
+                              return SingleChildScrollView(
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                      minHeight: viewportConstraints.maxHeight),
+                                  child: Center(
+                                    child: Text('Data Kosong'),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : _body(),
+                  ),
           ),
         ),
       ),
     );
   }
 
-  Widget listItem(int index) {
+  Future<Null> _actionRefresh() async {
+    var status = await ApiClient.methodGet(ApiConfig.urlListGoodReceived,
+        onBefore: (status) {
+//      Get.back();
+    }, onSuccess: (data) {
+      var baseResponse = BaseResponse.fromJson(data);
+      listGoodReceived.clear();
+      listGoodReceived.addAll(baseResponse.data.listGoodsReceived);
+      listGoodReceived.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    }, onFailed: (title, message) {
+      Get.defaultDialog(title: title, content: Text(message));
+    }, onError: (title, message) {
+      Get.defaultDialog(title: title, content: Text(message));
+    }, onAfter: (status) {
+//      if (status == ResponseStatus.success)
+//        MyPref.setRemember(isRemember, currentData);
+    });
+    setState(() {
+      status.execute();
+      if (isFirst) isFirst = false;
+    });
+
+    return null;
+  }
+
+  Widget _body() {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      physics: ClampingScrollPhysics(),
+//      controller: isFilter? null : _controller,
+      itemBuilder: (c, i) => _listItem(listGoodReceived[i], i),
+      itemCount: listGoodReceived.length,
+    );
+  }
+
+  Widget _listItem(GoodReceived gr, int index) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
       elevation: 8,
@@ -122,20 +188,24 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Dynamix serbaguna 40 kg',
+                      '${gr.namaProduk}',
                       style: TextStyle(
                         color: MyColor.mainRed,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text('200 SAK'),
+                    Text('${gr.qtyDo} ${gr.uom}'),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Icon(Icons.av_timer, size: 14,),
+                    Icon(
+                      Icons.av_timer,
+                      size: 14,
+                    ),
                     Text(
-                      '12 Feb 2020',
+                      timeago.format(DateTime.tryParse('${gr.createdAt}'),
+                          locale: 'id', allowFromNow: true),
                       style: TextStyle(
                         color: MyColor.mainRed,
                         fontWeight: FontWeight.bold,
@@ -156,7 +226,7 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
                   children: <Widget>[
                     Text('No SO'),
                     Text(
-                      'SO/2020/02/0020',
+                      '${gr.noSo}',
                       style: TextStyle(
                         color: MyColor.mainRed,
                         fontWeight: FontWeight.bold,
@@ -168,7 +238,7 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
                   children: <Widget>[
                     Text('No DO'),
                     Text(
-                      'DO/2020/02/0020',
+                      '${gr.noDo}',
                       style: TextStyle(
                         color: MyColor.mainRed,
                         fontWeight: FontWeight.bold,
@@ -181,29 +251,44 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
           ),
           Divider(
             height: 1,
+//            color: MyColor.txtField,
           ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'Lihat Detail',
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: FlatButton(
-                  color: MyColor.mainGreen,
-                  onPressed: () {},
+          InkWell(
+            onTap: () {
+              print('klik detail');
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Terima',
-                    style: TextStyle(color: Colors.white),
+                    'Lihat Detail',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: FlatButton(
+                    color: gr.statusPenerimaan == "received"
+                        ? null
+                        : MyColor.mainGreen,
+                    onPressed: gr.statusPenerimaan == "received"
+                        ? null
+                        : () {
+                            print('received');
+                          },
+                    child: gr.statusPenerimaan == "received"
+                        ? null
+                        : Text(
+                            'Terima',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
