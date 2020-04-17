@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
 import 'package:posku/model/GoodReceived.dart';
@@ -206,8 +208,10 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                         : MyColor.mainGreen,
                     onPressed: gr.statusPenerimaan == "received"
                         ? null
-                        : () {
-                            print('received');
+                        : () async {
+                            var isi = await Get.toNamed(grConfirmationScreen,
+                                arguments: gr.toJson());
+                            print('dah balik $isi');
                           },
                     child: gr.statusPenerimaan == "received"
                         ? null

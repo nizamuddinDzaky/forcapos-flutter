@@ -31,6 +31,8 @@ class ApiClient {
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
       if (options.uri.toString().contains('auth/login') == false) {
         var token = MyPref.getForcaToken();
+//        var token = 'MHZDeWprTXJMVkg1d0hwTUtyRUtNL3pENnlOMUkwWCtTL2VxMDdxNXNUbz06Oq6JsfLg3cMucEM64dSy3pc6OoeQ8IgrX7Tsh7sGMw==';
+//        var token = 'emRiWWlYYytTNUVsY3FLa3hsbFFKRjlkMVBLdkFmMkdMVWV3YTdsNTMySFZLU3pQOjrQKFrlmJbxfV5Ba3fe/v8GOjorB7ppAg4nc5ogLeU=';
         options.headers.addAll(
             {MyString.forcaToken: token?.isNotEmpty == true ? token : ''});
       }
