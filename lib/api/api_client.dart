@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
-import 'package:posku/app/my_router.dart';
 import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/resource/my_string.dart';
 
@@ -12,7 +10,8 @@ enum ResponseStatus { progress, success, failed, error, done }
 
 typedef APIBeforeCallback = dynamic Function(ResponseStatus status);
 typedef APIAfterCallback = dynamic Function(ResponseStatus status);
-typedef APISuccessCallback = dynamic Function(Map<String, dynamic> data);
+typedef APISuccessCallback = dynamic Function(
+    Map<String, dynamic> data, dynamic tagOrFlag);
 typedef APIErrorCallback = dynamic Function(String title, String message);
 typedef APIFailedCallback = dynamic Function(String title, String message);
 
@@ -70,6 +69,7 @@ class ApiClient {
     APIFailedCallback onFailed,
     APIAfterCallback onAfter,
     bool customHandle = false,
+    dynamic tagOrFlag,
   }) async {
     var responseApi = ApiResponse(
       ResponseStatus.progress,
@@ -78,6 +78,7 @@ class ApiClient {
       onFailed,
       onError,
       onAfter,
+      tagOrFlag: tagOrFlag,
     );
     try {
       await dio
@@ -104,6 +105,8 @@ class ApiClient {
         var statusCode = error.response.statusCode;
         if (statusCode == 405) {
           responseApi._setFailed(title, 'Akses informasi tidak valid.');
+        } else if (statusCode == 404) {
+          responseApi._setSuccess({});
         } else if (statusCode == 400) {
           responseApi._setFailed(
               title, 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
@@ -182,10 +185,11 @@ class ApiResponse {
   APIErrorCallback onError;
   APIFailedCallback onFailed;
   APIAfterCallback onAfter;
+  dynamic tagOrFlag;
 
   ApiResponse(this.responseStatus, this.onBefore, this.onSuccess, this.onFailed,
       this.onError, this.onAfter,
-      {this.dataResponse, this.title, this.message});
+      {this.dataResponse, this.title, this.message, this.tagOrFlag});
 
   _setSuccess(Map<String, dynamic> dataResponse) {
     this.responseStatus = ResponseStatus.success;
@@ -207,7 +211,7 @@ class ApiResponse {
   execute() async {
     if (onBefore != null) onBefore(responseStatus);
     if (responseStatus == ResponseStatus.success) {
-      if (onSuccess != null) await onSuccess(dataResponse);
+      if (onSuccess != null) await onSuccess(dataResponse, tagOrFlag);
     } else if (responseStatus == ResponseStatus.failed) {
       if (onFailed != null) onFailed(title, message);
     } else if (responseStatus == ResponseStatus.error) {

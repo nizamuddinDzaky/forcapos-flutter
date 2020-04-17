@@ -1,64 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:posku/api/api_client.dart';
-import 'package:posku/api/api_config.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
-import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/GoodReceived.dart';
+import 'package:posku/screen/goodreceived/good_received_view_model.dart';
 import 'package:posku/util/resource/my_color.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import 'package:timeago/timeago.dart' as timeAGo;
 
 class GoodReceiveScreen extends StatefulWidget {
   @override
   _GoodReceiveScreenState createState() => _GoodReceiveScreenState();
 }
 
-class _GoodReceiveScreenState extends State<GoodReceiveScreen>
-    with SingleTickerProviderStateMixin {
-  int _sliding = 0;
-  final TextEditingController _searchTextController = TextEditingController();
-  final FocusNode _searchFocusNode = FocusNode();
-  Animation _animation;
-  AnimationController _animationController;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
-  bool isFirst = true;
-  List<GoodReceived> listGoodReceived = [];
-
-  @override
-  void initState() {
-    _animationController = new AnimationController(
-      duration: new Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _animation = new CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-      reverseCurve: Curves.easeInOut,
-    );
-    _searchFocusNode.addListener(() {
-      if (!_animationController.isAnimating) {
-        _animationController.forward();
-      }
-    });
-//    WidgetsBinding.instance
-//        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
-    _actionRefresh();
-    super.initState();
-  }
-
-  void _cancelSearch() {
-    _searchTextController.clear();
-    _searchFocusNode.unfocus();
-    _animationController.reverse();
-  }
-
-  void _clearSearch() {
-    _searchTextController.clear();
-  }
-
+class _GoodReceiveScreenState extends GoodReceivedViewModel {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -76,10 +30,11 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
                       0: Container(child: Text('Mengirim')),
                       1: Container(child: Text('Diterima')),
                     },
-                    groupValue: _sliding,
+                    groupValue: sliding,
                     onValueChanged: (newValue) {
                       setState(() {
-                        _sliding = newValue;
+                        sliding = newValue;
+                        if (isFirst[sliding]) actionRefresh();
                       });
                     },
                   ),
@@ -87,7 +42,7 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
                     minSize: 16,
                     padding: EdgeInsets.all(0.0),
                     onPressed: () {
-                      _refreshIndicatorKey.currentState.show();
+//                      refreshIndicatorKey.currentState.show();
 //                      _actionRefresh();
                     },
                     child: Icon(
@@ -96,23 +51,23 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
                     ),
                   ),
                   largeTitle: IOSSearchBar(
-                    controller: _searchTextController,
-                    focusNode: _searchFocusNode,
-                    animation: _animation,
-                    onCancel: _cancelSearch,
-                    onClear: _clearSearch,
+                    controller: searchTextController,
+                    focusNode: searchFocusNode,
+                    animation: animation,
+                    onCancel: cancelSearch,
+                    onClear: clearSearch,
                   ),
                 ),
               ];
             },
-            body: isFirst
+            body: isFirst[sliding]
                 ? Center(
                     child: CupertinoActivityIndicator(),
                   )
                 : RefreshIndicator(
-                    key: _refreshIndicatorKey,
-                    onRefresh: _actionRefresh,
-                    child: listGoodReceived.length == 0
+                    key: refreshIndicatorKey,
+                    onRefresh: actionRefresh,
+                    child: listGoodReceived[sliding].length == 0
                         ? LayoutBuilder(
                             builder: (BuildContext context,
                                 BoxConstraints viewportConstraints) {
@@ -135,38 +90,13 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
     );
   }
 
-  Future<Null> _actionRefresh() async {
-    var status = await ApiClient.methodGet(ApiConfig.urlListGoodReceived,
-        onBefore: (status) {
-//      Get.back();
-    }, onSuccess: (data) {
-      var baseResponse = BaseResponse.fromJson(data);
-      listGoodReceived.clear();
-      listGoodReceived.addAll(baseResponse.data.listGoodsReceived);
-      listGoodReceived.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    }, onFailed: (title, message) {
-      Get.defaultDialog(title: title, content: Text(message));
-    }, onError: (title, message) {
-      Get.defaultDialog(title: title, content: Text(message));
-    }, onAfter: (status) {
-//      if (status == ResponseStatus.success)
-//        MyPref.setRemember(isRemember, currentData);
-    });
-    setState(() {
-      status.execute();
-      if (isFirst) isFirst = false;
-    });
-
-    return null;
-  }
-
   Widget _body() {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 8),
       physics: ClampingScrollPhysics(),
 //      controller: isFilter? null : _controller,
-      itemBuilder: (c, i) => _listItem(listGoodReceived[i], i),
-      itemCount: listGoodReceived.length,
+      itemBuilder: (c, i) => _listItem(listGoodReceived[sliding][i], i),
+      itemCount: listGoodReceived[sliding].length,
     );
   }
 
@@ -204,7 +134,7 @@ class _GoodReceiveScreenState extends State<GoodReceiveScreen>
                       size: 14,
                     ),
                     Text(
-                      timeago.format(DateTime.tryParse('${gr.createdAt}'),
+                      timeAGo.format(DateTime.tryParse('${gr.createdAt}'),
                           locale: 'id', allowFromNow: true),
                       style: TextStyle(
                         color: MyColor.mainRed,

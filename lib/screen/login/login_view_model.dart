@@ -30,7 +30,7 @@ abstract class LoginViewModel extends State<LoginScreen> {
     var status = await ApiClient.methodPost(
         ApiConfig.urlLogin, currentData.toJson(), {}, onBefore: (status) {
       Get.back();
-    }, onSuccess: (data) {
+    }, onSuccess: (data, _) {
       if (data.containsKey('data') && data['data'].containsKey('token')) {
         MyPref.setForcaToken(data['data']['token']);
       }

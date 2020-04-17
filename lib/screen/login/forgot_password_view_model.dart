@@ -40,7 +40,7 @@ abstract class ForgotPasswordViewModel extends State<ForgotPasswordScreen> {
       onBefore: (status) {
         Get.back();
       },
-      onSuccess: (data) {
+      onSuccess: (data, _) {
         Get.back();
         _dialogSuccess();
       },
