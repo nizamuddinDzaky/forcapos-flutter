@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:intl/intl.dart';
 
 bool get isIos => foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS;
 
@@ -70,3 +72,9 @@ final Uint8List kTransparentImage = new Uint8List.fromList(<int>[
   0x44,
   0xAE,
 ]);
+
+String strToDate(String txtDate, {BuildContext context}) {
+  if (txtDate == null) return '';
+  var dateFormatOut = DateFormat('dd MMMM yyyy', 'in_ID');
+  return dateFormatOut.format(DateTime.tryParse(txtDate));
+}

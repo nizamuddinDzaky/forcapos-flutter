@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/app/my_app.dart';
 import 'package:timeago/timeago.dart' as timeAGo;
 
-void main() {
+void main() async {
+  await initializeDateFormatting('in_ID', null);
   timeAGo.setLocaleMessages('id', timeAGo.IdMessages());
   ApiClient.addInterceptor();
   return runApp(MyApp());

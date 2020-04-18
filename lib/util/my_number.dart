@@ -1,32 +1,37 @@
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+//import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 
 class MyNumber {
-  static var fmf = new FlutterMoneyFormatter(
-      amount: 0,
-      settings: MoneyFormatterSettings(
-          symbol: 'Rp',
-          thousandSeparator: '.',
-          decimalSeparator: ',',
-          symbolAndNumberSeparator: ' ',
-          fractionDigits: 0,
-          compactFormatType: CompactFormatType.short));
-
-  static String toRupiah(double newValue) {
-    final f = NumberFormat('#,###', 'id');
-    return fmf
-        .copyWith(
-            amount: newValue ?? 0,
-            symbol: 'Rp.',
-            thousandSeparator: f.symbols.GROUP_SEP,
-            decimalSeparator: f.symbols.DECIMAL_SEP)
-        .output
-        .symbolOnLeft;
-  }
+//  static var fmf = new FlutterMoneyFormatter(
+//      amount: 0,
+//      settings: MoneyFormatterSettings(
+//          symbol: 'Rp',
+//          thousandSeparator: '.',
+//          decimalSeparator: ',',
+//          symbolAndNumberSeparator: ' ',
+//          fractionDigits: 0,
+//          compactFormatType: CompactFormatType.short));
+//
+//  static String toRupiah(double newValue) {
+//    final f = NumberFormat('#,###', 'id');
+//    return fmf
+//        .copyWith(
+//            amount: newValue ?? 0,
+//            symbol: 'Rp.',
+//            thousandSeparator: f.symbols.GROUP_SEP,
+//            decimalSeparator: f.symbols.DECIMAL_SEP)
+//        .output
+//        .symbolOnLeft;
+//  }
 
   static String toNumberId(double newValue) {
     final f = NumberFormat('#,###', 'id');
     return f.format(newValue);
+  }
+
+  static String toNumberIdStr(String newValue) {
+    final f = NumberFormat('#,###', 'id');
+    return f.format(strUSToDouble(newValue));
   }
 
   static String toNumberRp(double newValue) {
@@ -34,6 +39,11 @@ class MyNumber {
     final fc = NumberFormat.currency(locale: 'id', symbol: 'Rp');
 //    return f.format(newValue);
     return fc.format(newValue);
+  }
+
+  static String toNumberRpStr(String newValue) {
+    final fc = NumberFormat.currency(locale: 'id', symbol: 'Rp');
+    return fc.format(strUSToDouble(newValue));
   }
 
   static double strIDToDouble(String newValue) {
