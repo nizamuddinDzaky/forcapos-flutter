@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:posku/app/my_router.dart';
+import 'package:posku/helper/loading_button.dart';
+import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/screen/goodreceived/gr_detail_view_model.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_util.dart';
@@ -248,9 +252,16 @@ class _GRDetailScreenState extends GRDetailViewModel {
     );
   }
 
+  Future<bool> _willPopCallback() async {
+    if (newGr != null) Get.back(result: newGr.toJson());
+    return newGr == null ? true : false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return WillPopScope(
+      onWillPop: _willPopCallback,
+      child: Material(
       child: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           previousPageTitle: 'Balik',
@@ -261,11 +272,19 @@ class _GRDetailScreenState extends GRDetailViewModel {
         child: SafeArea(
           child: Container(
             color: MyColor.mainBg,
+            child: Column(
+            children: <Widget>[
+            Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: 16),
               child: Column(
                 children: <Widget>[
-                  tileInfo(data: {0: 'From', 1: gr.companyCode, 2: gr.companyName, 3: gr.ekspeditur}),
+                  tileInfo(data: {
+                    0: 'From',
+                    1: gr.companyCode,
+                    2: gr.companyName,
+                    3: gr.ekspeditur
+                  }),
                   MyDivider.lineDivider(),
                   tileInfo(data: {
                     0: 'To',
@@ -298,10 +317,22 @@ class _GRDetailScreenState extends GRDetailViewModel {
                       children: <Widget>[
                         ...[
                           {0: 'No. PP', 1: gr.noPp, 2: true},
-                          {0: 'Date PP', 1: strToDate(gr.tanggalPp, context: context), 2: null},
+                          {
+                            0: 'Date PP',
+                            1: strToDate(gr.tanggalPp, context: context),
+                            2: null
+                          },
                           {0: 'No. SO', 1: gr.noSo, 2: true},
-                          {0: 'Tanggal SO', 1: strToDate(gr.tanggalSo), 2: null},
-                          {0: 'No. Transaksi', 1: gr.noTransaksi, 2: true},
+                          {
+                            0: 'Tanggal SO',
+                            1: strToDate(gr.tanggalSo),
+                            2: null
+                          },
+                          {
+                            0: 'No. Transaksi',
+                            1: gr.noTransaksi,
+                            2: true
+                          },
                           {0: 'Tipe Pemesanan', 1: gr.tipeOrder, 2: null},
                         ].map((data) {
                           return sectionDetailItem(data: data);
@@ -317,7 +348,11 @@ class _GRDetailScreenState extends GRDetailViewModel {
                       children: <Widget>[
                         ...[
                           {0: 'No. SPJ', 1: gr.noSpj, 2: true},
-                          {0: 'Tanggal SPJ', 1: strToDate(gr.tanggalSpj), 2: null},
+                          {
+                            0: 'Tanggal SPJ',
+                            1: strToDate(gr.tanggalSpj),
+                            2: null
+                          },
                           {0: 'No. Polisi', 1: gr.noPolisi, 2: true},
                           {0: 'Nama Pengemudi', 1: gr.namaSopir, 2: null},
                           {0: 'Kode Pabrik', 1: gr.kodePlant, 2: null},
@@ -330,6 +365,34 @@ class _GRDetailScreenState extends GRDetailViewModel {
                   ),
                 ],
               ),
+            ),
+            ),
+            if (gr.statusPenerimaan != 'received')
+              Container(
+                color: Colors.white,
+                child: Column(
+                  children: <Widget>[
+                    MyDivider.lineDivider(),
+                    LoadingButton(
+                      title: 'Terima',
+                      onPressed: () async {
+                        newGr = null;
+                        var isi = await Get.toNamed(grConfirmationScreen,
+                            arguments: gr.toJson());
+                        if (isi != null) {
+                          setState(() {
+                            gr = GoodReceived.fromJson(isi);
+                          });
+                          //Get.key.currentState.maybePop(gr.toJson() as dynamic);
+                          newGr = gr;
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            ),
             ),
           ),
         ),

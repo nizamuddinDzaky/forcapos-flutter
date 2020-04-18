@@ -13,6 +13,7 @@ abstract class GRDetailViewModel extends State<GRDetailScreen> {
   bool isFirst = true;
   String idGr;
   GoodReceived gr;
+  GoodReceived newGr;
   List<GoodReceivedItem> grItems = [];
 
   actionCopy(String text) async {

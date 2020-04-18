@@ -186,8 +186,15 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
 //            color: MyColor.txtField,
           ),
           InkWell(
-            onTap: () {
-              Get.toNamed(grDetailScreen, arguments: gr.toJson());
+            onTap: () async {
+              var result = await Get.toNamed(
+                  grDetailScreen, arguments: gr.toJson());
+              if (result != null) {
+                setState(() {
+                  var newGr = GoodReceived.fromJson(result);
+                  gr.statusPenerimaan = newGr.statusPenerimaan;
+                });
+              }
             },
             child: Row(
               mainAxisSize: MainAxisSize.max,
@@ -209,9 +216,14 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                     onPressed: gr.statusPenerimaan == "received"
                         ? null
                         : () async {
-                            var isi = await Get.toNamed(grConfirmationScreen,
+                            var result = await Get.toNamed(grConfirmationScreen,
                                 arguments: gr.toJson());
-                            print('dah balik $isi');
+                            if (result != null) {
+                              setState(() {
+                                var newGr = GoodReceived.fromJson(result);
+                                gr.statusPenerimaan = newGr.statusPenerimaan;
+                              });
+                            }
                           },
                     child: gr.statusPenerimaan == "received"
                         ? null
