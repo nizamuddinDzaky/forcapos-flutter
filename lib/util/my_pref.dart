@@ -39,29 +39,29 @@ class MyPref {
   }
 
   //get value
-  static String getForcaToken() => getString(MyString.forcaToken);
+  static String getForcaToken() => getString(MyString.KEY_FORCA_TOKEN);
 
   static setForcaToken(String value) {
-    setString(MyString.forcaToken, value);
+    setString(MyString.KEY_FORCA_TOKEN, value);
   }
 
-  static bool getRemember() => getBool(MyString.isRemember);
+  static bool getRemember() => getBool(MyString.KEY_IS_REMEMBER);
 
   static setRemember(bool remember, Login login) {
-    setBool(MyString.isRemember, remember);
-    setString(MyString.username, remember ? (login?.username ?? '') : '');
-    setString(MyString.password, remember ? (login?.password ?? '') : '');
+    setBool(MyString.KEY_IS_REMEMBER, remember);
+    setString(MyString.KEY_USERNAME, remember ? (login?.username ?? '') : '');
+    setString(MyString.KEY_PASSWORD, remember ? (login?.password ?? '') : '');
   }
 
-  static String getUsername() => getString(MyString.username);
+  static String getUsername() => getString(MyString.KEY_USERNAME);
 
   static setUsername(String value) {
-    setString(MyString.username, value);
+    setString(MyString.KEY_USERNAME, value);
   }
 
-  static String getPassword() => getString(MyString.password);
+  static String getPassword() => getString(MyString.KEY_PASSWORD);
 
   static setPassword(String value) {
-    setString(MyString.password, value);
+    setString(MyString.KEY_PASSWORD, value);
   }
 }
