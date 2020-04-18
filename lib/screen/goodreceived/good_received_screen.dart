@@ -187,7 +187,7 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
           ),
           InkWell(
             onTap: () {
-              print('klik detail');
+              Get.toNamed(grDetailScreen, arguments: gr.toJson());
             },
             child: Row(
               mainAxisSize: MainAxisSize.max,

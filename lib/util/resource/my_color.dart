@@ -6,8 +6,12 @@ class MyColor {
   static Color mainOrange = Color(0xFFFEAE17);
   static Color mainRed = Color(0xFFAE0D28);
 
+  static Color mainBg2 = Color(0xFFCACACA);
+  static Color mainBg = Color(0xFFE5E5E5);
+  static Color txtBlack = Color(0xFF000000);
   static Color txtField = Color(0xFF666666);
   static Color lineTxtField = Color(0xFF00B0FF);
+  static Color lineDivider = Color(0xFFC5C5C5);
 
   static Color gradient1 = Color(0xFF76D4FF);
   static Color gradient2 = Color(0xFFF1FBFF);
