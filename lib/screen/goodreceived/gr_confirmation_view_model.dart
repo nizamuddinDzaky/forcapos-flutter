@@ -27,6 +27,8 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
       print('onbefore');
     }, onSuccess: (data, _) {
       Get.snackbar('GR No SPJ: ${gr.noSpj}', 'Status: Berhasil di terima');
+      gr.statusPenerimaan = 'received';
+      Get.back(result: gr.toJson());
     }, onFailed: (title, message) {
       CustomDialog.showAlertDialog(context,
           title: 'Gagal',
