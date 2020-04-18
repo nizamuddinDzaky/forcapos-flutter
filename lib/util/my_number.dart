@@ -36,7 +36,7 @@ class MyNumber {
     return fc.format(newValue);
   }
 
-  static double strToDouble(String newValue) {
+  static double strIDToDouble(String newValue) {
     final f = NumberFormat('#,###', 'id');
     var resValue = (newValue ?? '').isEmpty ? '0' : newValue;
     return f.parse(resValue) ?? 0;

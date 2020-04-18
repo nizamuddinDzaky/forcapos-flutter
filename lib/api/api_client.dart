@@ -34,7 +34,7 @@ class ApiClient {
 //        var token = 'MHZDeWprTXJMVkg1d0hwTUtyRUtNL3pENnlOMUkwWCtTL2VxMDdxNXNUbz06Oq6JsfLg3cMucEM64dSy3pc6OoeQ8IgrX7Tsh7sGMw==';
 //        var token = 'emRiWWlYYytTNUVsY3FLa3hsbFFKRjlkMVBLdkFmMkdMVWV3YTdsNTMySFZLU3pQOjrQKFrlmJbxfV5Ba3fe/v8GOjorB7ppAg4nc5ogLeU=';
         options.headers.addAll(
-            {MyString.forcaToken: token?.isNotEmpty == true ? token : ''});
+            {MyString.KEY_FORCA_TOKEN: token?.isNotEmpty == true ? token : ''});
       }
       return options;
     }, onResponse: (Response response) async {
