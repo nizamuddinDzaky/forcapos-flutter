@@ -155,7 +155,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   width: 48,
                                   fit: BoxFit.cover,
                                 ),
-                                Text(data[1]),
+                                //Text(data[1]),
                               ],
                             ),
                           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/middle_ware.dart';
 import 'package:posku/app/my_router.dart';
@@ -14,6 +15,16 @@ class MyApp extends StatelessWidget {
           primaryColor: MyColor.mainBlue, accentColor: MyColor.mainRed),
       navigatorKey: Get.key,
       initialRoute: "/",
+//      localizationsDelegates: [
+//        GlobalMaterialLocalizations.delegate,
+//        GlobalWidgetsLocalizations.delegate,
+//        GlobalCupertinoLocalizations.delegate,
+//      ],
+      supportedLocales: [
+        const Locale('en', 'US'), // American English
+//        const Locale('in', 'ID'),
+      ],
+//      locale: Locale('in', 'ID'),
       navigatorObservers: [
         GetObserver(MiddleWare.observer),
       ],

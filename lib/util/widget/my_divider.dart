@@ -4,7 +4,7 @@ import 'package:posku/util/resource/my_color.dart';
 
 class MyDivider {
   static spaceDividerLogin({double custom}) {
-    return Padding(padding: EdgeInsets.symmetric(vertical: custom ?? 9));
+    return Padding(padding: EdgeInsets.symmetric(vertical: custom ?? 6));
   }
 
   static lineDivider({

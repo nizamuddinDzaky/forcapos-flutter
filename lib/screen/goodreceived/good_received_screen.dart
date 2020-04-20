@@ -5,6 +5,7 @@ import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
 import 'package:posku/model/GoodReceived.dart';
+import 'package:posku/screen/filter/filter_screen.dart';
 import 'package:posku/screen/goodreceived/good_received_view_model.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:timeago/timeago.dart' as timeAGo;
@@ -46,6 +47,9 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                     onPressed: () {
 //                      refreshIndicatorKey.currentState.show();
 //                      _actionRefresh();
+//                      Get.to(FilterScreen());
+                      Get.toNamed(filterScreen);
+//                      Get.toNamed(root);
                     },
                     child: Icon(
                       Icons.filter_list,
