@@ -1,10 +1,12 @@
+import 'package:posku/util/style/my_style.dart';
+
 class GoodReceived {
   String id;
   String companyCode;
   String companyName;
   String noPp;
   String tanggalPp;
-  Null noKontrak;
+  String noKontrak;
   String noSo;
   String tipeOrder;
   String tanggalSo;
@@ -48,17 +50,17 @@ class GoodReceived {
   String warehouseId;
   String billerId;
   String createdAt;
-  Null updatedAt;
-  Null note;
-  Null attachment;
+  String updatedAt;
+  String note;
+  String attachment;
   String total;
   String productDiscount;
-  Null orderDiscountId;
-  Null orderDiscount;
+  String orderDiscountId;
+  String orderDiscount;
   String totalDiscount;
   String productTax;
   String orderTaxId;
-  Null orderTax;
+  String orderTax;
   String totalTax;
   String shipping;
   String grandTotal;

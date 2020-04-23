@@ -44,12 +44,16 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                   trailing: CupertinoButton(
                     minSize: 16,
                     padding: EdgeInsets.all(0.0),
-                    onPressed: () {
-//                      refreshIndicatorKey.currentState.show();
-//                      _actionRefresh();
-//                      Get.to(FilterScreen());
-                      Get.toNamed(filterScreen);
-//                      Get.toNamed(root);
+                    onPressed: () async {
+                      var result = await Get.toNamed(
+                        filterScreen,
+                        arguments: filterData,
+                      );
+                      if (result != null &&
+                          result as Map<String, String> != null) {
+                        filterData = result as Map<String, String>;
+                        refreshIndicatorKey.currentState.show();
+                      }
                     },
                     child: Icon(
                       Icons.filter_list,
@@ -191,8 +195,8 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
           ),
           InkWell(
             onTap: () async {
-              var result = await Get.toNamed(
-                  grDetailScreen, arguments: gr.toJson());
+              var result =
+                  await Get.toNamed(grDetailScreen, arguments: gr.toJson());
               if (result != null) {
                 setState(() {
                   var newGr = GoodReceived.fromJson(result);

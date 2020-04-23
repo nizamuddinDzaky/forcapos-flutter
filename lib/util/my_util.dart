@@ -78,3 +78,17 @@ String strToDate(String txtDate, {BuildContext context}) {
   var dateFormatOut = DateFormat('dd MMMM yyyy', 'in_ID');
   return dateFormatOut.format(DateTime.tryParse(txtDate));
 }
+
+String dateToDate(DateTime dateTime) {
+  if (dateTime == null) return '';
+  var dateFormatOut = DateFormat('dd MMMM yyyy', 'in_ID');
+  return dateFormatOut.format(dateTime);
+}
+
+String differenceDateTime(DateTime startDate, DateTime endDate) {
+//  if (endDate.millisecondsSinceEpoch > startDate.millisecondsSinceEpoch) {
+    var diff = endDate.difference(startDate);
+    return '${diff.inDays} hari';
+//  }
+//  return dateFormatOut.format(dateTime);
+}

@@ -18,6 +18,7 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
       new GlobalKey<RefreshIndicatorState>();
   List<bool> isFirst = [true, true];
   List<List<GoodReceived>> listGoodReceived = [[], []];
+  Map<String, String> filterData = {'date': 'desc'};
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
     var params = {
       'goods_received_status': sliding == 0 ? 'delivering' : 'received',
     };
+    params.addAll(filterData);
     var status = await ApiClient.methodGet(ApiConfig.urlListGoodReceived,
         params: params, tagOrFlag: sliding, onBefore: (status) {
 //      Get.back();
