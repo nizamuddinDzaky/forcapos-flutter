@@ -209,8 +209,11 @@ class _LoginScreenState extends LoginViewModel {
                         Expanded(
                           child: Align(
                             alignment: Alignment.bottomCenter,
-                            child: MyText.textBlackSmall(
-                                'Ⓒ 2020 PT SISI, All Right Reserved.'),
+                            child: Container(
+                              padding: EdgeInsets.only(bottom: 8),
+                              child: MyText.textBlackSmall(
+                                  'Ⓒ 2020 PT SISI, All Right Reserved.'),
+                            )
                           ),
                         ),
                       ],

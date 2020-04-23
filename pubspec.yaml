@@ -13,6 +13,10 @@ dependencies:
   cupertino_icons: ^0.1.2
   dio: ^3.0.9
   expandable: ^4.1.3
+  flutter_cupertino_data_picker:
+    git:
+      url: git://github.com/roufroufrouf/flutter_cupertino_data_picker.git
+      ref: modification
   flutter_date_pickers: ^0.0.6
   flutter_linkify: ^3.1.0
   flutter_localizations:

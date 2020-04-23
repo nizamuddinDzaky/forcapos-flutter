@@ -1,9 +1,157 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:posku/screen/filter/multi_date_range_picker.dart';
+import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
+import 'package:posku/util/resource/my_string.dart';
+import 'package:provider/provider.dart';
+
+extension IndexedIterable<E> on Iterable<E> {
+  Iterable<T> mapIndexed<T>(T f(E e, int i)) {
+    var i = 0;
+    return this.map((e) => f(e, i++));
+  }
+}
+
+class _FilterState extends ChangeNotifier {
+  final Map<String, String> firstFilter;
+
+  _FilterState({this.firstFilter}) {
+    firstInit(this.firstFilter ?? {});
+  }
+
+  void firstInit(Map<String, String> first) {
+    if (first.containsKey(MyString.KEY_SORT_BY)) {
+      indexSort = sortVal.indexOf(first[MyString.KEY_SORT_BY]);
+      isAsc = first[MyString.KEY_SORT_TYPE];
+    }
+    if (first.containsKey(MyString.KEY_START_DATE)) {
+      var startDate = DateTime.tryParse(first[MyString.KEY_START_DATE]);
+      var endDate = DateTime.tryParse(first[MyString.KEY_END_DATE]);
+      if (startDate != null && endDate != null) {
+        changeIntervals([
+          [
+            startDate,
+            endDate,
+          ],
+        ], notify: false);
+      }
+    }
+    if (first.containsKey(MyString.KEY_GR_STATUS)) {
+      _selectedStatus = (_statusDelivery.where((data) {
+            return data[1] == first[MyString.KEY_GR_STATUS];
+          }).first) ??
+          ['', ''];
+    }
+  }
+
+  //status
+  List<List<String>> _statusDelivery = [
+    ['Menunggu', 'pending'],
+    ['Dikonfirmasi', 'confirmed'],
+    ['Ditutup', 'closed'],
+    ['Dipesan', 'receive'],
+    ['Dibatalkan', 'cancel'],
+  ];
+  List<String> _selectedStatus = ['', ''];
+
+  List<String> get selectedStatus => _selectedStatus;
+
+  List<List<String>> get statusDelivery => _statusDelivery;
+
+  bool getStatus(int index) => _selectedStatus == _statusDelivery[index];
+
+  void changeStatus(int index) {
+    _selectedStatus = _statusDelivery[index];
+    notifyListeners();
+  }
+
+  //date range
+  List<List<DateTime>> intervals = [];
+  String differenceDate;
+  int hint;
+
+  void changeIntervals(List<List<DateTime>> intervals, {bool notify}) {
+    this.intervals = intervals;
+    if (intervals.length == 1) {
+      differenceDate =
+          differenceDateTime(intervals.first[0], intervals.first[1]);
+    }
+    hint = 0;
+    if (notify == true) notifyListeners();
+  }
+
+  //sorting
+  String isAsc = 'desc';
+  int indexSort = 0;
+  List<String> sortData = ['Tanggal Transaksi', 'Total Harga', 'Status'];
+  List<String> sortVal = ['date', 'amount', 'status_penerimaan'];
+
+  String get labelName => sortData[indexSort % sortData.length];
+
+  String get _labelVal => sortVal[indexSort % sortVal.length];
+
+  void showDataPicker(BuildContext context) {
+    final bool showTitleActions = true;
+    DataPicker.showDatePicker(
+      context,
+      showTitleActions: showTitleActions,
+      locale: 'id',
+      datas: sortData,
+      title: 'Urut berdasarkan',
+      onChanged: (_) {},
+      onConfirm: (data) {
+        indexSort = sortData.indexOf(data);
+        notifyListeners();
+      },
+    );
+  }
+
+  void updateSortType() {
+    isAsc = isAsc == 'asc' ? 'desc' : 'asc';
+    notifyListeners();
+  }
+
+  String labelType() {
+    switch (indexSort) {
+      case 1:
+        return isAsc == 'desc' ? 'Tertinggi' : 'Terendah';
+      case 2:
+        return isAsc == 'desc' ? 'Z - A' : 'A - Z';
+      default:
+        return isAsc == 'desc' ? 'Terbaru' : 'Awal';
+    }
+  }
+
+  Map<String, String> resultFilter() {
+    Map<String, String> result = {};
+    if (intervals.isNotEmpty && intervals.first.isNotEmpty) {
+      var f = DateFormat('yyyy-MM-dd HH:mm:ss');
+      result[MyString.KEY_START_DATE] = f.format(intervals.first[0]);
+      result[MyString.KEY_END_DATE] = f.format(intervals.first[1]);
+    }
+    if (_selectedStatus.isNotEmpty && _selectedStatus[1] != '') {
+      result[MyString.KEY_GR_STATUS] = _selectedStatus[1];
+    }
+    result[MyString.KEY_SORT_BY] = _labelVal;
+    result[MyString.KEY_SORT_TYPE] = isAsc;
+    print(result);
+    return result;
+  }
+
+  void onReset() {
+    _selectedStatus = ['', ''];
+    intervals = [];
+    differenceDate = null;
+    indexSort = 0;
+    isAsc = 'desc';
+    notifyListeners();
+  }
+}
 
 class FilterScreen extends StatefulWidget {
   @override
@@ -11,100 +159,74 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  Future<bool> _willPopCallback() async {
+  Future<bool> _willPopCallback(Map result) async {
     //if (newGr != null) Get.back(result: newGr.toJson());
     //return newGr == null ? true : false;
-    Get.back();
+//    if (Navigator.of(context).canPop()) Get.back(result: result);
+//    return !Navigator.of(context).canPop();
+    Get.back(result: result);
     return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _willPopCallback,
-      child: Material(
-        child: CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-            previousPageTitle: 'Balik',
-            middle: Text(
-              'Filter',
-            ),
-            trailing: CupertinoButton(
-              padding: EdgeInsets.all(0),
-              onPressed: () {},
-              child: Text('Hapus'),
-            ),
-          ),
-          child: SafeArea(
-            child: ExpandableTheme(
-              data: const ExpandableThemeData(
-                  iconColor: Colors.blue, useInkWell: true),
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                children: <Widget>[
-                  Card1(),
-                  Card2(),
-                  Card3(),
-                ],
-              ),
-            ),
-/*
-            child: SingleChildScrollView(
-              child: Container(
-//              child: _rangeDatePicker2(),
-                child: Column(
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        title: Text(
-                          'Status Pengiriman',
-                          style: TextStyle(color: MyColor.txtField),
-                        ),
-                        trailing: Icon(Icons.keyboard_arrow_down),
-                      ),
+    Map<String, String> firstData;
+    if (Get.args(context) != null) {
+      firstData = Get.args(context) as Map<String, String>;
+    }
+    return ChangeNotifierProvider(
+      create: (_) => _FilterState(firstFilter: firstData),
+      child: Consumer<_FilterState>(
+        builder: (context, filterState, _) {
+          return WillPopScope(
+            onWillPop: () => _willPopCallback(filterState.resultFilter()),
+            child: Material(
+              child: CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  previousPageTitle: 'Balik',
+                  middle: Text(
+                    'Filter',
+                  ),
+                  trailing: CupertinoButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: filterState.onReset,
+                    child: Text('Hapus'),
+                  ),
+                ),
+                child: SafeArea(
+                  child: ExpandableTheme(
+                    data: const ExpandableThemeData(
+                        iconColor: Colors.blue, useInkWell: true),
+                    child: ListView(
+                      physics: const BouncingScrollPhysics(),
+                      children: <Widget>[
+                        Card1(),
+                        Card2(),
+                        Card3(),
+                      ],
                     ),
-                    ExpandableTheme(
-                      data: const ExpandableThemeData(
-                          iconColor: Colors.blue, useInkWell: true),
-                      child: ListView(
-                        physics: const BouncingScrollPhysics(),
-                        children: <Widget>[
-                          //Card1(),
-                          //Card2(),
-                          //Card3(),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-*/
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 }
 
-class Card1 extends StatefulWidget {
-  @override
-  _Card1State createState() => _Card1State();
-}
-
-class _Card1State extends State<Card1> {
-  List<List<String>> statusDelivery = [
-    ['Menunggu', 'pending'],
-    ['Dikonfirmasi', 'confirmed'],
-    ['Ditutup', 'closed'],
-    ['Dipesan', 'receive'],
-    ['Dibatalkan', 'cancel'],
-  ];
-  final empty = ['', ''];
-  var selectedStatus;
+class Card1 extends StatelessWidget {
+//class Card1 extends StatefulWidget {
+//  @override
+//  _Card1State createState() => _Card1State();
+//}
+//
+//class _Card1State extends State<Card1> {
   ExpandableController _controller;
+
   ExpandableController get controller => _controller;
+
   set controller(ExpandableController controller) {
     if (_controller == null) {
       _controller = controller;
@@ -113,7 +235,7 @@ class _Card1State extends State<Card1> {
 
   @override
   Widget build(BuildContext context) {
-
+    final state = Provider.of<_FilterState>(context);
     return ExpandableNotifier(
         child: Padding(
       padding: const EdgeInsets.all(10),
@@ -129,14 +251,6 @@ class _Card1State extends State<Card1> {
                   headerAlignment: ExpandablePanelHeaderAlignment.center,
                   tapBodyToCollapse: true,
                 ),
-/*
-                header: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Status Pengiriman",
-                      style: Theme.of(context).textTheme.body2,
-                    )),
-*/
                 header: Container(
                   padding: EdgeInsets.all(10),
                   child: Row(
@@ -147,7 +261,7 @@ class _Card1State extends State<Card1> {
                         style: Theme.of(context).textTheme.body2,
                       ),
                       Text(
-                        (selectedStatus ?? empty)[0],
+                        state.selectedStatus[0],
                         style: TextStyle(color: MyColor.mainRed),
                       ),
                     ],
@@ -167,43 +281,33 @@ class _Card1State extends State<Card1> {
                   physics: NeverScrollableScrollPhysics(),
                   childAspectRatio: 16 / 4,
                   children: <Widget>[
-                    ...statusDelivery.map((data) {
+                    ...state.statusDelivery.mapIndexed((data, index) {
                       return CustomExpandableButton.custom(
-                        shareController: (newController) => controller = newController,
-//                        shareController: (newContext) => controller = ExpandableController.of(newContext),
+                        shareController: (newController) =>
+                            controller = newController,
                         child: RaisedButton(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             side: BorderSide(color: MyColor.mainRed),
                           ),
                           onPressed: () {
-                            setState(() {
-                              selectedStatus = data;
-                              print('controller ${controller.value}');
-                              controller.toggle();
-                              print('controller ${controller.value}');
-                            });
+                            state.changeStatus(index);
+                            controller.toggle();
+//                            setState(() {
+//                            });
                           },
-                          color: (selectedStatus ?? empty)[1] == data[1]
+                          color: state.getStatus(index)
                               ? MyColor.mainRed
                               : Colors.white,
                           child: Text(
                             data[0],
                             style: TextStyle(
-                              color: (selectedStatus ?? empty)[1] == data[1]
+                              color: state.getStatus(index)
                                   ? Colors.white
                                   : MyColor.txtField,
                             ),
                           ),
                         ),
-//                      return CustomRadioButton(
-//                        selectedStatus: selectedStatus,
-//                        data: data,
-//                        onSelected: (newData) {
-//                          setState(() {
-//                            selectedStatus = newData;
-//                          });
-//                        },
                       );
                     }).toList(),
                   ],
@@ -227,69 +331,39 @@ class _Card1State extends State<Card1> {
   }
 }
 
-class Card2 extends StatefulWidget {
-  @override
-  _Card2State createState() => _Card2State();
-}
-
-class _Card2State extends State<Card2> {
-  List<Widget> buildColumn() {
+class Card2 extends StatelessWidget {
+//class Card2 extends StatefulWidget {
+//  @override
+//  _Card2State createState() => _Card2State();
+//}
+//
+//class _Card2State extends State<Card2> {
+  List<Widget> buildColumn(List<List<DateTime>> intervals) {
     final List<Widget> list = [];
 
     for (final interval in intervals) {
-      list.add(Text(interval[0].toString() + " - " + interval[1].toString()));
+      list.add(Text(dateToDate(interval[0]) + " - " + dateToDate(interval[1])));
       if (interval != intervals.last)
         list.add(SizedBox(
           height: 8,
         ));
     }
+//    if (list.isEmpty) {
+//      var status =
+//          hint == null ? 'Mulai tanggal berapa?' : 'Sampai tanggal berapa?';
+//      list.add(Text(status));
+//    }
 
     return list;
   }
 
-  List<List<DateTime>> intervals = [];
-
-  Widget _rangeDatePicker2() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          MultiDateRangePicker(
-            onlyOne: true,
-            initialValue: intervals,
-            onChanged: (List<List<DateTime>> intervals) {
-              setState(() {
-                this.intervals = intervals;
-              });
-            },
-            selectionColor: Colors.lightBlueAccent,
-            buttonColor: Colors.lightBlueAccent,
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 16.0),
-                    child: Column(
-                      children: buildColumn(),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+//  List<List<DateTime>> intervals = [];
+//  String differenceDate;
+//  int hint;
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<_FilterState>(context);
     return ExpandableNotifier(
         child: Padding(
       padding: const EdgeInsets.all(10),
@@ -305,19 +379,77 @@ class _Card2State extends State<Card2> {
                   headerAlignment: ExpandablePanelHeaderAlignment.center,
                   tapBodyToCollapse: true,
                 ),
-                header: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Rentang Tanggal",
-                      style: Theme.of(context).textTheme.body2,
-                    )),
-//                    collapsed: Text(
-//                      'loremIpsum',
-//                      softWrap: true,
-//                      maxLines: 2,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-                expanded: _rangeDatePicker2(),
+                header: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Rentang tanggal',
+                        style: Theme.of(context).textTheme.body2,
+                      ),
+                      Text(
+                        state.differenceDate ?? '',
+                        style: TextStyle(color: MyColor.mainRed),
+                      ),
+                    ],
+                  ),
+                ),
+                collapsed: state.differenceDate == null
+                    ? null
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 8.0),
+                        child: Center(
+                          child: Column(
+                            children: buildColumn(state.intervals),
+                          ),
+                        ),
+                      ),
+                expanded: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      MultiDateRangePicker(
+                        onlyOne: true,
+                        initialValue: state.intervals,
+                        onChanged: (List<List<DateTime>> intervals) {
+                          state.changeIntervals(intervals);
+//                          setState(() {
+//                            print('cek1 ${this.intervals} $intervals');
+//                            this.intervals = intervals;
+//                            print('cek2 ${this.intervals} $intervals');
+//                            if (intervals.length == 1) {
+//                              differenceDate = differenceDateTime(
+//                                  intervals.first[0], intervals.first[1]);
+//                            }
+//                            hint = 0;
+//                          });
+                        },
+                        selectionColor: Colors.lightBlueAccent,
+                        buttonColor: Colors.lightBlueAccent,
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 16.0),
+                                child: Column(
+                                  children: buildColumn(state.intervals),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
                 builder: (_, collapsed, expanded) {
                   return Padding(
                     padding: EdgeInsets.only(left: 10, right: 10),
@@ -338,8 +470,27 @@ class _Card2State extends State<Card2> {
 }
 
 class Card3 extends StatelessWidget {
+//class Card3 extends StatefulWidget {
+//  @override
+//  _Card3State createState() => _Card3State();
+//}
+//
+//class _Card3State extends State<Card3> {
+/*
+  String isAsc = 'desc';
+  int indexSort = 0;
+  List<String> sortData = ['Tanggal Transaksi', 'Total Harga', 'Status'];
+*/
+
+//  List<List<String>> sortData = [
+//    ['Tanggal Transaksi#date', 'date'],
+//    ['Total Harga#total', 'grand_total'],
+//    ['Status#status', 'status'],
+//  ];
+
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<_FilterState>(context);
     return ExpandableNotifier(
         child: Padding(
       padding: const EdgeInsets.all(10),
@@ -355,30 +506,136 @@ class Card3 extends StatelessWidget {
                   headerAlignment: ExpandablePanelHeaderAlignment.center,
                   tapBodyToCollapse: true,
                 ),
-                header: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Urutan",
-                      style: Theme.of(context).textTheme.body2,
-                    )),
-//                    collapsed: Text(
-//                      'loremIpsum',
-//                      softWrap: true,
-//                      maxLines: 2,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-                expanded: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    for (var _ in Iterable.generate(5))
-                      Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            'loremIpsum',
-                            softWrap: true,
-                            overflow: TextOverflow.fade,
-                          )),
-                  ],
+                header: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Urutan',
+                        style: Theme.of(context).textTheme.body2,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            '${state.labelName}: ',
+                            style: TextStyle(color: MyColor.txtField),
+                          ),
+                          Text(
+                            '${state.labelType()}',
+                            style: TextStyle(color: MyColor.mainRed),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                expanded: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: OutlineButton(
+                          borderSide: BorderSide(color: Colors.blue),
+                          shape: StadiumBorder(),
+                          color: Colors.blue,
+                          onPressed: () => state.showDataPicker(context),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                'Data: ',
+                                style: TextStyle(
+                                  color: MyColor.txtField,
+                                ),
+                              ),
+                              Flexible(
+                                  child: Center(
+                                child: Text(
+                                  state.labelName,
+                                ),
+                              )),
+                              Icon(
+                                Icons.arrow_drop_down,
+                                color: MyColor.txtField,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          side: BorderSide(color: MyColor.mainRed),
+                        ),
+                        onPressed: state.updateSortType,
+                        color: (state.isAsc ?? '') == 'desc'
+                            ? MyColor.mainRed
+                            : Colors.white,
+                        child: Text(
+                          state.labelType(),
+                          style: TextStyle(
+                            color: (state.isAsc ?? '') == 'desc'
+                                ? Colors.white
+                                : MyColor.txtField,
+                          ),
+                        ),
+                      ),
+
+/*
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          side: BorderSide(color: MyColor.mainRed),
+                        ),
+                        onPressed: () {
+                          setState(() {
+//                            isAsc = isAsc == 'asc' ? null : 'asc';
+                            isAsc = 'asc';
+                          });
+                        },
+                        color: (isAsc ?? '') == 'asc'
+                            ? MyColor.mainRed
+                            : Colors.white,
+                        child: Text(
+                          'Asc',
+                          style: TextStyle(
+                            color: (isAsc ?? '') == 'asc'
+                                ? Colors.white
+                                : MyColor.txtField,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          side: BorderSide(color: MyColor.mainRed),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            //isAsc = isAsc == 'desc' ? null : 'desc';
+                            isAsc = 'desc';
+                          });
+                        },
+                        color: (isAsc ?? '') == 'desc'
+                            ? MyColor.mainRed
+                            : Colors.white,
+                        child: Text(
+                          'Desc',
+                          style: TextStyle(
+                            color: (isAsc ?? '') == 'desc'
+                                ? Colors.white
+                                : MyColor.txtField,
+                          ),
+                        ),
+                      ),
+*/
+                    ],
+                  ),
                 ),
                 builder: (_, collapsed, expanded) {
                   return Padding(
@@ -403,7 +660,8 @@ class CustomExpandableButton extends ExpandableButton {
   final Function shareController;
   final Widget child;
 
-  CustomExpandableButton.custom({this.shareController, this.child}) : super(child: child);
+  CustomExpandableButton.custom({this.shareController, this.child})
+      : super(child: child);
 
   @override
   Widget build(BuildContext context) {
@@ -411,73 +669,3 @@ class CustomExpandableButton extends ExpandableButton {
     return super.build(context);
   }
 }
-
-/*
-class CustomExpandableButton extends StatelessWidget {
-  final Widget child;
-  final Function shareController;
-
-  CustomExpandableButton({@required this.shareController, @required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = ExpandableController.of(context);
-    final theme = ExpandableThemeData.withDefaults(null, context);
-    shareController(controller);
-
-    if (theme.useInkWell) {
-      return InkWell(onTap: controller.toggle, child: child);
-    } else {
-      return GestureDetector(
-        onTap: controller.toggle,
-        child: child,
-      );
-    }
-  }
-}
-*/
-
-/*
-class CustomRadioButton extends StatefulWidget {
-  final List<String> data;
-  final List<String> selectedStatus;
-  final Function onSelected;
-
-  CustomRadioButton({this.data, this.selectedStatus, this.onSelected});
-
-  @override
-  _CustomRadioButtonState createState() => _CustomRadioButtonState();
-}
-
-class _CustomRadioButtonState extends State<CustomRadioButton> {
-  final empty = ['', ''];
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = ExpandableController.of(context);
-
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
-        side: BorderSide(color: MyColor.mainRed),
-      ),
-      onPressed: () {
-        if (widget.onSelected != null) widget.onSelected(widget.data);
-        setState(() {});
-        controller.toggle();
-      },
-      color: (widget.selectedStatus ?? empty)[1] == widget.data[1]
-          ? MyColor.mainRed
-          : Colors.white,
-      child: Text(
-        widget.data[0],
-        style: TextStyle(
-          color: (widget.selectedStatus ?? empty)[1] == widget.data[1]
-              ? Colors.white
-              : MyColor.txtField,
-        ),
-      ),
-    );
-  }
-}
-*/

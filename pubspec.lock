@@ -188,6 +188,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_cupertino_data_picker:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: modification
+      resolved-ref: c76bf893fc1b6eab9206e9599a3be8e93e9d3cc8
+      url: "git://github.com/roufroufrouf/flutter_cupertino_data_picker.git"
+    source: git
+    version: "0.8.6"
   flutter_date_pickers:
     dependency: "direct main"
     description:
