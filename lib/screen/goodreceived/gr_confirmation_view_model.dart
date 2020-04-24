@@ -30,10 +30,12 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
       gr.statusPenerimaan = 'received';
       Get.back(result: gr.toJson());
     }, onFailed: (title, message) {
-      CustomDialog.showAlertDialog(context,
-          title: 'Gagal',
-          message: message,
-          leftAction: CustomDialog.customAction());
+      gr.statusPenerimaan = 'received';
+      Get.back(result: gr.toJson());
+//      CustomDialog.showAlertDialog(context,
+//          title: 'Gagal',
+//          message: message,
+//          leftAction: CustomDialog.customAction());
     }, onError: (title, message) {
       print('onerror');
     }, onAfter: (status) {

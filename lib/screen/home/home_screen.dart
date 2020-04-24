@@ -77,20 +77,38 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                 tabBuilder: (context, index) {
+                  CupertinoTabView returnValue;
                   switch (index) {
                     case 1:
-                      return GoodReceiveScreen();
+                      returnValue = CupertinoTabView(builder: (context) {
+                        return CupertinoPageScaffold(
+                          child: GoodReceiveScreen(),
+                        );
+                      });
                       break;
                     case 2:
-                      return SalesBookingScreen();
+                      returnValue = CupertinoTabView(builder: (context) {
+                        return CupertinoPageScaffold(
+                          child: SalesBookingScreen(),
+                        );
+                      });
                       break;
                     case 3:
-                      return MasterDataScreen();
+                      returnValue = CupertinoTabView(builder: (context) {
+                        return CupertinoPageScaffold(
+                          child: MasterDataScreen(),
+                        );
+                      });
                       break;
                     default:
-                      return DashboardScreen();
+                      returnValue = CupertinoTabView(builder: (context) {
+                        return CupertinoPageScaffold(
+                          child: DashboardScreen(),
+                        );
+                      });
                       break;
                   }
+                  return returnValue;
                 }),
           );
         },

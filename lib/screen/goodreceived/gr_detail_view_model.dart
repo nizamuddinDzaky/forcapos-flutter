@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/helper/custom_cupertino_page_route.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/model/GoodReceivedItem.dart';
@@ -69,5 +70,7 @@ abstract class GRDetailViewModel extends State<GRDetailScreen> {
       actionGetDetailGR();
       isFirst = false;
     }
+    (ModalRoute.of(context) as CustomCupertinoPageRoute)?.resultPop =
+        newGr?.toJson();
   }
 }

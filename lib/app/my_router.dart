@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:posku/helper/custom_cupertino_page_route.dart';
 import 'package:posku/screen/filter/filter_screen.dart';
 import 'package:posku/screen/goodreceived/gr_confirmation_screen.dart';
 import 'package:posku/screen/goodreceived/gr_detail_screen.dart';
@@ -49,10 +50,9 @@ class MyRouter {
           page: GRConfirmationScreen(),
         );
       case grDetailScreen:
-        return GetRoute(
+        return CustomCupertinoPageRoute(
           settings: settings,
-          transition: Transition.rightToLeft,
-          page: GRDetailScreen(),
+          builder: (BuildContext context) => GRDetailScreen(),
         );
       case filterScreen:
         return GetRoute(
