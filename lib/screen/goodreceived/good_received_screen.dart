@@ -7,7 +7,9 @@ import 'package:posku/helper/ios_search_bar.dart';
 import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/screen/filter/filter_screen.dart';
 import 'package:posku/screen/goodreceived/good_received_view_model.dart';
+import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/util/resource/my_color.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeAGo;
 
 class GoodReceiveScreen extends StatefulWidget {
@@ -18,86 +20,152 @@ class GoodReceiveScreen extends StatefulWidget {
 class _GoodReceiveScreenState extends GoodReceivedViewModel {
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: Scaffold(
-        appBar: EmptyAppBar(),
-        body: SafeArea(
-          child: NestedScrollView(
-            headerSliverBuilder: (ctx, innerBoxIsScrolled) {
-              return [
-                CupertinoSliverNavigationBar(
-                  transitionBetweenRoutes: false,
-                  heroTag: 'logoForcaPoS',
-                  middle: CupertinoSlidingSegmentedControl(
-                    children: {
-                      0: Container(child: Text('Mengirim')),
-                      1: Container(child: Text('Diterima')),
-                    },
-                    groupValue: sliding,
-                    onValueChanged: (newValue) {
-                      setState(() {
-                        sliding = newValue;
-                        if (isFirst[sliding]) actionRefresh();
-                      });
-                    },
-                  ),
-                  trailing: CupertinoButton(
-                    minSize: 16,
-                    padding: EdgeInsets.all(0.0),
-                    onPressed: () async {
-                      var result = await Get.toNamed(
-                        filterScreen,
-                        arguments: filterData,
-                      );
-                      if (result != null &&
-                          result as Map<String, String> != null) {
-                        filterData = result as Map<String, String>;
-                        refreshIndicatorKey.currentState.show();
-                      }
-                    },
-                    child: Icon(
-                      Icons.filter_list,
-                      size: 32,
+    return Consumer<HomeState>(
+      builder: (context, homeState, _) {
+        final searchBar = IOSSearchBar(
+          controller: searchTextController,
+          focusNode: initSearch(
+              searchFocusNode: searchFocusNode, homeState: homeState),
+          animation: animation,
+          onCancel: () => cancelSearch(homeState: homeState),
+          onClear: clearSearch,
+          onSubmit: onSubmit,
+          onUpdate: onUpdate,
+        );
+
+        return CupertinoPageScaffold(
+          child: Scaffold(
+            appBar: EmptyAppBar(),
+            body: SafeArea(
+              child: NestedScrollView(
+                headerSliverBuilder: (ctx, innerBoxIsScrolled) {
+                  return [
+                    if (homeState.isSearch == false)
+                      CupertinoSliverNavigationBar(
+                        transitionBetweenRoutes: false,
+                        heroTag: 'logoForcaPoS',
+                        middle: CupertinoSlidingSegmentedControl(
+                          children: {
+                            0: Container(child: Text('Mengirim')),
+                            1: Container(child: Text('Diterima')),
+                          },
+                          groupValue: sliding,
+                          onValueChanged: (newValue) {
+                            setState(() {
+                              sliding = newValue;
+                              if (isFirst[sliding]) actionRefresh();
+                            });
+                          },
+                        ),
+                        trailing: CupertinoButton(
+                          minSize: 16,
+                          padding: EdgeInsets.all(0.0),
+                          onPressed: () async {
+//                          homeState?.changeSearch(true);
+                            searchFocusNode.requestFocus();
+/*
+                          var result = await Get.toNamed(
+                            filterScreen,
+                            arguments: filterData,
+                          );
+                          if (result != null &&
+                              result as Map<String, String> != null) {
+                            filterData = result as Map<String, String>;
+                            refreshIndicatorKey.currentState.show();
+                          }
+*/
+                          },
+                          child: Icon(
+                            Icons.filter_list,
+                            size: 32,
+                          ),
+                        ),
+                        largeTitle: IOSSearchBar(
+                          animation: animationController,
+                          controller: TextEditingController(),
+                          focusNode: initFocus(homeState: homeState),
+                        ),
+//                        largeTitle: searchBar,
+//                        largeTitle: FlatButton(
+//                          child: Text('ok'),
+//                          onPressed: () {
+//                            homeState.changeSearch(true, action: () async {
+//                              await Future.delayed(Duration(milliseconds: 300));
+//                              searchFocusNode.requestFocus();
+//                            });
+//                          },
+//                        ),
+                      ),
+                    if (homeState.isSearch == true)
+                      SliverToBoxAdapter(
+                        child: Container(
+                          padding: EdgeInsets.only(left: 8),
+                          child: CupertinoNavigationBar(
+                            middle: searchBar,
+                          ),
+                        ),
+                      ),
+                  ];
+                },
+                body: homeState.isSearch == true
+                    ? _contentSearch()
+                    : _contentBody(),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _contentSearch() {
+    return RefreshIndicator(
+      key: refreshIndicatorKey,
+      onRefresh: actionRefresh,
+      child: listSearch == null
+          ? LayoutBuilder(
+              builder:
+                  (BuildContext context, BoxConstraints viewportConstraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                        minHeight: viewportConstraints.maxHeight),
+                    child: Center(
+                      child: Text('Mau cari apa nih?'),
                     ),
                   ),
-                  largeTitle: IOSSearchBar(
-                    controller: searchTextController,
-                    focusNode: searchFocusNode,
-                    animation: animation,
-                    onCancel: cancelSearch,
-                    onClear: clearSearch,
-                  ),
-                ),
-              ];
-            },
-            body: isFirst[sliding]
-                ? Center(
-                    child: CupertinoActivityIndicator(),
-                  )
-                : RefreshIndicator(
-                    key: refreshIndicatorKey,
-                    onRefresh: actionRefresh,
-                    child: listGoodReceived[sliding].length == 0
-                        ? LayoutBuilder(
-                            builder: (BuildContext context,
-                                BoxConstraints viewportConstraints) {
-                              return SingleChildScrollView(
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                      minHeight: viewportConstraints.maxHeight),
-                                  child: Center(
-                                    child: Text('Data Kosong'),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : _body(),
-                  ),
-          ),
-        ),
-      ),
+                );
+              },
+            )
+          : _body(),
     );
+  }
+
+  Widget _contentBody() {
+    return isFirst[sliding]
+        ? Center(
+            child: CupertinoActivityIndicator(),
+          )
+        : RefreshIndicator(
+            key: refreshIndicatorKey,
+            onRefresh: actionRefresh,
+            child: listGoodReceived[sliding].length == 0
+                ? LayoutBuilder(
+                    builder: (BuildContext context,
+                        BoxConstraints viewportConstraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                              minHeight: viewportConstraints.maxHeight),
+                          child: Center(
+                            child: Text('Data Kosong'),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : _body(),
+          );
   }
 
   Widget _body() {

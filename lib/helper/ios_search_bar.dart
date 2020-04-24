@@ -130,7 +130,7 @@ class IOSSearchBar extends AnimatedWidget {
               padding: const EdgeInsets.only(left: 8.0),
               onPressed: onCancel,
               child: new Text(
-                'Cancel',
+                'Batal',
                 softWrap: false,
               ),
             ),

@@ -6,6 +6,7 @@ import 'package:posku/api/api_config.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/screen/goodreceived/good_received_screen.dart';
+import 'package:posku/screen/home/home_screen.dart';
 
 abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
     with SingleTickerProviderStateMixin {
@@ -18,7 +19,14 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
       new GlobalKey<RefreshIndicatorState>();
   List<bool> isFirst = [true, true];
   List<List<GoodReceived>> listGoodReceived = [[], []];
+  List<GoodReceived> listSearch;
   Map<String, String> filterData = {'date': 'desc'};
+
+  @override
+  void dispose() {
+    searchTextController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -31,18 +39,60 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
       curve: Curves.easeInOut,
       reverseCurve: Curves.easeInOut,
     );
-    searchFocusNode.addListener(() {
-      if (!animationController.isAnimating) {
-        animationController.forward();
-      }
-    });
+//    searchTextController.add
+//    showSearch();
 //    WidgetsBinding.instance
 //        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
     actionRefresh();
     super.initState();
   }
 
-  void cancelSearch() {
+  void onUpdate(String update) {
+    print('search update $update');
+  }
+
+  void onSubmit(String submit) {
+    print('search submit $submit');
+  }
+
+  void showSearch({HomeState homeState}) {
+    searchFocusNode.addListener(() {
+      if (!animationController.isAnimating) {
+        print("issearch true");
+        homeState?.changeSearch(true);
+        animationController.forward();
+      }
+    });
+  }
+
+  FocusNode initSearch({FocusNode searchFocusNode, HomeState homeState}) {
+//    print('searchFocusNode ${searchFocusNode.hasListeners}');
+    if (searchFocusNode.hasListeners == false) {
+      searchFocusNode?.addListener(() async {
+        if (!animationController.isAnimating) {
+          animationController.forward();
+//          homeState?.changeSearch(true);
+//          await Future.delayed(Duration(milliseconds: 300));
+//          searchFocusNode?.requestFocus();
+        }
+      });
+    }
+    return searchFocusNode;
+  }
+
+  FocusNode initFocus({HomeState homeState}) {
+    FocusNode focusNode = FocusNode();
+    focusNode.addListener(() async {
+      homeState.changeSearch(true);
+      await Future.delayed(Duration(milliseconds: 100));
+      searchFocusNode?.requestFocus();
+    });
+    return focusNode;
+  }
+
+  void cancelSearch({HomeState homeState}) {
+    print("issearch false");
+    homeState?.changeSearch(false);
     searchTextController.clear();
     searchFocusNode.unfocus();
     animationController.reverse();
