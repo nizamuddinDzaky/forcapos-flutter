@@ -1,5 +1,3 @@
-import 'package:posku/util/style/my_style.dart';
-
 class GoodReceived {
   String id;
   String companyCode;

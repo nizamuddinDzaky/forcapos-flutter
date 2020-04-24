@@ -8,16 +8,20 @@ import 'package:posku/util/resource/my_color.dart';
 import 'package:provider/provider.dart';
 
 class HomeState extends ChangeNotifier {
-//  final CupertinoTabController controller;
-//
-//  HomeState({this.controller});
+  bool isBack = false;
+  bool _isSearch = false;
 
-//  bool isSearch;
-  bool isSearch = false;
+  bool get isSearch => _isSearch;
 
   void changeSearch(bool isSearch, {Function action}) {
-    this.isSearch = isSearch;
+    this._isSearch = isSearch;
     if (action != null) action();
+    notifyListeners();
+  }
+
+  void popBack() {
+    isBack = true;
+    _isSearch = false;
     notifyListeners();
   }
 }
@@ -30,54 +34,65 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final CupertinoTabController controller = CupertinoTabController();
 
+  Future<bool> _willPopCallback(HomeState homeState) async {
+    if (homeState.isSearch == true) {
+      homeState.popBack();
+//      homeState.changeSearch(false);
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-//      create: (_) => HomeState(controller: controller),
       create: (_) => HomeState(),
       child: Consumer<HomeState>(
         builder: (context, homeState, _) {
-          return CupertinoTabScaffold(
-              controller: controller,
-              tabBar: homeState.isSearch == true
-                  ? InvisibleCupertinoTabBar()
-                  : CupertinoTabBar(
-                      activeColor: MyColor.mainBlue,
-                      items: [
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.home),
-                          title: Text("Beranda"),
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.shopping_cart),
-                          title: Text("Penerimaan"),
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.date_range),
-                          title: Text("Penjualan"),
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.dashboard),
-                          title: Text("Data"),
-                        ),
-                      ],
-                    ),
-              tabBuilder: (context, index) {
-                switch (index) {
-                  case 1:
-                    return GoodReceiveScreen();
-                    break;
-                  case 2:
-                    return SalesBookingScreen();
-                    break;
-                  case 3:
-                    return MasterDataScreen();
-                    break;
-                  default:
-                    return DashboardScreen();
-                    break;
-                }
-              });
+          return WillPopScope(
+            onWillPop: () => _willPopCallback(homeState),
+            child: CupertinoTabScaffold(
+                controller: controller,
+                tabBar: homeState.isSearch == true
+                    ? InvisibleCupertinoTabBar()
+                    : CupertinoTabBar(
+                        activeColor: MyColor.mainBlue,
+                        items: [
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.home),
+                            title: Text("Beranda"),
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.shopping_cart),
+                            title: Text("Penerimaan"),
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.date_range),
+                            title: Text("Penjualan"),
+                          ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.dashboard),
+                            title: Text("Data"),
+                          ),
+                        ],
+                      ),
+                tabBuilder: (context, index) {
+                  switch (index) {
+                    case 1:
+                      return GoodReceiveScreen();
+                      break;
+                    case 2:
+                      return SalesBookingScreen();
+                      break;
+                    case 3:
+                      return MasterDataScreen();
+                      break;
+                    default:
+                      return DashboardScreen();
+                      break;
+                  }
+                }),
+          );
         },
       ),
     );

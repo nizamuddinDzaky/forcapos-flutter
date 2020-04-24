@@ -21,6 +21,8 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
   List<List<GoodReceived>> listGoodReceived = [[], []];
   List<GoodReceived> listSearch;
   Map<String, String> filterData = {'date': 'desc'};
+  bool isSearch = false;
+  Map<String, String> searchData;
 
   @override
   void dispose() {
@@ -48,32 +50,21 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
   }
 
   void onUpdate(String update) {
-    print('search update $update');
   }
 
   void onSubmit(String submit) {
-    print('search submit $submit');
-  }
-
-  void showSearch({HomeState homeState}) {
-    searchFocusNode.addListener(() {
-      if (!animationController.isAnimating) {
-        print("issearch true");
-        homeState?.changeSearch(true);
-        animationController.forward();
-      }
-    });
+    searchData?.clear();
+    searchData = {
+      'search': submit,
+    };
+    refreshIndicatorKey.currentState.show();
   }
 
   FocusNode initSearch({FocusNode searchFocusNode, HomeState homeState}) {
-//    print('searchFocusNode ${searchFocusNode.hasListeners}');
     if (searchFocusNode.hasListeners == false) {
       searchFocusNode?.addListener(() async {
         if (!animationController.isAnimating) {
           animationController.forward();
-//          homeState?.changeSearch(true);
-//          await Future.delayed(Duration(milliseconds: 300));
-//          searchFocusNode?.requestFocus();
         }
       });
     }
@@ -83,6 +74,7 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
   FocusNode initFocus({HomeState homeState}) {
     FocusNode focusNode = FocusNode();
     focusNode.addListener(() async {
+      isSearch = true;
       homeState.changeSearch(true);
       await Future.delayed(Duration(milliseconds: 100));
       searchFocusNode?.requestFocus();
@@ -90,9 +82,12 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
     return focusNode;
   }
 
-  void cancelSearch({HomeState homeState}) {
-    print("issearch false");
-    homeState?.changeSearch(false);
+  void cancelSearch({HomeState homeState, bool notify}) {
+    isSearch = false;
+    searchData = null;
+    listSearch?.clear();
+    listSearch = null;
+    if (notify ?? true) homeState?.changeSearch(false);
     searchTextController.clear();
     searchFocusNode.unfocus();
     animationController.reverse();
@@ -102,21 +97,42 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
     searchTextController.clear();
   }
 
+  List<GoodReceived> listData() {
+    if (isSearch) {
+      return listSearch ?? [];
+    } else {
+      return listGoodReceived[sliding] ?? [];
+    }
+  }
+
   Future<Null> actionRefresh() async {
     var params = {
       'goods_received_status': sliding == 0 ? 'delivering' : 'received',
     };
     params.addAll(filterData);
+    if (searchData != null && searchData.isNotEmpty) {
+      params.clear();
+      params.addAll(searchData);
+    }
     var status = await ApiClient.methodGet(ApiConfig.urlListGoodReceived,
         params: params, tagOrFlag: sliding, onBefore: (status) {
 //      Get.back();
     }, onSuccess: (data, flag) {
-      if (isFirst[flag]) isFirst[flag] = false;
       var baseResponse = BaseResponse.fromJson(data);
-      listGoodReceived[flag].clear();
-      listGoodReceived[flag]
-          .addAll(baseResponse?.data?.listGoodsReceived ?? []);
-      listGoodReceived[flag].sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      var newListGR = baseResponse?.data?.listGoodsReceived ?? [];
+      if (isSearch) {
+        if (listSearch == null)
+          listSearch = [];
+        else
+          listSearch?.clear();
+        listSearch.addAll(newListGR);
+      } else {
+        if (isFirst[flag]) isFirst[flag] = false;
+        listGoodReceived[flag].clear();
+        listGoodReceived[flag].addAll(newListGR);
+        listGoodReceived[flag]
+            .sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      }
     }, onFailed: (title, message) {
       Get.defaultDialog(title: title, content: Text(message));
     }, onError: (title, message) {

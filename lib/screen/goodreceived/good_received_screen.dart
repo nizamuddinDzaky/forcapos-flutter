@@ -5,7 +5,6 @@ import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
 import 'package:posku/model/GoodReceived.dart';
-import 'package:posku/screen/filter/filter_screen.dart';
 import 'package:posku/screen/goodreceived/good_received_view_model.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/util/resource/my_color.dart';
@@ -22,16 +21,10 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
   Widget build(BuildContext context) {
     return Consumer<HomeState>(
       builder: (context, homeState, _) {
-        final searchBar = IOSSearchBar(
-          controller: searchTextController,
-          focusNode: initSearch(
-              searchFocusNode: searchFocusNode, homeState: homeState),
-          animation: animation,
-          onCancel: () => cancelSearch(homeState: homeState),
-          onClear: clearSearch,
-          onSubmit: onSubmit,
-          onUpdate: onUpdate,
-        );
+        if (homeState.isBack) {
+          homeState.isBack = false;
+          cancelSearch(homeState: homeState, notify: false);
+        }
 
         return CupertinoPageScaffold(
           child: Scaffold(
@@ -62,18 +55,16 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                           padding: EdgeInsets.all(0.0),
                           onPressed: () async {
 //                          homeState?.changeSearch(true);
-                            searchFocusNode.requestFocus();
-/*
-                          var result = await Get.toNamed(
-                            filterScreen,
-                            arguments: filterData,
-                          );
-                          if (result != null &&
-                              result as Map<String, String> != null) {
-                            filterData = result as Map<String, String>;
-                            refreshIndicatorKey.currentState.show();
-                          }
-*/
+//                            searchFocusNode.requestFocus();
+                            var result = await Get.toNamed(
+                              filterScreen,
+                              arguments: filterData,
+                            );
+                            if (result != null &&
+                                result as Map<String, String> != null) {
+                              filterData = result as Map<String, String>;
+                              refreshIndicatorKey.currentState.show();
+                            }
                           },
                           child: Icon(
                             Icons.filter_list,
@@ -85,23 +76,24 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                           controller: TextEditingController(),
                           focusNode: initFocus(homeState: homeState),
                         ),
-//                        largeTitle: searchBar,
-//                        largeTitle: FlatButton(
-//                          child: Text('ok'),
-//                          onPressed: () {
-//                            homeState.changeSearch(true, action: () async {
-//                              await Future.delayed(Duration(milliseconds: 300));
-//                              searchFocusNode.requestFocus();
-//                            });
-//                          },
-//                        ),
                       ),
                     if (homeState.isSearch == true)
                       SliverToBoxAdapter(
                         child: Container(
                           padding: EdgeInsets.only(left: 8),
                           child: CupertinoNavigationBar(
-                            middle: searchBar,
+                            middle: IOSSearchBar(
+                              controller: searchTextController,
+                              focusNode: initSearch(
+                                searchFocusNode: searchFocusNode,
+                                homeState: homeState,),
+                              animation: animation,
+                              onCancel: () =>
+                                  cancelSearch(homeState: homeState),
+                              onClear: clearSearch,
+                              onSubmit: onSubmit,
+                              onUpdate: onUpdate,
+                            ),
                           ),
                         ),
                       ),
@@ -122,7 +114,7 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
     return RefreshIndicator(
       key: refreshIndicatorKey,
       onRefresh: actionRefresh,
-      child: listSearch == null
+      child: (listSearch == null || listSearch.isEmpty)
           ? LayoutBuilder(
               builder:
                   (BuildContext context, BoxConstraints viewportConstraints) {
@@ -131,7 +123,11 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                     constraints: BoxConstraints(
                         minHeight: viewportConstraints.maxHeight),
                     child: Center(
-                      child: Text('Mau cari apa nih?'),
+                      child: Text(
+                        listSearch == null
+                            ? 'Mau cari apa nih?'
+                            : 'Tidak menemukan hasil',
+                      ),
                     ),
                   ),
                 );
@@ -173,8 +169,8 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
       padding: EdgeInsets.symmetric(vertical: 8),
       physics: ClampingScrollPhysics(),
 //      controller: isFilter? null : _controller,
-      itemBuilder: (c, i) => _listItem(listGoodReceived[sliding][i], i),
-      itemCount: listGoodReceived[sliding].length,
+      itemBuilder: (c, i) => _listItem(listData()[i], i),
+      itemCount: listData().length,
     );
   }
 
