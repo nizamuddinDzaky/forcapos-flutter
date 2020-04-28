@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
+import 'package:posku/helper/my_screen.dart';
 import 'package:posku/screen/dashboard/report_screen.dart';
 import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/resource/my_color.dart';
@@ -16,8 +17,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  var heightTop = 0.0;
-
   _dialogLogout() {
     showDialog(
       context: context,
@@ -47,14 +46,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    heightTop = size.height * 0.24;
+    var screen = MyScreen(MediaQuery.of(context).size);
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             new SliverAppBar(
-                expandedHeight: heightTop,
+                expandedHeight: screen.hp(25),
                 primary: true,
                 automaticallyImplyLeading: false,
                 pinned: true,
@@ -84,8 +82,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   titlePadding: EdgeInsets.all(0),
+                  centerTitle: true,
                   title: Container(
-                    height: heightTop,
+                    height: screen.hp(27),
                     child: SafeArea(
                       child: Center(
                         child: Column(
@@ -118,6 +117,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               elevation: 0,
               primary: true,
               pinned: true,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(20.0),
+                child: Container(),
+              ),
               flexibleSpace: FlexibleSpaceBar(
                 background: Container(
                   decoration: BoxDecoration(
@@ -155,7 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   width: 48,
                                   fit: BoxFit.cover,
                                 ),
-                                //Text(data[1]),
+                                Text(data[1]),
                               ],
                             ),
                           ),

@@ -30,12 +30,12 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
       gr.statusPenerimaan = 'received';
       Get.back(result: gr.toJson());
     }, onFailed: (title, message) {
-      gr.statusPenerimaan = 'received';
-      Get.back(result: gr.toJson());
-//      CustomDialog.showAlertDialog(context,
-//          title: 'Gagal',
-//          message: message,
-//          leftAction: CustomDialog.customAction());
+//      gr.statusPenerimaan = 'received';
+//      Get.back(result: gr.toJson());
+      CustomDialog.showAlertDialog(context,
+          title: 'Gagal',
+          message: message,
+          leftAction: CustomDialog.customAction());
     }, onError: (title, message) {
       print('onerror');
     }, onAfter: (status) {
@@ -50,8 +50,8 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
 //    Get.back(result: {"isSuccess": true});
     var price = MyNumber.strIDToDouble(priceController.text);
     print('price $price');
-    await actionGRtoPO("abc", 45000.0);
-//    actionGRtoPO(gr.id, price);
+//    await actionGRtoPO("abc", 45000.0);
+    actionGRtoPO(gr.id, price);
   }
 
   void totalPrice() {

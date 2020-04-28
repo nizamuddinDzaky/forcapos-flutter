@@ -51,11 +51,13 @@ class _FilterState extends ChangeNotifier {
 
   //status
   List<List<String>> _statusDelivery = [
-    ['Menunggu', 'pending'],
-    ['Dikonfirmasi', 'confirmed'],
-    ['Ditutup', 'closed'],
-    ['Dipesan', 'receive'],
-    ['Dibatalkan', 'cancel'],
+//    ['Menunggu', 'pending'],
+//    ['Dikonfirmasi', 'confirmed'],
+//    ['Ditutup', 'closed'],
+//    ['Dipesan', 'receive'],
+//    ['Dibatalkan', 'cancel'],
+    ['Dikirim', 'delivering'],
+    ['Diterima', 'received'],
   ];
   List<String> _selectedStatus = ['', ''];
 
