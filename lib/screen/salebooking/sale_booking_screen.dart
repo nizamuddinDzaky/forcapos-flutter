@@ -176,6 +176,8 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
   }
 
   Widget _listItem(SalesBooking sb, int index) {
+    var paymentStyle = paymentStatus(sb.paymentStatus);
+    var deliveryStyle = paymentStatus(sb.deliveryStatus);
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
       elevation: 8,
@@ -208,6 +210,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                     width: 8,
                   ),
                   Expanded(
+                    flex: 4,
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 2),
                       child: Column(
@@ -235,32 +238,34 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                   SizedBox(
                     width: 8,
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(
-                        Icons.av_timer,
-                        size: 14,
-                      ),
-                      Container(
-                        constraints: BoxConstraints(minWidth: 0, maxWidth: 75),
-                        child: RichText(
-                          textAlign: TextAlign.left,
-                          softWrap: true,
-                          text: TextSpan(children: <TextSpan>[
-                            TextSpan(
-                                text: timeAGo.format(
-                                    DateTime.tryParse('${sb.createdAt}') ??
-                                        DateTime.now(),
-                                    locale: 'id',
-                                    allowFromNow: true),
-                                style: TextStyle(
-                                    color: MyColor.txtField,
-                                    fontWeight: FontWeight.bold)),
-                          ]),
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(
+                          Icons.av_timer,
+                          size: 14,
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: RichText(
+                            textAlign: TextAlign.left,
+                            softWrap: true,
+                            text: TextSpan(children: <TextSpan>[
+                              TextSpan(
+                                  text: timeAGo.format(
+                                      DateTime.tryParse('${sb.createdAt}') ??
+                                          DateTime.now(),
+                                      locale: 'id',
+                                      allowFromNow: true),
+                                  style: TextStyle(
+                                      color: MyColor.txtField,
+                                      fontWeight: FontWeight.bold)),
+                            ]),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -276,9 +281,9 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                   children: <Widget>[
                     Text('Status Pembayaran'),
                     Text(
-                      '${sb.paymentStatus}',
+                      '${paymentStyle[0]}',
                       style: TextStyle(
-                        color: MyColor.mainRed,
+                        color: paymentStyle[1],
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -288,9 +293,9 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                   children: <Widget>[
                     Text('Status Pengiriman'),
                     Text(
-                      '${sb.deliveryStatus}',
+                      '${deliveryStyle[0]}',
                       style: TextStyle(
-                        color: MyColor.mainRed,
+                        color: deliveryStyle[1],
                         fontWeight: FontWeight.bold,
                       ),
                     ),
