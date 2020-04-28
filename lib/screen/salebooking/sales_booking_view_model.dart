@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:posku/api/api_client.dart';
+import 'package:posku/api/api_config.dart';
+import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/salebooking/sale_booking_screen.dart';
+import 'package:posku/util/resource/my_string.dart';
 
 abstract class SalesBookingViewModel extends State<SalesBookingScreen>
     with SingleTickerProviderStateMixin {
@@ -13,8 +18,7 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
   AnimationController animationController;
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
   new GlobalKey<RefreshIndicatorState>();
-//  List<bool> isFirst = [true, true, true];
-  List<bool> isFirst = [false, false, true];
+  List<bool> isFirst = [true, true, true];
   List<List<SalesBooking>> listSalesBooking = [[], [], []];
   List<SalesBooking> listSearch;
   Map<String, String> filterData = {'date': 'desc'};
@@ -101,15 +105,56 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
     }
   }
 
+  String getSaleStatus() {
+    switch(sliding) {
+      case 1:
+        return 'reserved';
+      case 2:
+        return 'closed';
+      default:
+        return 'pending';
+    }
+  }
+
   Future<Null> actionRefresh() async {
-    if (isFirst[sliding]) isFirst[sliding] = false;
-    listSalesBooking[sliding].clear();
-    listSalesBooking[sliding].addAll([
-      SalesBooking(),
-      SalesBooking(),
-      SalesBooking(),
-    ]);
-    setState(() {});
+    var params = {
+      MyString.KEY_SALE_STATUS: getSaleStatus(),
+    };
+    params.addAll(filterData);
+    if (searchData != null && searchData.isNotEmpty) {
+      params.clear();
+      params.addAll(searchData);
+    }
+    var status = await ApiClient.methodGet(ApiConfig.urlListSalesBooking,
+        params: params, tagOrFlag: sliding, onBefore: (status) {
+//      Get.back();
+        }, onSuccess: (data, flag) {
+          var baseResponse = BaseResponse.fromJson(data);
+          var newListSB = baseResponse?.data?.listSalesBooking ?? [];
+          if (isSearch) {
+            if (listSearch == null)
+              listSearch = [];
+            else
+              listSearch?.clear();
+            listSearch.addAll(newListSB);
+          } else {
+            if (isFirst[flag]) isFirst[flag] = false;
+            listSalesBooking[flag].clear();
+            listSalesBooking[flag].addAll(newListSB);
+            listSalesBooking[flag]
+                .sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          }
+        }, onFailed: (title, message) {
+          Get.defaultDialog(title: title, content: Text(message));
+        }, onError: (title, message) {
+          Get.defaultDialog(title: title, content: Text(message));
+        }, onAfter: (status) {
+//      if (status == ResponseStatus.success)
+//        MyPref.setRemember(isRemember, currentData);
+        });
+    setState(() {
+      status.execute();
+    });
 
     return null;
   }

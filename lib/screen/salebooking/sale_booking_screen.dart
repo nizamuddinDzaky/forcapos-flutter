@@ -48,7 +48,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                           onValueChanged: (newValue) {
                             setState(() {
                               sliding = newValue;
-                              //if (isFirst[sliding]) actionRefresh();
+                              if (isFirst[sliding]) actionRefresh();
                             });
                           },
                         ),
@@ -215,7 +215,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            '${sb.saleId}',
+                            '${sb.referenceNo}',
                             style: TextStyle(
                               color: MyColor.blueDio,
                               fontWeight: FontWeight.bold,
@@ -243,7 +243,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                         size: 14,
                       ),
                       Container(
-                        width: 75,
+                        constraints: BoxConstraints(minWidth: 0, maxWidth: 75),
                         child: RichText(
                           textAlign: TextAlign.left,
                           softWrap: true,
@@ -260,19 +260,6 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                           ]),
                         ),
                       ),
-/*
-                      Text(
-                        timeAGo.format(
-                            DateTime.tryParse('${sb.createdAt}') ??
-                                DateTime.now(),
-                            locale: 'id',
-                            allowFromNow: true),
-                        style: TextStyle(
-                          color: MyColor.mainRed,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-*/
                     ],
                   ),
                 ],
