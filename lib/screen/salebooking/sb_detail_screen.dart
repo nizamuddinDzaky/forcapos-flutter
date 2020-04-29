@@ -38,7 +38,12 @@ class _SBDetailScreenState extends SBDetailViewModel {
                   Stack(
                     children: <Widget>[
                       if (data == null)
-                        Center(child: CupertinoActivityIndicator()),
+                        Positioned.fill(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: CupertinoActivityIndicator(),
+                          ),
+                        ),
                       (data == null)
                           ? Column(
                               children: <Widget>[
@@ -352,13 +357,161 @@ class _SBDetailScreenState extends SBDetailViewModel {
     );
   }
 
+  Widget widgetDetail() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        children: <Widget>[
+          FutureBuilder(
+            future: getDetailCustomer(sb?.customerId),
+            builder: (context, snapshot) {
+              if (sbItems == null ||
+                  snapshot.connectionState !=
+                      ConnectionState.done) {
+                return tileInfo('Dipesan Oleh', data: null);
+              }
+
+              var address = [
+                customer?.region,
+                customer?.state,
+                customer?.country
+              ];
+              address.removeWhere((s) => s == null);
+              return tileInfo('Dipesan Oleh', data: {
+                0: 'Dipesan Oleh',
+                1: customer?.name ?? '',
+                2: customer?.address ?? '',
+                3: address.join(' - ')
+              });
+            },
+          ),
+          MyDivider.lineDivider(),
+          FutureBuilder(
+            future: getDetailSupplier(sb?.companyId),
+            builder: (context, snapshot) {
+              if (sbItems == null ||
+                  snapshot.connectionState !=
+                      ConnectionState.done) {
+                return tileInfo('Distributor', data: null);
+              }
+
+              return tileInfo('Distributor', data: {
+                0: 'Distributor',
+                1: supplier?.name ?? '',
+                2: supplier?.address ?? '',
+                3: supplier?.state ?? ''
+              });
+            },
+          ),
+          MyDivider.lineDivider(),
+          FutureBuilder(
+            future: getDetailWarehouse(sb?.warehouseId),
+            builder: (context, snapshot) {
+              if (sbItems == null ||
+                  snapshot.connectionState !=
+                      ConnectionState.done) {
+                return tileInfo('Gudang', data: null);
+              }
+
+              return tileInfo('Gudang', data: {
+                0: 'Gudang',
+                1: warehouse?.name ?? '',
+                2: warehouse?.address ?? '',
+              });
+            },
+          ),
+          MyDivider.spaceDividerLogin(),
+          sectionDetail(),
+          MyDivider.spaceDividerLogin(),
+          sectionDO(noDo: sb.saleStatus),
+          MyDivider.lineDivider(),
+          FutureBuilder(
+            future: getSalesBookingItem(sb.id),
+            builder: (context, snapshot) {
+              if (sbItems == null ||
+                  snapshot.connectionState !=
+                      ConnectionState.done) {
+                return Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16,
+                  ),
+                  child: Center(
+                      child: CupertinoActivityIndicator()),
+                );
+              }
+              return ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: sbItems?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return listProductItem(sbItems[index]);
+                },
+                separatorBuilder: (context, index) {
+                  return MyDivider.lineDivider();
+                },
+              );
+            },
+          ),
+          MyDivider.lineDivider(),
+          sectionTotal(),
+        ],
+      ),
+    );
+  }
+
+  Widget widgetPayment() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        children: <Widget>[
+          Text('Tab Bayar'),
+        ],
+      ),
+    );
+  }
+
+  Widget widgetDelivery() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        children: <Widget>[
+          Text('Tab Kirim'),
+        ],
+      ),
+    );
+  }
+
+  Widget body() {
+    switch(sliding) {
+      case 1:
+        return widgetPayment();
+      case 2:
+        return widgetDelivery();
+      default:
+        return widgetDetail();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: 'Balik',
-        middle: Text(
-          'Rincian Pembelian',
+        middle: CupertinoSlidingSegmentedControl(
+          children: {
+            0: Container(child: Text('Rincian')),
+            1: Container(child: Text('Bayar')),
+            2: Container(child: Text('Kirim')),
+          },
+          groupValue: sliding,
+          onValueChanged: (newValue) {
+            setState(() {
+              sliding = newValue;
+//              if (isFirst[sliding]) actionRefresh();
+            });
+          },
         ),
       ),
       child: Scaffold(
@@ -368,112 +521,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
             onRefresh: actionRefresh,
             child: Container(
               color: MyColor.mainBg,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Column(
-                        children: <Widget>[
-                          FutureBuilder(
-                            future: getDetailCustomer(sb?.customerId),
-                            builder: (context, snapshot) {
-                              if (sbItems == null ||
-                                  snapshot.connectionState !=
-                                      ConnectionState.done) {
-                                return tileInfo('Dipesan Oleh', data: null);
-                              }
-
-                              var address = [
-                                customer?.region,
-                                customer?.state,
-                                customer?.country
-                              ];
-                              address.removeWhere((s) => s == null);
-                              return tileInfo('Dipesan Oleh', data: {
-                                0: 'Dipesan Oleh',
-                                1: customer?.name ?? '',
-                                2: customer?.address ?? '',
-                                3: address.join(' - ')
-                              });
-                            },
-                          ),
-                          MyDivider.lineDivider(),
-                          FutureBuilder(
-                            future: getDetailSupplier(sb?.companyId),
-                            builder: (context, snapshot) {
-                              if (sbItems == null ||
-                                  snapshot.connectionState !=
-                                      ConnectionState.done) {
-                                return tileInfo('Distributor', data: null);
-                              }
-
-                              return tileInfo('Distributor', data: {
-                                0: 'Distributor',
-                                1: supplier?.name ?? '',
-                                2: supplier?.address ?? '',
-                                3: supplier?.state ?? ''
-                              });
-                            },
-                          ),
-                          MyDivider.lineDivider(),
-                          FutureBuilder(
-                            future: getDetailWarehouse(sb?.warehouseId),
-                            builder: (context, snapshot) {
-                              if (sbItems == null ||
-                                  snapshot.connectionState !=
-                                      ConnectionState.done) {
-                                return tileInfo('Gudang', data: null);
-                              }
-
-                              return tileInfo('Gudang', data: {
-                                0: 'Gudang',
-                                1: warehouse?.name ?? '',
-                                2: warehouse?.address ?? '',
-                              });
-                            },
-                          ),
-                          MyDivider.spaceDividerLogin(),
-                          sectionDetail(),
-                          MyDivider.spaceDividerLogin(),
-                          sectionDO(noDo: sb.saleStatus),
-                          MyDivider.lineDivider(),
-                          FutureBuilder(
-                            future: getSalesBookingItem(sb.id),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState !=
-                                  ConnectionState.done) {
-                                return Container(
-                                  color: Colors.white,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 16,
-                                  ),
-                                  child: Center(
-                                      child: CupertinoActivityIndicator()),
-                                );
-                              }
-                              return ListView.separated(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: sbItems.length,
-                                itemBuilder: (context, index) {
-                                  return listProductItem(sbItems[index]);
-                                },
-                                separatorBuilder: (context, index) {
-                                  return MyDivider.lineDivider();
-                                },
-                              );
-                            },
-                          ),
-                          MyDivider.lineDivider(),
-                          sectionTotal(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              child: body(),
             ),
           ),
         ),

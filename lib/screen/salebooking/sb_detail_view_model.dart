@@ -16,7 +16,7 @@ import 'package:posku/util/resource/my_string.dart';
 
 abstract class SBDetailViewModel extends State<SBDetailScreen> {
   bool isFirst = true;
-//  String idSb;
+  int sliding = 0;
   SalesBooking sb;
   SalesBooking newSb;
   List<SalesBookingItem> sbItems;
@@ -174,57 +174,12 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
     return null;
   }
 
-  actionGetDetailSB() async {
-    /*
-    var params = {
-      MyString.KEY_ID_GOODS_RECEIVED: idGr,
-    };
-    var status = await ApiClient.methodGet(
-      ApiConfig.urlDetailGoodReceived,
-      params: params,
-      onBefore: (status) {
-        print('onbefore');
-      },
-      onSuccess: (data, flag) {
-        var baseResponse = BaseResponse.fromJson(data);
-        setState(() {
-//          sb = baseResponse.data.goodReceived;
-//          sbItems = baseResponse.data.goodReceivedItems;
-        });
-        print('onsuccess');
-      },
-      onFailed: (title, message) {
-        print('onfailed');
-      },
-      onError: (title, message) {
-        print('onerror');
-      },
-      onAfter: (status) {
-        print('onafter');
-      },
-    );
-    status.execute();
-     */
-    sbItems = [
-      for (int i = 0; i < 3; i++)
-        SalesBookingItem(
-          productName: 'Semen',
-          productUnitCode: 'SAK',
-          realUnitPrice: '45000',
-          quantity: '200',
-          unitPrice: '42000',
-        ),
-    ];
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (Get.args(context) != null && isFirst) {
       var arg = Get.args(context) as Map<String, dynamic>;
       sb = SalesBooking.fromJson(arg ?? {});
-//      idSb = sb.id;
-//      actionGetDetailSB();
       isFirst = false;
     }
     (ModalRoute.of(context) as CustomCupertinoPageRoute)?.resultPop =
