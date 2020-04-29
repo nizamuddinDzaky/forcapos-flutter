@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/screen/salebooking/sb_detail_view_model.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
-import 'package:posku/util/resource/my_image.dart';
 import 'package:posku/util/widget/my_divider.dart';
 
 class SBDetailScreen extends StatefulWidget {
@@ -13,7 +13,7 @@ class SBDetailScreen extends StatefulWidget {
 }
 
 class _SBDetailScreenState extends SBDetailViewModel {
-  Widget tileInfo({Map<int, dynamic> data = const {}}) {
+  Widget tileInfo(String title, {Map<int, dynamic> data = const {}}) {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -25,29 +25,52 @@ class _SBDetailScreenState extends SBDetailViewModel {
             Icons.location_on,
             color: MyColor.mainRed,
           ),
-          Container(
-            padding: EdgeInsets.only(left: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  data[0] ?? '',
-                  style: TextStyle(color: MyColor.txtBlack),
-                ),
-                Text(
-                  data[1] ?? '',
-                  style: TextStyle(
-                      color: MyColor.txtBlack, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  data[2] ?? '',
-                  style: TextStyle(color: MyColor.txtField),
-                ),
-                Text(
-                  data[3] ?? '',
-                  style: TextStyle(color: MyColor.txtField),
-                ),
-              ],
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(left: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    title,
+                    style: TextStyle(color: MyColor.txtBlack),
+                  ),
+                  Stack(
+                    children: <Widget>[
+                      if (data == null)
+                        Center(child: CupertinoActivityIndicator()),
+                      (data == null)
+                          ? Column(
+                              children: <Widget>[
+                                Text(''),
+                                Text(''),
+                                Text(''),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  data[1] ?? '',
+                                  style: TextStyle(
+                                      color: MyColor.txtBlack,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  data[2]?.toString()?.trim() ?? '',
+                                  style: TextStyle(color: MyColor.txtField),
+                                ),
+                                if (data[3] != null)
+                                  Text(
+                                    data[3] ?? 'tes',
+                                    style: TextStyle(color: MyColor.txtField),
+                                  ),
+                              ],
+                            ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -61,16 +84,14 @@ class _SBDetailScreenState extends SBDetailViewModel {
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Row(
         children: <Widget>[
-          Icon(
-            Icons.book
-          ),
+          Icon(Icons.book),
           SizedBox(
             width: 8,
           ),
           Text(
             'Produk',
-            style: TextStyle(
-                color: MyColor.txtField, fontWeight: FontWeight.bold),
+            style:
+                TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -88,12 +109,12 @@ class _SBDetailScreenState extends SBDetailViewModel {
           Text(
             key ?? '',
             style:
-            TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
+                TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
           ),
           Text(
             '${MyNumber.toNumberIdStr(value)}',
-            style:
-            TextStyle(color: color ?? MyColor.txtField, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: color ?? MyColor.txtField, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -106,10 +127,23 @@ class _SBDetailScreenState extends SBDetailViewModel {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         children: <Widget>[
-          sectionTotalDetail('Diskon Pesanan (Rp)', '10000', color: MyColor.mainGreen),
-          sectionTotalDetail('Jumlah (Rp)', '10000'),
-          sectionTotalDetail('Dibayar (Rp)', '10000'),
-          sectionTotalDetail('Jumlah Akhir (Rp)', '10000'),
+          sectionTotalDetail(
+            'Diskon Pesanan (Rp)',
+            sb.totalDiscount,
+            color: MyColor.mainGreen,
+          ),
+          sectionTotalDetail(
+            'Jumlah (Rp)',
+            sb.total,
+          ),
+          sectionTotalDetail(
+            'Dibayar (Rp)',
+            sb.paid,
+          ),
+          sectionTotalDetail(
+            'Jumlah Akhir (Rp)',
+            sb.grandTotal,
+          ),
         ],
       ),
     );
@@ -124,9 +158,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(
-            Icons.insert_drive_file
-          ),
+          Icon(Icons.insert_drive_file),
           SizedBox(
             width: 8,
           ),
@@ -141,13 +173,13 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         children: <Widget>[
                           Text(
                             'Referensi',
-                            style:
-                            TextStyle(color: MyColor.txtField),
+                            style: TextStyle(color: MyColor.txtField),
                           ),
                           Text(
                             '${sb.referenceNo}',
-                            style:
-                            TextStyle(color: MyColor.txtBlack, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: MyColor.txtBlack,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -158,13 +190,13 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         children: <Widget>[
                           Text(
                             'Tanggal',
-                            style:
-                            TextStyle(color: MyColor.txtField),
+                            style: TextStyle(color: MyColor.txtField),
                           ),
                           Text(
                             '${strToDateTimeFormat(sb.createdAt)}',
-                            style:
-                            TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: MyColor.txtField,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -182,13 +214,13 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         children: <Widget>[
                           Text(
                             'Status Penjualan',
-                            style:
-                            TextStyle(color: MyColor.txtField),
+                            style: TextStyle(color: MyColor.txtField),
                           ),
                           Text(
                             '${statusStyle[0]}',
-                            style:
-                            TextStyle(color: statusStyle[1], fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: statusStyle[1],
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -199,13 +231,13 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         children: <Widget>[
                           Text(
                             'Status Pengiriman',
-                            style:
-                            TextStyle(color: MyColor.txtField),
+                            style: TextStyle(color: MyColor.txtField),
                           ),
                           Text(
                             '${deliveryStyle[0]}',
-                            style:
-                            TextStyle(color: deliveryStyle[1], fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: deliveryStyle[1],
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -220,17 +252,13 @@ class _SBDetailScreenState extends SBDetailViewModel {
     );
   }
 
-  Widget listProductItem({Map<int, dynamic> data = const {}}) {
+  Widget listProductItem(SalesBookingItem sbi) {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-//          Image.asset(
-//            kImageDynamix,
-//            width: 75,
-//          ),
           Container(
             width: 64,
             height: 64,
@@ -254,7 +282,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    data[0] ?? '',
+                    sbi.productName ?? '',
                     maxLines: 2,
                     style: TextStyle(
                       fontSize: 20,
@@ -275,19 +303,21 @@ class _SBDetailScreenState extends SBDetailViewModel {
                   ),
                   Row(
                     children: <Widget>[
-                      Text(
-                        data[1] ?? '',
-                        textScaleFactor: 1.0,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: MyColor.mainRed,
+                      if (MyNumber.strUSToDouble(sbi.discount) > 0)
+                        Text(
+                          MyNumber.toNumberRpStr(sbi.discount) ?? '',
+                          textScaleFactor: 1.0,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: MyColor.mainRed,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
+                      if (MyNumber.strUSToDouble(sbi.discount) > 0)
+                        SizedBox(
+                          width: 8,
+                        ),
                       Text(
-                        data[4] ?? '',
+                        MyNumber.toNumberRpStr(sbi.unitPrice) ?? '',
                         textScaleFactor: 1.0,
                         style: TextStyle(
                           fontSize: 16,
@@ -305,7 +335,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Text(
-                data[2] ?? '',
+                MyNumber.toNumberIdStr(sbi.quantity) ?? '',
                 style: TextStyle(
                   fontSize: 20,
                   color: MyColor.txtField,
@@ -313,7 +343,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                 ),
               ),
               Text(
-                data[3] ?? '',
+                sbi.productUnitCode ?? '',
               ),
             ],
           )
@@ -345,51 +375,99 @@ class _SBDetailScreenState extends SBDetailViewModel {
                       padding: EdgeInsets.symmetric(vertical: 12),
                       child: Column(
                         children: <Widget>[
-                          tileInfo(data: {
-                            0: 'Dipesan Oleh',
-                            1: sb.saleStatus,
-                            2: sb.saleStatus,
-                            3: sb.saleStatus
-                          }),
+                          FutureBuilder(
+                            future: getDetailCustomer(sb?.customerId),
+                            builder: (context, snapshot) {
+                              if (sbItems == null ||
+                                  snapshot.connectionState !=
+                                      ConnectionState.done) {
+                                return tileInfo('Dipesan Oleh', data: null);
+                              }
+
+                              var address = [
+                                customer?.region,
+                                customer?.state,
+                                customer?.country
+                              ];
+                              address.removeWhere((s) => s == null);
+                              return tileInfo('Dipesan Oleh', data: {
+                                0: 'Dipesan Oleh',
+                                1: customer?.name ?? '',
+                                2: customer?.address ?? '',
+                                3: address.join(' - ')
+                              });
+                            },
+                          ),
                           MyDivider.lineDivider(),
-                          tileInfo(data: {
-                            0: 'Distributor',
-                            1: sb.saleStatus,
-                            2: sb.saleStatus,
-                            3: sb.saleStatus
-                          }),
+                          FutureBuilder(
+                            future: getDetailSupplier(sb?.companyId),
+                            builder: (context, snapshot) {
+                              if (sbItems == null ||
+                                  snapshot.connectionState !=
+                                      ConnectionState.done) {
+                                return tileInfo('Distributor', data: null);
+                              }
+
+                              return tileInfo('Distributor', data: {
+                                0: 'Distributor',
+                                1: supplier?.name ?? '',
+                                2: supplier?.address ?? '',
+                                3: supplier?.state ?? ''
+                              });
+                            },
+                          ),
                           MyDivider.lineDivider(),
-                          tileInfo(data: {
-                            0: 'Gudang',
-                            1: sb.saleStatus,
-                            2: '${sb.saleStatus} - ${sb.saleStatus}',
-                            3: sb.saleStatus,
-                          }),
+                          FutureBuilder(
+                            future: getDetailWarehouse(sb?.warehouseId),
+                            builder: (context, snapshot) {
+                              if (sbItems == null ||
+                                  snapshot.connectionState !=
+                                      ConnectionState.done) {
+                                return tileInfo('Gudang', data: null);
+                              }
+
+                              return tileInfo('Gudang', data: {
+                                0: 'Gudang',
+                                1: warehouse?.name ?? '',
+                                2: warehouse?.address ?? '',
+                              });
+                            },
+                          ),
                           MyDivider.spaceDividerLogin(),
                           sectionDetail(),
                           MyDivider.spaceDividerLogin(),
                           sectionDO(noDo: sb.saleStatus),
                           MyDivider.lineDivider(),
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: sbItems.length,
-                            itemBuilder: (context, index) {
-                              return listProductItem(data: {
-                                0: sbItems[index].productName,
-                                1: MyNumber.toNumberRpStr(sbItems[index].realUnitPrice),
-                                2: MyNumber.toNumberIdStr(sbItems[index].quantity),
-                                3: sbItems[index].productUnitCode,
-                                4: MyNumber.toNumberRpStr(sbItems[index].unitPrice),
-                              });
-                            },
-                            separatorBuilder: (context, index) {
-                              return MyDivider.lineDivider();
+                          FutureBuilder(
+                            future: getSalesBookingItem(sb.id),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState !=
+                                  ConnectionState.done) {
+                                return Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 16,
+                                  ),
+                                  child: Center(
+                                      child: CupertinoActivityIndicator()),
+                                );
+                              }
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: sbItems.length,
+                                itemBuilder: (context, index) {
+                                  return listProductItem(sbItems[index]);
+                                },
+                                separatorBuilder: (context, index) {
+                                  return MyDivider.lineDivider();
+                                },
+                              );
                             },
                           ),
                           MyDivider.lineDivider(),
-                          sectionTotal(
-                              totalItem: MyNumber.toNumberIdStr(sb.grandTotal)),
+                          sectionTotal(),
                         ],
                       ),
                     ),
