@@ -7,7 +7,6 @@ import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/salebooking/sale_booking_screen.dart';
-import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/resource/my_string.dart';
 
 abstract class SalesBookingViewModel extends State<SalesBookingScreen>
@@ -114,34 +113,6 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
         return 'closed';
       default:
         return 'pending';
-    }
-  }
-
-  paymentStatus(status) {
-    switch(status) {
-      case 'paid':
-        return ['Lunas', MyColor.mainGreen];
-      case 'partial':
-        return ['Sebagian', MyColor.mainBlue];
-      case 'due':
-        return ['Jatuh tempo', MyColor.mainOrange];
-      default:
-        return ['Menunggu', MyColor.mainRed];
-    }
-  }
-
-  deliveryStatus(status) {
-    switch(status) {
-      case 'packing':
-        return ['Dikemas', MyColor.mainBlue];
-      case 'delivering':
-        return ['Sedang dikirim', MyColor.blueDio];
-      case 'delivered':
-        return ['Selesai', MyColor.mainGreen];
-      case 'returned':
-        return ['Dikembalikan', MyColor.mainOrange];
-      default:
-        return ['Menunggu', MyColor.mainRed];
     }
   }
 

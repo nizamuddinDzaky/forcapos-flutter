@@ -8,6 +8,7 @@ import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/salebooking/sales_booking_view_model.dart';
 import 'package:posku/util/my_number.dart';
+import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeAGo;
@@ -177,7 +178,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
 
   Widget _listItem(SalesBooking sb, int index) {
     var paymentStyle = paymentStatus(sb.paymentStatus);
-    var deliveryStyle = paymentStatus(sb.deliveryStatus);
+    var deliveryStyle = deliveryStatus(sb.deliveryStatus);
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
       elevation: 8,
@@ -311,7 +312,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
           InkWell(
             onTap: () async {
               var result =
-                  await Get.toNamed(grDetailScreen, arguments: sb.toJson());
+                  await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
               if (result != null) {
                 setState(() {
                   var newGr = SalesBooking.fromJson(result);
