@@ -7,6 +7,7 @@ import 'package:posku/screen/goodreceived/gr_detail_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/login/forgot_password_screen.dart';
 import 'package:posku/screen/login/login_screen.dart';
+import 'package:posku/screen/salebooking/sb_detail_screen.dart';
 import 'package:posku/screen/splash_screen.dart';
 
 const String root = "/";
@@ -15,6 +16,7 @@ const forgotPasswordScreen = "/ForgotPasswordScreen";
 const homeScreen = "/HomeScreen";
 const grConfirmationScreen = "/GrConfirmationScreen";
 const grDetailScreen = "/GrDetailScreen";
+const sbDetailScreen = "/SbDetailScreen";
 const filterScreen = "/FilterScreen";
 
 class MyRouter {
@@ -53,6 +55,11 @@ class MyRouter {
         return CustomCupertinoPageRoute(
           settings: settings,
           builder: (BuildContext context) => GRDetailScreen(),
+        );
+      case sbDetailScreen:
+        return CustomCupertinoPageRoute(
+          settings: settings,
+          builder: (BuildContext context) => SBDetailScreen(),
         );
       case filterScreen:
         return GetRoute(
