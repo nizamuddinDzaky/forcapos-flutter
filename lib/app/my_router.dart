@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/helper/custom_cupertino_page_route.dart';
+import 'package:posku/screen/delivery/detail_delivery_screen.dart';
 import 'package:posku/screen/filter/filter_screen.dart';
 import 'package:posku/screen/goodreceived/gr_confirmation_screen.dart';
 import 'package:posku/screen/goodreceived/gr_detail_screen.dart';
@@ -18,6 +19,7 @@ const grConfirmationScreen = "/GrConfirmationScreen";
 const grDetailScreen = "/GrDetailScreen";
 const sbDetailScreen = "/SbDetailScreen";
 const filterScreen = "/FilterScreen";
+const detailDeliveryScreen = "/DetailDeliveryScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -60,6 +62,11 @@ class MyRouter {
         return CustomCupertinoPageRoute(
           settings: settings,
           builder: (BuildContext context) => SBDetailScreen(),
+        );
+      case detailDeliveryScreen:
+        return CustomCupertinoPageRoute(
+          settings: settings,
+          builder: (BuildContext context) => DetailDeliveryScreen(),
         );
       case filterScreen:
         return GetRoute(

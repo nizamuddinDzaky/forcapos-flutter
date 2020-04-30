@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:posku/app/my_router.dart';
+import 'package:posku/model/delivery.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/screen/salebooking/sb_detail_view_model.dart';
@@ -1015,16 +1017,15 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 color: MyColor.txtField,
                               ),
                               InkWell(
-                                onTap: () {
-                                  print('klik detail payment');
-//                  var result =
-//                  await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
-//                  if (result != null) {
-//                    setState(() {
-//                      var newGr = SalesBooking.fromJson(result);
-//                      sb.saleStatus = newGr.saleStatus;
-//                    });
-//                  }
+                                onTap: () async {
+                                  var result = await Get.toNamed(detailDeliveryScreen,
+                                      arguments: listDelivery[index].toJson());
+                                  if (result != null) {
+                                    setState(() {
+                                      var newDelivery = Delivery.fromJson(result);
+                                      //sb.saleStatus = newGr.saleStatus;
+                                    });
+                                  }
                                 },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
