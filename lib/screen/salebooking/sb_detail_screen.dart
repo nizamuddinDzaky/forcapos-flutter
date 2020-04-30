@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/screen/salebooking/sb_detail_view_model.dart';
 import 'package:posku/util/my_number.dart';
@@ -366,8 +367,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
             future: getDetailCustomer(sb?.customerId),
             builder: (context, snapshot) {
               if (sbItems == null ||
-                  snapshot.connectionState !=
-                      ConnectionState.done) {
+                  snapshot.connectionState != ConnectionState.done) {
                 return tileInfo('Dipesan Oleh', data: null);
               }
 
@@ -390,8 +390,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
             future: getDetailSupplier(sb?.companyId),
             builder: (context, snapshot) {
               if (sbItems == null ||
-                  snapshot.connectionState !=
-                      ConnectionState.done) {
+                  snapshot.connectionState != ConnectionState.done) {
                 return tileInfo('Distributor', data: null);
               }
 
@@ -408,8 +407,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
             future: getDetailWarehouse(sb?.warehouseId),
             builder: (context, snapshot) {
               if (sbItems == null ||
-                  snapshot.connectionState !=
-                      ConnectionState.done) {
+                  snapshot.connectionState != ConnectionState.done) {
                 return tileInfo('Gudang', data: null);
               }
 
@@ -429,16 +427,14 @@ class _SBDetailScreenState extends SBDetailViewModel {
             future: getSalesBookingItem(sb.id),
             builder: (context, snapshot) {
               if (sbItems == null ||
-                  snapshot.connectionState !=
-                      ConnectionState.done) {
+                  snapshot.connectionState != ConnectionState.done) {
                 return Container(
                   color: Colors.white,
                   padding: EdgeInsets.symmetric(
                     vertical: 8,
                     horizontal: 16,
                   ),
-                  child: Center(
-                      child: CupertinoActivityIndicator()),
+                  child: Center(child: CupertinoActivityIndicator()),
                 );
               }
               return ListView.separated(
@@ -461,15 +457,214 @@ class _SBDetailScreenState extends SBDetailViewModel {
     );
   }
 
+  List<Payment> listPayment = [
+    Payment(),
+    Payment(),
+    Payment(),
+    Payment(),
+  ];
   Widget widgetPayment() {
     return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.insert_drive_file,
+                  size: 16,
+                  color: MyColor.blueDio,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text('Daftar Pembayaran',
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle
+                        .copyWith(color: Colors.black)),
+              ],
+            ),
+          ),
+          ListView.separated(
+//            padding: EdgeInsets.symmetric(vertical: 12),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (buildContext, index) {
+              return Container(
+                color: Colors.white,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 64,
+                            height: 64,
+                            decoration: BoxDecoration(
+                              color: MyColor.blueDio,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                            ),
+                            child: Center(
+                              child: Text('PoS',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .title
+                                      .copyWith(color: Colors.white)),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    'No Referensi',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: MyColor.txtField,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    listPayment[index].toString() ?? '1234567890',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: MyColor.txtField,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Column(
+                                        children: <Widget>[
+                                          Text(
+                                            'Nominal',
+                                            textScaleFactor: 1.0,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: MyColor.txtField,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Nominal',
+                                            textScaleFactor: 1.0,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: MyColor.txtField,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            'Tipe Pembayaran',
+                                            textScaleFactor: 1.0,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: MyColor.txtField,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Tunai',
+                                            textScaleFactor: 1.0,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: MyColor.txtField,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                    InkWell(
+                      onTap: () async {
+//                  var result =
+//                  await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
+//                  if (result != null) {
+//                    setState(() {
+//                      var newGr = SalesBooking.fromJson(result);
+//                      sb.saleStatus = newGr.saleStatus;
+//                    });
+//                  }
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.access_time,
+                                  size: 16,
+                                  color: MyColor.txtField,
+                                ),
+                                Text(
+                                  ' ${sb.createdBy}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: MyColor.txtField),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'Selengkapnya',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, color: MyColor.mainBlue),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (buildContext, index) {
+              return MyDivider.lineDivider(bottom: 12);
+            },
+            itemCount: listPayment?.length ?? 0,
+          ),
+        ],
+      ),
+    );
+    /*return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 12),
       child: Column(
         children: <Widget>[
           Text('Tab Bayar'),
         ],
       ),
-    );
+    );*/
   }
 
   Widget widgetDelivery() {
@@ -484,7 +679,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
   }
 
   Widget body() {
-    switch(sliding) {
+    switch (sliding) {
       case 1:
         return widgetPayment();
       case 2:
