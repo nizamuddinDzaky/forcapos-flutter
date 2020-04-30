@@ -3,6 +3,7 @@ import 'package:posku/model/GoodReceivedItem.dart';
 import 'package:posku/model/company.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/model/delivery.dart';
+import 'package:posku/model/delivery_item.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
@@ -21,6 +22,8 @@ class DataResponse {
   Warehouse warehouse;
   List<Payment> listPayment;
   List<Delivery> listDelivery;
+  Delivery delivery;
+  List<DeliveryItem> deliveryItems;
 
   DataResponse(
       {this.totalGoodsReceived, this.listGoodsReceived, this.goodReceived, this.listSalesBooking});
@@ -51,6 +54,12 @@ class DataResponse {
   }
 
   DataResponse.fromJson(Map<String, dynamic> json) {
+    deliveryItems = ifExistList(json, 'delivery_items', (obj) {
+      return DeliveryItem.fromJson(obj);
+    });
+    delivery = ifExistObject(json, 'delivery', (obj) {
+      return Delivery.fromJson(obj);
+    });
     listDelivery = ifExistList(json, 'list_deliveries_booking', (obj) {
       return Delivery.fromJson(obj);
     });

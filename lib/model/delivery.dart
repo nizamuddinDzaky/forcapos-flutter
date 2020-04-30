@@ -28,37 +28,57 @@ class Delivery {
   String isApproval;
   String isReject;
   String isConfirm;
+  String biller;
+  String alamatBiller;
+  String emailBiller;
+  String provinsiBiller;
+  String stateBiller;
+  String alamatCustomer;
+  String emailCustomer;
+  String provinsiCustomer;
+  String stateCustomer;
+  String clientId;
 
   Delivery(
       {this.id,
-        this.date,
-        this.saleId,
-        this.doReferenceNo,
-        this.saleReferenceNo,
-        this.customer,
-        this.address,
-        this.note,
-        this.status,
-        this.attachment,
-        this.spjFile,
-        this.receiveStatus,
-        this.deliveredBy,
-        this.receivedBy,
-        this.createdBy,
-        this.createdAt,
-        this.updatedBy,
-        this.updatedAt,
-        this.flag,
-        this.isDeleted,
-        this.deviceId,
-        this.uuid,
-        this.uuidApp,
-        this.deliveringDate,
-        this.deliveredDate,
-        this.returnReferenceNo,
-        this.isApproval,
-        this.isReject,
-        this.isConfirm});
+      this.date,
+      this.saleId,
+      this.doReferenceNo,
+      this.saleReferenceNo,
+      this.customer,
+      this.address,
+      this.note,
+      this.status,
+      this.attachment,
+      this.spjFile,
+      this.receiveStatus,
+      this.deliveredBy,
+      this.receivedBy,
+      this.createdBy,
+      this.createdAt,
+      this.updatedBy,
+      this.updatedAt,
+      this.flag,
+      this.isDeleted,
+      this.deviceId,
+      this.uuid,
+      this.uuidApp,
+      this.deliveringDate,
+      this.deliveredDate,
+      this.returnReferenceNo,
+      this.isApproval,
+      this.isReject,
+      this.isConfirm,
+      this.biller,
+      this.alamatBiller,
+      this.emailBiller,
+      this.provinsiBiller,
+      this.stateBiller,
+      this.alamatCustomer,
+      this.emailCustomer,
+      this.provinsiCustomer,
+      this.stateCustomer,
+      this.clientId});
 
   Delivery.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -90,6 +110,16 @@ class Delivery {
     isApproval = json['is_approval'];
     isReject = json['is_reject'];
     isConfirm = json['is_confirm'];
+    biller = json['biller'];
+    alamatBiller = json['alamat_biller'];
+    emailBiller = json['email_biller'];
+    provinsiBiller = json['provinsi_biller'];
+    stateBiller = json['state_biller'];
+    alamatCustomer = json['alamat_customer'];
+    emailCustomer = json['email_customer'];
+    provinsiCustomer = json['provinsi_customer'];
+    stateCustomer = json['state_customer'];
+    clientId = json['client_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -123,6 +153,16 @@ class Delivery {
     data['is_approval'] = this.isApproval;
     data['is_reject'] = this.isReject;
     data['is_confirm'] = this.isConfirm;
+    data['biller'] = this.biller;
+    data['alamat_biller'] = this.alamatBiller;
+    data['email_biller'] = this.emailBiller;
+    data['provinsi_biller'] = this.provinsiBiller;
+    data['state_biller'] = this.stateBiller;
+    data['alamat_customer'] = this.alamatCustomer;
+    data['email_customer'] = this.emailCustomer;
+    data['provinsi_customer'] = this.provinsiCustomer;
+    data['state_customer'] = this.stateCustomer;
+    data['client_id'] = this.clientId;
     return data;
   }
 }
