@@ -40,7 +40,7 @@ class MyString {
   static const KEY_PAYMENT_STATUS = "payment_status";
 
   // delivery
-  static const KEY_ID_DELIVERY = "id_deliver";
+  static const KEY_ID_DELIVERY = "id_delivery";
 
   // dashboard
   static const KEY_PIE_CHART_DATE = "year_month";

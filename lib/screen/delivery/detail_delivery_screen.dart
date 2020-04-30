@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:posku/helper/custom_cupertino_page_route.dart';
-import 'package:posku/model/delivery.dart';
+import 'package:posku/screen/delivery/detail_delivery_view_model.dart';
+import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -11,25 +9,6 @@ import 'package:posku/util/widget/my_divider.dart';
 class DetailDeliveryScreen extends StatefulWidget {
   @override
   _DetailDeliveryScreenState createState() => _DetailDeliveryScreenState();
-}
-
-abstract class DetailDeliveryViewModel extends State<DetailDeliveryScreen> {
-  bool isFirst = true;
-  Delivery delivery;
-  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
-
-  Future<Null> actionRefresh() async {
-    setState(() {});
-    return null;
-  }
-
-  actionCopy(String text) async {
-    if (text != null) {
-      Clipboard.setData(ClipboardData(text: text));
-      Get.snackbar('Berhasil disalin', text);
-    }
-  }
 }
 
 class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
@@ -102,7 +81,10 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                 children: <Widget>[
                   Text(
                     title,
-                    style: TextStyle(color: MyColor.txtBlack),
+                    style: TextStyle(
+                      color: MyColor.txtBlack,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Stack(
                     children: <Widget>[
@@ -115,32 +97,32 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                         ),
                       (data == null)
                           ? Column(
-                        children: <Widget>[
-                          Text(''),
-                          Text(''),
-                          Text(''),
-                        ],
-                      )
+                              children: <Widget>[
+                                Text(''),
+                                Text(''),
+                                Text(''),
+                              ],
+                            )
                           : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            data[1] ?? '',
-                            style: TextStyle(
-                                color: MyColor.txtBlack,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            data[2]?.toString()?.trim() ?? '',
-                            style: TextStyle(color: MyColor.txtField),
-                          ),
-                          if (data[3] != null)
-                            Text(
-                              data[3] ?? 'tes',
-                              style: TextStyle(color: MyColor.txtField),
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  data[1] ?? '',
+                                  style: TextStyle(
+                                    color: MyColor.txtField,
+                                  ),
+                                ),
+                                Text(
+                                  data[2]?.toString()?.trim() ?? '',
+                                  style: TextStyle(color: MyColor.txtField),
+                                ),
+                                if (data[3] != null)
+                                  Text(
+                                    data[3] ?? 'tes',
+                                    style: TextStyle(color: MyColor.txtField),
+                                  ),
+                              ],
                             ),
-                        ],
-                      ),
                     ],
                   ),
                 ],
@@ -155,7 +137,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
   Widget body() {
     var deliveryStyle = deliveryStatus(delivery.status);
     return SingleChildScrollView(
-//      padding: EdgeInsets.symmetric(vertical: 12),
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         children: <Widget>[
           Container(
@@ -187,8 +169,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                 MyDivider.lineDivider(top: 8),
                 tileInfo('Alamat', data: {
                   1: delivery.address,
-                  2: 'delivery.email',
-                  3: 'delivery.phone',
+                  2: delivery.emailCustomer,
                 }),
               ],
             ),
@@ -214,115 +195,158 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
             ),
           ),
           MyDivider.lineDivider(),
-          Container(
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: Row(
-              //crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: MyColor.blueDio,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(8)),
-                  ),
-                  child: Center(
-                    child: Text('PPC',
-                        style: Theme.of(context)
-                            .textTheme
-                            .title
-                            .copyWith(
-                            color: Colors.white)),
-                  ),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('PPC',
-                          style: Theme.of(context)
-                              .textTheme
-                              .title
-                              .copyWith()),
-                      Text('2020',
-                          style: Theme.of(context)
-                              .textTheme
-                              .subhead
-                              .copyWith(color: MyColor.txtField)),
-                      SizedBox(
-                        height: 8,
+          if (deliveryItems == null)
+            Container(
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Center(child: CupertinoActivityIndicator()),
+            ),
+          if (deliveryItems != null)
+            ...deliveryItems.map((data) {
+              return Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Row(
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: MyColor.blueDio,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
                       ),
-                      Text('200 SAK',
+                      child: Center(
+                        child: Text('PPC',
+                            style: Theme.of(context)
+                                .textTheme
+                                .title
+                                .copyWith(color: Colors.white)),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(data.productName ?? '',
+                              style:
+                                  Theme.of(context).textTheme.title.copyWith()),
+                          Text(data.productCode ?? '',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subhead
+                                  .copyWith(color: MyColor.txtField)),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                              '${MyNumber.toNumberIdStr(data.quantitySent)} ${data.productUnitCode}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle
+                                  .copyWith(color: MyColor.txtField)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          if (deliveryItems != null) MyDivider.lineDivider(),
+          if (deliveryItems != null)
+            Container(
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text('Buruk',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle
-                              .copyWith(color: MyColor.txtField)),
+                              .copyWith(color: MyColor.mainRed)),
+                      RichText(
+                        textAlign: TextAlign.left,
+                        softWrap: true,
+                        text: TextSpan(children: <TextSpan>[
+                          TextSpan(
+                              text: MyNumber.toNumberId(deliveryItems
+                                  .map((data) {
+                                    return MyNumber.strUSToDouble(
+                                        data.badQuantity);
+                                  })
+                                  .toList()
+                                  .fold<double>(
+                                      0,
+                                      (previous, current) =>
+                                          previous + current)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .title
+                                  .copyWith(color: MyColor.txtField)),
+                          TextSpan(
+                              text:
+                                  ' ' + deliveryItems.first?.productUnitCode ??
+                                      '',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .title
+                                  .copyWith(color: MyColor.txtField)),
+                        ]),
+                      ),
                     ],
                   ),
-                ),
-              ],
+                  Column(
+                    children: <Widget>[
+                      Text('Baik',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle
+                              .copyWith(color: MyColor.mainGreen)),
+                      RichText(
+                        textAlign: TextAlign.left,
+                        softWrap: true,
+                        text: TextSpan(children: <TextSpan>[
+                          TextSpan(
+                              text: MyNumber.toNumberId(deliveryItems
+                                  .map((data) {
+                                return MyNumber.strUSToDouble(
+                                    data.goodQuantity);
+                              })
+                                  .toList()
+                                  .fold<double>(
+                                  0,
+                                      (previous, current) =>
+                                  previous + current)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .title
+                                  .copyWith(color: MyColor.txtField)),
+                          TextSpan(
+                              text:
+                              ' ' + deliveryItems.first?.productUnitCode ??
+                                  '',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .title
+                                  .copyWith(color: MyColor.txtField)),
+                        ]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          MyDivider.lineDivider(),
-          Container(
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text('Buruk',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle
-                            .copyWith(color: MyColor.mainRed)),
-                    Text('100 SAK',
-                        style: Theme.of(context)
-                            .textTheme
-                            .title
-                            .copyWith(color: MyColor.txtField)),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Text('Baik',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle
-                            .copyWith(color: MyColor.mainGreen)),
-                    Text('200 SAK',
-                        style: Theme.of(context)
-                            .textTheme
-                            .title
-                            .copyWith(color: MyColor.txtField)),
-                  ],
-                ),
-              ],
-            ),
-          ),
           MyDivider.lineDivider(),
         ],
       ),
     );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (Get.args(context) != null && isFirst) {
-      var arg = Get.args(context) as Map<String, dynamic>;
-      delivery = Delivery.fromJson(arg ?? {});
-      isFirst = false;
-    }
-    (ModalRoute.of(context) as CustomCupertinoPageRoute)?.resultPop =
-        delivery?.toJson();
   }
 
   @override
