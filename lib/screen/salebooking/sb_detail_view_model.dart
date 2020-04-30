@@ -8,6 +8,7 @@ import 'package:posku/helper/custom_cupertino_page_route.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/company.dart';
 import 'package:posku/model/customer.dart';
+import 'package:posku/model/delivery.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
@@ -27,6 +28,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
   Company supplier;
   Warehouse warehouse;
   List<Payment> listPayment;
+  List<Delivery> listDelivery;
 
   actionCopy(String text) async {
     if (text != null) {
@@ -43,6 +45,8 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       supplier = null;
     } else if (sliding == 1) {
       listPayment = null;
+    } else if (sliding == 2) {
+      listDelivery = null;
     } else {
 
     }
@@ -80,6 +84,36 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
     return null;
   }
 
+  Future<List<Delivery>> getListDelivery(String idSales) async {
+    if (listDelivery != null) return listDelivery;
+    var params = {
+      MyString.KEY_ID_SALES_BOOKING: idSales,
+    };
+    var status = await ApiClient.methodGet(
+      ApiConfig.urlListDeliveriesBooking,
+      params: params,
+      onBefore: (status) {
+        print('onbefore');
+      },
+      onSuccess: (data, flag) {
+        var baseResponse = BaseResponse.fromJson(data);
+        listDelivery = baseResponse?.data?.listDelivery ?? [];
+      },
+      onFailed: (title, message) {
+        print('onfailed');
+      },
+      onError: (title, message) {
+        print('onerror');
+      },
+      onAfter: (status) {
+        print('onafter');
+        setState(() {});
+      },
+    );
+    status.execute();
+    return null;
+  }
+
   Future<List<SalesBookingItem>> getSalesBookingItem(String idSales) async {
     if (sbItems != null) return sbItems;
     var params = {
@@ -93,8 +127,8 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
-        sb = baseResponse.data.salesBooking ?? sb;
-        sbItems = baseResponse.data.salesBookingItems ?? [];
+        sb = baseResponse?.data?.salesBooking ?? sb;
+        sbItems = baseResponse?.data?.salesBookingItems ?? [];
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -130,7 +164,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
-        customer = baseResponse.data.customer ?? Customer();
+        customer = baseResponse?.data?.customer ?? Customer();
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -160,7 +194,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
-        supplier = baseResponse.data.supplier ?? Company();
+        supplier = baseResponse?.data?.supplier ?? Company();
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -190,7 +224,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
-        warehouse = baseResponse.data.warehouse ?? Warehouse();
+        warehouse = baseResponse?.data?.warehouse ?? Warehouse();
       },
       onFailed: (title, message) {
         print('onfailed');

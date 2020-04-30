@@ -360,6 +360,35 @@ class _SBDetailScreenState extends SBDetailViewModel {
     );
   }
 
+  void _showPopupMenu(Offset offset) async {
+    double left = offset.dx;
+    double top = offset.dy;
+    var result = await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(left, top, 0, 0),
+      items: [
+        PopupMenuItem<int>(
+          height: 30,
+          child: const Text('Lihat Rincian'),
+          value: 0,
+        ),
+        PopupMenuItem<int>(
+          height: 30,
+          child: const Text('Ubah Pengiriman'),
+          value: 1,
+        ),
+        PopupMenuItem<int>(
+          enabled: false,
+          height: 30,
+          child: const Text('Retur Pengiriman'),
+          value: 2,
+        ),
+      ],
+      elevation: 8.0,
+    );
+    print('hasil $result');
+  }
+
   Widget widgetDetail() {
     return SingleChildScrollView(
       //padding: EdgeInsets.symmetric(vertical: 12),
@@ -496,9 +525,9 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         snapshot.connectionState != ConnectionState.done) {
                       return Expanded(
                           child: Container(
-                            color: Colors.white,
-                            child: Center(child: CupertinoActivityIndicator()),
-                          ));
+                        color: Colors.white,
+                        child: Center(child: CupertinoActivityIndicator()),
+                      ));
                     }
 
                     if (listPayment?.length == 0) {
@@ -710,24 +739,354 @@ class _SBDetailScreenState extends SBDetailViewModel {
         ),
       ],
     );
-    /*return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 12),
-      child: Column(
-        children: <Widget>[
-          Text('Tab Bayar'),
-        ],
-      ),
-    );*/
   }
 
   Widget widgetDelivery() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 12),
-      child: Column(
-        children: <Widget>[
-          Text('Tab Kirim'),
-        ],
-      ),
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverFillRemaining(
+          hasScrollBody: true,
+          fillOverscroll: true,
+          child: IntrinsicHeight(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.insert_drive_file,
+                        size: 16,
+                        color: MyColor.blueDio,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Daftar Pengiriman',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle
+                              .copyWith(color: Colors.black)),
+                    ],
+                  ),
+                ),
+                FutureBuilder(
+                  future: getListDelivery(sb.id),
+                  builder: (buildContext, snapshot) {
+                    if (listDelivery == null ||
+                        snapshot.connectionState != ConnectionState.done) {
+                      return Expanded(
+                          child: Container(
+                        color: Colors.white,
+                        child: Center(child: CupertinoActivityIndicator()),
+                      ));
+                    }
+
+                    if (listDelivery?.length == 0) {
+                      return Container();
+                    }
+
+                    return ListView.separated(
+//            padding: EdgeInsets.symmetric(vertical: 12),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (buildContext, index) {
+                        var deliveryStyle =
+                            deliveryStatus(listDelivery[index].status);
+                        return Container(
+                          color: Colors.white,
+                          child: Column(
+                            children: <Widget>[
+                              Stack(
+                                children: <Widget>[
+                                  Positioned(
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTapDown: (TapDownDetails details) {
+                                        _showPopupMenu(details.globalPosition);
+                                      },
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.only(right: 8, top: 12),
+                                        child: Icon(
+                                          Icons.more_vert,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 16),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width: 64,
+                                          height: 64,
+                                          decoration: BoxDecoration(
+                                            color: MyColor.blueDio,
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                          ),
+                                          child: Center(
+                                            child: Text('Deliv',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .title
+                                                    .copyWith(
+                                                        color: Colors.white)),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 12,
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.only(left: 8),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            'No. DO',
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: MyColor
+                                                                  .txtField,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            listDelivery[index]
+                                                                .doReferenceNo,
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: MyColor
+                                                                  .txtField,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            'No. SO',
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: MyColor
+                                                                  .txtField,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            listDelivery[index]
+                                                                .saleReferenceNo,
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: MyColor
+                                                                  .txtField,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            'Status',
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: MyColor
+                                                                  .txtField,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            deliveryStyle[0],
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  deliveryStyle[
+                                                                      1],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            'Nama Pengemudi',
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: MyColor
+                                                                  .txtField,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            listDelivery[index]
+                                                                .customer,
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: MyColor
+                                                                  .txtField,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                height: 1,
+                                color: MyColor.txtField,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  print('klik detail payment');
+//                  var result =
+//                  await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
+//                  if (result != null) {
+//                    setState(() {
+//                      var newGr = SalesBooking.fromJson(result);
+//                      sb.saleStatus = newGr.saleStatus;
+//                    });
+//                  }
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.access_time,
+                                            size: 16,
+                                            color: MyColor.txtField,
+                                          ),
+                                          Text(
+                                            ' ${strToDate(listDelivery[index].createdAt)}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: MyColor.txtField),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 16),
+                                      child: Text(
+                                        'Selengkapnya',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: MyColor.mainBlue),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      separatorBuilder: (buildContext, index) {
+                        return MyDivider.lineDivider(
+                          bottom: 12,
+                        );
+                      },
+                      itemCount: listDelivery?.length ?? 0,
+                    );
+                  },
+                ),
+                if (listDelivery?.length == 0)
+                  Expanded(
+                      child: Container(
+                    color: Colors.white,
+                    child: Center(child: Text('Data Kosong')),
+                  )),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
