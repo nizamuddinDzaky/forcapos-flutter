@@ -8,6 +8,7 @@ import 'package:posku/helper/custom_cupertino_page_route.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/company.dart';
 import 'package:posku/model/customer.dart';
+import 'package:posku/model/delivery.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
@@ -27,6 +28,11 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
   Company supplier;
   Warehouse warehouse;
   List<Payment> listPayment;
+  List<Delivery> listDelivery = [
+    Delivery(),
+    Delivery(),
+    Delivery(),
+  ];
 
   actionCopy(String text) async {
     if (text != null) {
