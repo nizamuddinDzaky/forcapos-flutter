@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/screen/salebooking/sb_detail_view_model.dart';
@@ -134,13 +135,13 @@ class _SBDetailScreenState extends SBDetailViewModel {
       child: Column(
         children: <Widget>[
           sectionTotalDetail(
+            'Jumlah (Rp)',
+            sb.total,
+          ),
+          sectionTotalDetail(
             'Diskon Pesanan (Rp)',
             sb.totalDiscount,
             color: MyColor.mainGreen,
-          ),
-          sectionTotalDetail(
-            'Jumlah (Rp)',
-            sb.total,
           ),
           sectionTotalDetail(
             'Dibayar (Rp)',
@@ -149,6 +150,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
           sectionTotalDetail(
             'Jumlah Akhir (Rp)',
             sb.grandTotal,
+            color: MyColor.mainBlue,
           ),
         ],
       ),
@@ -360,7 +362,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
 
   Widget widgetDetail() {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 12),
+      //padding: EdgeInsets.symmetric(vertical: 12),
       child: Column(
         children: <Widget>[
           FutureBuilder(
@@ -457,152 +459,185 @@ class _SBDetailScreenState extends SBDetailViewModel {
     );
   }
 
-  List<Payment> listPayment = [
-    Payment(),
-    Payment(),
-    Payment(),
-    Payment(),
-  ];
   Widget widgetPayment() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            child: Row(
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverFillRemaining(
+          hasScrollBody: true,
+          fillOverscroll: true,
+          child: IntrinsicHeight(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Icon(
-                  Icons.insert_drive_file,
-                  size: 16,
-                  color: MyColor.blueDio,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text('Daftar Pembayaran',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle
-                        .copyWith(color: Colors.black)),
-              ],
-            ),
-          ),
-          ListView.separated(
-//            padding: EdgeInsets.symmetric(vertical: 12),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (buildContext, index) {
-              return Container(
-                color: Colors.white,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            width: 64,
-                            height: 64,
-                            decoration: BoxDecoration(
-                              color: MyColor.blueDio,
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                            ),
-                            child: Center(
-                              child: Text('PoS',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .title
-                                      .copyWith(color: Colors.white)),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.only(left: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'No Referensi',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: MyColor.txtField,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    listPayment[index].toString() ?? '1234567890',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: MyColor.txtField,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Column(
-                                        children: <Widget>[
-                                          Text(
-                                            'Nominal',
-                                            textScaleFactor: 1.0,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: MyColor.txtField,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Nominal',
-                                            textScaleFactor: 1.0,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: MyColor.txtField,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            'Tipe Pembayaran',
-                                            textScaleFactor: 1.0,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: MyColor.txtField,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Tunai',
-                                            textScaleFactor: 1.0,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: MyColor.txtField,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.insert_drive_file,
+                        size: 16,
+                        color: MyColor.blueDio,
                       ),
-                    ),
-                    Divider(
-                      height: 1,
-                    ),
-                    InkWell(
-                      onTap: () async {
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Daftar Pembayaran',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle
+                              .copyWith(color: Colors.black)),
+                    ],
+                  ),
+                ),
+                FutureBuilder(
+                  future: getListPayment(sb.id),
+                  builder: (buildContext, snapshot) {
+                    if (listPayment == null ||
+                        snapshot.connectionState != ConnectionState.done) {
+                      return Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: Center(child: CupertinoActivityIndicator()),
+                          ));
+                    }
+
+                    if (listPayment?.length == 0) {
+                      return Container();
+                    }
+
+                    return ListView.separated(
+//            padding: EdgeInsets.symmetric(vertical: 12),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (buildContext, index) {
+                        return Container(
+                          color: Colors.white,
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 16),
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 64,
+                                      height: 64,
+                                      decoration: BoxDecoration(
+                                        color: MyColor.blueDio,
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8)),
+                                      ),
+                                      child: Center(
+                                        child: Text('PoS',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .title
+                                                .copyWith(color: Colors.white)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 12,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              'No Referensi',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: MyColor.txtField,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              listPayment[index].referenceNo ??
+                                                  '1234567890',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: MyColor.txtField,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Nominal',
+                                                      textScaleFactor: 1.0,
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: MyColor.txtField,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      MyNumber.toNumberRpStr(
+                                                          listPayment[index]
+                                                              .amount),
+                                                      textScaleFactor: 1.0,
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: MyColor.txtField,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Tipe Pembayaran',
+                                                      textScaleFactor: 1.0,
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: MyColor.txtField,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      paidType(
+                                                          listPayment[index]
+                                                              .paidBy)[0],
+                                                      textScaleFactor: 1.0,
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: MyColor.txtField,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(
+                                height: 1,
+                                color: MyColor.txtField,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  print('klik detail payment');
 //                  var result =
 //                  await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
 //                  if (result != null) {
@@ -611,51 +646,69 @@ class _SBDetailScreenState extends SBDetailViewModel {
 //                      sb.saleStatus = newGr.saleStatus;
 //                    });
 //                  }
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.access_time,
+                                            size: 16,
+                                            color: MyColor.txtField,
+                                          ),
+                                          Text(
+                                            ' ${strToDate(sb.createdAt)}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: MyColor.txtField),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 16),
+                                      child: Text(
+                                        'Selengkapnya',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: MyColor.mainBlue),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                       },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.access_time,
-                                  size: 16,
-                                  color: MyColor.txtField,
-                                ),
-                                Text(
-                                  ' ${sb.createdBy}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: MyColor.txtField),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              'Selengkapnya',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, color: MyColor.mainBlue),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                      separatorBuilder: (buildContext, index) {
+                        return MyDivider.lineDivider(
+                          bottom: 12,
+                          customColor: MyColor.txtField,
+                        );
+                      },
+                      itemCount: listPayment?.length ?? 0,
+                    );
+                  },
                 ),
-              );
-            },
-            separatorBuilder: (buildContext, index) {
-              return MyDivider.lineDivider(bottom: 12);
-            },
-            itemCount: listPayment?.length ?? 0,
+                if (listPayment?.length == 0)
+                  Expanded(
+                      child: Container(
+                    color: Colors.white,
+                    child: Center(child: Text('Data Kosong')),
+                  )),
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
     /*return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 12),

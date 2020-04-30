@@ -100,6 +100,15 @@ String differenceDateTime(DateTime startDate, DateTime endDate) {
 //  return dateFormatOut.format(dateTime);
 }
 
+paidType(type) {
+  switch(type) {
+    case 'cash':
+      return ['Tunai', MyColor.mainRed];
+    default:
+      return ['Tunai', MyColor.mainRed];
+  }
+}
+
 saleStatus(status) {
   switch(status) {
     case 'reserved':

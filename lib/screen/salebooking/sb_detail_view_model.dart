@@ -8,6 +8,7 @@ import 'package:posku/helper/custom_cupertino_page_route.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/company.dart';
 import 'package:posku/model/customer.dart';
+import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/model/warehouse.dart';
@@ -25,25 +26,57 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
   Customer customer;
   Company supplier;
   Warehouse warehouse;
+  List<Payment> listPayment;
 
   actionCopy(String text) async {
     if (text != null) {
       Clipboard.setData(ClipboardData(text: text));
       Get.snackbar('Berhasil disalin', text);
-      /*CustomDialog.showAlertDialog(
-        context,
-        title: 'Berhasil disalin',
-        message: text,
-      );*/
     }
   }
 
   Future<Null> actionRefresh() async {
-    sbItems = null;
-    customer = null;
-    warehouse = null;
-    supplier = null;
+    if (sliding == 0) {
+      sbItems = null;
+      customer = null;
+      warehouse = null;
+      supplier = null;
+    } else if (sliding == 1) {
+      listPayment = null;
+    } else {
+
+    }
     setState(() {});
+    return null;
+  }
+
+  Future<List<Payment>> getListPayment(String idSales) async {
+    if (listPayment != null) return listPayment;
+    var params = {
+      MyString.KEY_ID_SALES_BOOKING: idSales,
+    };
+    var status = await ApiClient.methodGet(
+      ApiConfig.urlListPaymentBooking,
+      params: params,
+      onBefore: (status) {
+        print('onbefore');
+      },
+      onSuccess: (data, flag) {
+        var baseResponse = BaseResponse.fromJson(data);
+        listPayment = baseResponse?.data?.listPayment ?? [];
+      },
+      onFailed: (title, message) {
+        print('onfailed');
+      },
+      onError: (title, message) {
+        print('onerror');
+      },
+      onAfter: (status) {
+        print('onafter');
+        setState(() {});
+      },
+    );
+    status.execute();
     return null;
   }
 
@@ -62,7 +95,6 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
         var baseResponse = BaseResponse.fromJson(data);
         sb = baseResponse.data.salesBooking ?? sb;
         sbItems = baseResponse.data.salesBookingItems ?? [];
-        updateState();
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -72,6 +104,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onAfter: (status) {
         print('onafter');
+        updateState();
       },
     );
     status.execute();
@@ -98,7 +131,6 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
         customer = baseResponse.data.customer ?? Customer();
-        updateState();
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -108,6 +140,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onAfter: (status) {
         print('onafter');
+        updateState();
       },
     );
     status.execute();
@@ -128,7 +161,6 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
         supplier = baseResponse.data.supplier ?? Company();
-        updateState();
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -138,6 +170,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onAfter: (status) {
         print('onafter');
+        updateState();
       },
     );
     status.execute();
@@ -158,7 +191,6 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
         warehouse = baseResponse.data.warehouse ?? Warehouse();
-        updateState();
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -168,6 +200,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onAfter: (status) {
         print('onafter');
+        updateState();
       },
     );
     status.execute();
