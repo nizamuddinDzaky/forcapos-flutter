@@ -772,7 +772,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                   ),
                 ),
                 FutureBuilder(
-                  future: getListPayment(sb.id),
+                  future: getListDelivery(sb.id),
                   builder: (buildContext, snapshot) {
                     if (listDelivery == null ||
                         snapshot.connectionState != ConnectionState.done) {
@@ -792,7 +792,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (buildContext, index) {
-                        var deliveryStyle = deliveryStatus('sb.deliveryStatus');
+                        var deliveryStyle =
+                            deliveryStatus(listDelivery[index].status);
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -829,7 +830,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                 Radius.circular(8)),
                                           ),
                                           child: Center(
-                                            child: Text('PoS',
+                                            child: Text('Deliv',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .title
@@ -848,6 +849,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
@@ -872,9 +875,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                             ),
                                                           ),
                                                           Text(
-                                                            MyNumber
-                                                                .toNumberRpStr(
-                                                                    '000'),
+                                                            listDelivery[index]
+                                                                .doReferenceNo,
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -906,7 +908,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                             ),
                                                           ),
                                                           Text(
-                                                            paidType('')[0],
+                                                            listDelivery[index]
+                                                                .saleReferenceNo,
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -924,6 +927,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                   height: 8,
                                                 ),
                                                 Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
@@ -981,7 +986,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                             ),
                                                           ),
                                                           Text(
-                                                            paidType('')[0],
+                                                            listDelivery[index]
+                                                                .customer,
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -1036,7 +1042,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                             color: MyColor.txtField,
                                           ),
                                           Text(
-                                            ' isitanggal${strToDate(sb.createdAt)}',
+                                            ' ${strToDate(listDelivery[index].createdAt)}',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: MyColor.txtField),
