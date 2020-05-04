@@ -57,6 +57,7 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                           onPressed: () async {
 //                          homeState?.changeSearch(true);
 //                            searchFocusNode.requestFocus();
+                            filterData.addAll({'page': 'gr'});
                             var result = await Get.toNamed(
                               filterScreen,
                               arguments: filterData,

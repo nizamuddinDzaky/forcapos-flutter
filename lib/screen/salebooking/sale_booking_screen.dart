@@ -57,6 +57,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                           minSize: 16,
                           padding: EdgeInsets.all(0.0),
                           onPressed: () async {
+                            filterData.addAll({'page': 'sb'});
                             var result = await Get.toNamed(
                               filterScreen,
                               arguments: filterData,
