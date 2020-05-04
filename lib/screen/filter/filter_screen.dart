@@ -41,24 +41,54 @@ class _FilterState extends ChangeNotifier {
         ], notify: false);
       }
     }
+    callInitFilter(first['page']);
     if (first.containsKey(MyString.KEY_GR_STATUS)) {
       _selectedStatus = (_statusDelivery.where((data) {
             return data[1] == first[MyString.KEY_GR_STATUS];
-          }).first) ??
+          })?.first) ??
+          ['', ''];
+    }
+    if (first.containsKey(MyString.KEY_SALE_STATUS)) {
+      _selectedStatus = (_statusDelivery.where((data) {
+            return data[1] == first[MyString.KEY_SALE_STATUS];
+          })?.first) ??
           ['', ''];
     }
   }
 
+  void _initFilterGR() {
+    _statusDelivery.addAll([
+      ['Dikirim', 'delivering'],
+      ['Diterima', 'received'],
+    ]);
+  }
+
+  void _initFilterSB() {
+    _statusDelivery.addAll([
+      ['Menunggu', 'pending'],
+      ['Dikirim', 'reserved'],
+      ['Selesai', 'closed'],
+    ]);
+  }
+
+  void callInitFilter(String page) {
+    _statusDelivery = [];
+    switch(page) {
+      case 'gr':
+        _initFilterGR();
+        break;
+      case 'sb':
+        _initFilterSB();
+        break;
+      default:
+        _initFilterGR();
+        _initFilterSB();
+        break;
+    }
+  }
+
   //status
-  List<List<String>> _statusDelivery = [
-//    ['Menunggu', 'pending'],
-//    ['Dikonfirmasi', 'confirmed'],
-//    ['Ditutup', 'closed'],
-//    ['Dipesan', 'receive'],
-//    ['Dibatalkan', 'cancel'],
-    ['Dikirim', 'delivering'],
-    ['Diterima', 'received'],
-  ];
+  List<List<String>> _statusDelivery = [];
   List<String> _selectedStatus = ['', ''];
 
   List<String> get selectedStatus => _selectedStatus;
@@ -129,15 +159,18 @@ class _FilterState extends ChangeNotifier {
     }
   }
 
-  Map<String, String> resultFilter() {
+  Map<String, String> resultFilter(page) {
     Map<String, String> result = {};
     if (intervals.isNotEmpty && intervals.first.isNotEmpty) {
       var f = DateFormat('yyyy-MM-dd HH:mm:ss');
       result[MyString.KEY_START_DATE] = f.format(intervals.first[0]);
       result[MyString.KEY_END_DATE] = f.format(intervals.first[1]);
     }
-    if (_selectedStatus.isNotEmpty && _selectedStatus[1] != '') {
+    if (_selectedStatus.isNotEmpty && _selectedStatus[1] != '' && page == 'gr') {
       result[MyString.KEY_GR_STATUS] = _selectedStatus[1];
+    }
+    if (_selectedStatus.isNotEmpty && _selectedStatus[1] != '' && page == 'sb') {
+      result[MyString.KEY_SALE_STATUS] = _selectedStatus[1];
     }
     result[MyString.KEY_SORT_BY] = _labelVal;
     result[MyString.KEY_SORT_TYPE] = isAsc;
@@ -151,6 +184,7 @@ class _FilterState extends ChangeNotifier {
     differenceDate = null;
     indexSort = 0;
     isAsc = 'desc';
+    hint = null;
     notifyListeners();
   }
 }
@@ -173,15 +207,17 @@ class _FilterScreenState extends State<FilterScreen> {
   @override
   Widget build(BuildContext context) {
     Map<String, String> firstData;
+    String page = '';
     if (Get.args(context) != null) {
       firstData = Get.args(context) as Map<String, String>;
+      if (firstData.containsKey('page')) page = firstData['page'];
     }
     return ChangeNotifierProvider(
       create: (_) => _FilterState(firstFilter: firstData),
       child: Consumer<_FilterState>(
         builder: (context, filterState, _) {
           return WillPopScope(
-            onWillPop: () => _willPopCallback(filterState.resultFilter()),
+            onWillPop: () => _willPopCallback(filterState.resultFilter(page)),
             child: Material(
               child: CupertinoPageScaffold(
                 navigationBar: CupertinoNavigationBar(
@@ -340,7 +376,7 @@ class Card2 extends StatelessWidget {
 //}
 //
 //class _Card2State extends State<Card2> {
-  List<Widget> buildColumn(List<List<DateTime>> intervals) {
+  List<Widget> buildColumn(List<List<DateTime>> intervals, hint) {
     final List<Widget> list = [];
 
     for (final interval in intervals) {
@@ -350,11 +386,11 @@ class Card2 extends StatelessWidget {
           height: 8,
         ));
     }
-//    if (list.isEmpty) {
-//      var status =
-//          hint == null ? 'Mulai tanggal berapa?' : 'Sampai tanggal berapa?';
-//      list.add(Text(status));
-//    }
+    if (list.isEmpty) {
+      var status =
+          hint == null ? 'Mulai tanggal berapa?' : 'Sampai tanggal berapa?';
+      list.add(Text(status));
+    }
 
     return list;
   }
@@ -404,7 +440,7 @@ class Card2 extends StatelessWidget {
                             horizontal: 8.0, vertical: 8.0),
                         child: Center(
                           child: Column(
-                            children: buildColumn(state.intervals),
+                            children: buildColumn(state.intervals, state.hint),
                           ),
                         ),
                       ),
@@ -416,7 +452,7 @@ class Card2 extends StatelessWidget {
                         onlyOne: true,
                         initialValue: state.intervals,
                         onChanged: (List<List<DateTime>> intervals) {
-                          state.changeIntervals(intervals);
+                          state.changeIntervals(intervals, notify: true);
 //                          setState(() {
 //                            print('cek1 ${this.intervals} $intervals');
 //                            this.intervals = intervals;
@@ -442,7 +478,8 @@ class Card2 extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8.0, vertical: 16.0),
                                 child: Column(
-                                  children: buildColumn(state.intervals),
+                                  children:
+                                      buildColumn(state.intervals, state.hint),
                                 ),
                               ),
                             ),

@@ -32,12 +32,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final CupertinoTabController controller = CupertinoTabController();
-
   Future<bool> _willPopCallback(HomeState homeState) async {
     if (homeState.isSearch == true) {
       homeState.popBack();
-//      homeState.changeSearch(false);
       return false;
     }
     return true;
@@ -52,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return WillPopScope(
             onWillPop: () => _willPopCallback(homeState),
             child: CupertinoTabScaffold(
-                controller: controller,
                 tabBar: homeState.isSearch == true
                     ? InvisibleCupertinoTabBar()
                     : CupertinoTabBar(
@@ -123,6 +119,8 @@ class InvisibleCupertinoTabBar extends CupertinoTabBar {
   InvisibleCupertinoTabBar()
       : super(
           items: [
+            BottomNavigationBarItem(icon: dummyIcon),
+            BottomNavigationBarItem(icon: dummyIcon),
             BottomNavigationBarItem(icon: dummyIcon),
             BottomNavigationBarItem(icon: dummyIcon),
           ],
