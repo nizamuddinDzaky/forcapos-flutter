@@ -36,9 +36,9 @@ abstract class LoginViewModel extends State<LoginScreen> {
       }
       Get.offNamed(homeScreen);
     }, onFailed: (title, message) {
-      Get.defaultDialog(title: title, content: Text(message));
+      Get.defaultDialog(title: title, content: Text(message ?? 'Gagal'));
     }, onError: (title, message) {
-      Get.defaultDialog(title: title, content: Text(message));
+      Get.defaultDialog(title: title, content: Text(message ?? 'Gagal'));
     }, onAfter: (status) {
       if (status == ResponseStatus.success)
         MyPref.setRemember(isRemember, currentData);

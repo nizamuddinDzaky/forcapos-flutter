@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:posku/api/api_config.dart';
 import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/resource/my_string.dart';
 
@@ -27,6 +28,8 @@ class ApiClient {
   }
 
   static addInterceptor2() {
+    var profileDio = Dio();
+    profileDio.options = dio.options;
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
       if (options.uri.toString().contains('auth/login') == false) {
@@ -42,12 +45,22 @@ class ApiClient {
       var statusCode = response.statusCode;
       if (statusCode == 401) {
         return null;
-      } else if (statusCode == 200) {
+      } else if (statusCode == 200 &&
+          response.request.uri.toString().contains('auth/login') == true) {
         var jsonResponse = jsonDecode(response.data);
-        if (response.request.uri.toString().contains('auth/login') == true &&
-            jsonResponse.containsKey('data') &&
+        if (jsonResponse.containsKey('data') &&
             jsonResponse['data'].containsKey('token')) {
 //          MyPref.setForcaToken(jsonResponse['data']['token']);
+          dio.lock();
+          profileDio.options.headers.addAll(
+              {MyString.KEY_FORCA_TOKEN: jsonResponse['data']['token']}
+          );
+          return profileDio.get<String>(ApiConfig.urlProfile).then((profileData) {
+            var jsonProfile = jsonDecode(profileData.data);
+            jsonProfile['data']['token'] = jsonResponse['data']['token'];
+            profileData.data = jsonEncode(jsonProfile);
+            return profileData;
+          }).whenComplete(() => dio.unlock());
         }
       }
       return response;
