@@ -5,6 +5,7 @@ import 'package:posku/app/my_router.dart';
 import 'package:posku/model/delivery.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking_item.dart';
+import 'package:posku/screen/payment/detail_payment_screen.dart';
 import 'package:posku/screen/salebooking/sb_detail_view_model.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_util.dart';
@@ -667,16 +668,11 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 color: MyColor.txtField,
                               ),
                               InkWell(
-                                onTap: () {
-                                  print('klik detail payment');
-//                  var result =
-//                  await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
-//                  if (result != null) {
-//                    setState(() {
-//                      var newGr = SalesBooking.fromJson(result);
-//                      sb.saleStatus = newGr.saleStatus;
-//                    });
-//                  }
+                                onTap: () async {
+                                  await Get.toNamed(
+                                    detailPaymentScreen,
+                                    arguments: listPayment[index].toJson(),
+                                  );
                                 },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
