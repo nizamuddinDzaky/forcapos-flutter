@@ -152,6 +152,10 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
   }
 
   Future<Customer> getDetailCustomer(String idCustomer) async {
+    if (idCustomer == '1') {
+      customer = Customer(name: 'Eceran', id: '1');
+      return customer;
+    }
     if (customer != null) return customer;
     var params = {
       'id_customers': idCustomer,

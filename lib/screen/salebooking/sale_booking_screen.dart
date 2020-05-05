@@ -227,7 +227,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                             ),
                           ),
                           Text(
-                            '${sb.customer}',
+                            '${sb.customerId == '1' ? 'Eceran' : sb.customer}',
                             style: TextStyle(
                               color: MyColor.txtField,
                               fontWeight: FontWeight.bold,

@@ -161,7 +161,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
   }
 
   Widget sectionDetail() {
-    var statusStyle = saleStatus(sb.paymentStatus);
+    var statusStyle = saleStatus(sb.saleStatus);
     var deliveryStyle = deliveryStatus(sb.deliveryStatus);
     return Container(
       color: Colors.white,

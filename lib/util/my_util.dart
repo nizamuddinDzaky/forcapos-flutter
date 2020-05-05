@@ -113,7 +113,7 @@ saleStatus(status) {
   switch(status) {
     case 'reserved':
       return ['Dikirim', MyColor.blueDio];
-    case 'close':
+    case 'closed':
       return ['Selesai', MyColor.mainGreen];
     default:
       return ['Menunggu', MyColor.mainRed];
