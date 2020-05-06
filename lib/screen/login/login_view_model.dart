@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
 import 'package:posku/app/my_router.dart';
+import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/login.dart';
 import 'package:posku/screen/login/login_screen.dart';
 import 'package:posku/util/my_pref.dart';
@@ -31,9 +32,9 @@ abstract class LoginViewModel extends State<LoginScreen> {
         ApiConfig.urlLogin, currentData.toJson(), {}, onBefore: (status) {
       Get.back();
     }, onSuccess: (data, _) {
-      if (data.containsKey('data') && data['data'].containsKey('token')) {
-        MyPref.setForcaToken(data['data']['token']);
-      }
+      var baseResponse = BaseResponse.fromJson(data);
+      MyPref.setForcaToken(baseResponse?.data?.token);
+      MyPref.setRole(int.tryParse(baseResponse?.data?.user?.groupId));
       Get.offNamed(homeScreen);
     }, onFailed: (title, message) {
       Get.defaultDialog(title: title, content: Text(message ?? 'Gagal'));

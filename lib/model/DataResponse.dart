@@ -7,6 +7,7 @@ import 'package:posku/model/delivery_item.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
+import 'package:posku/model/user.dart';
 import 'package:posku/model/warehouse.dart';
 
 class DataResponse {
@@ -24,6 +25,9 @@ class DataResponse {
   List<Delivery> listDelivery;
   Delivery delivery;
   List<DeliveryItem> deliveryItems;
+  Company company;
+  User user;
+  String token;
 
   DataResponse(
       {this.totalGoodsReceived, this.listGoodsReceived, this.goodReceived, this.listSalesBooking});
@@ -54,6 +58,13 @@ class DataResponse {
   }
 
   DataResponse.fromJson(Map<String, dynamic> json) {
+    token = ifExist(json, 'token');
+    company = ifExistObject(json, 'company', (obj) {
+      return Company.fromJson(obj);
+    });
+    user = ifExistObject(json, 'user', (obj) {
+      return User.fromJson(obj);
+    });
     deliveryItems = ifExistList(json, 'delivery_items', (obj) {
       return DeliveryItem.fromJson(obj);
     });

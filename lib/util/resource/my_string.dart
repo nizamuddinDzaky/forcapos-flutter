@@ -55,6 +55,7 @@ class MyString {
   static const KEY_END_DATE = "end_date";
 
   // role
+  static const KEY_ROLE_USER = 'roleUser';
   static const ROLE_SUPER_ADMIN = 2;
   static const ROLE_WAREHOUSE_ADMIN = 8;
   static const ROLE_CASHIER = 5;
