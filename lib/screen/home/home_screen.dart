@@ -4,14 +4,27 @@ import 'package:posku/screen/dashboard/dashboard_screen.dart';
 import 'package:posku/screen/goodreceived/good_received_screen.dart';
 import 'package:posku/screen/masterdata/master_data_screen.dart';
 import 'package:posku/screen/salebooking/sale_booking_screen.dart';
+import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/resource/my_color.dart';
+import 'package:posku/util/resource/my_string.dart';
 import 'package:provider/provider.dart';
 
 class HomeState extends ChangeNotifier {
   bool isBack = false;
   bool _isSearch = false;
+  int _roleId;
 
   bool get isSearch => _isSearch;
+
+  int get roleId => _roleId;
+//  int get roleId => MyString.ROLE_SUPER_ADMIN;
+//  int get roleId => MyString.ROLE_WAREHOUSE_ADMIN;
+//  int get roleId => MyString.ROLE_CASHIER;
+
+  void changeRole(int newRole, {bool isNotify}) {
+    _roleId = newRole;
+    if (isNotify == true) notifyListeners();
+  }
 
   void changeSearch(bool isSearch, {Function action}) {
     this._isSearch = isSearch;
@@ -43,14 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomeState(),
+      create: (_) => HomeState()..changeRole(MyPref.getRole()),
       child: Consumer<HomeState>(
         builder: (context, homeState, _) {
           return WillPopScope(
             onWillPop: () => _willPopCallback(homeState),
             child: CupertinoTabScaffold(
                 tabBar: homeState.isSearch == true
-                    ? InvisibleCupertinoTabBar()
+                    ? InvisibleCupertinoTabBar(roleId: homeState.roleId)
                     : CupertinoTabBar(
                         activeColor: MyColor.mainBlue,
                         items: [
@@ -58,18 +71,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: Icon(Icons.home),
                             title: Text("Beranda"),
                           ),
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.shopping_cart),
-                            title: Text("Penerimaan"),
-                          ),
+                          if (homeState.roleId != MyString.ROLE_CASHIER)
+                            BottomNavigationBarItem(
+                              icon: Icon(Icons.shopping_cart),
+                              title: Text("Penerimaan"),
+                            ),
                           BottomNavigationBarItem(
                             icon: Icon(Icons.date_range),
                             title: Text("Penjualan"),
                           ),
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.dashboard),
-                            title: Text("Data"),
-                          ),
+                          if (homeState.roleId == MyString.ROLE_SUPER_ADMIN)
+                            BottomNavigationBarItem(
+                              icon: Icon(Icons.dashboard),
+                              title: Text("Data"),
+                            ),
                         ],
                       ),
                 tabBuilder: (context, index) {
@@ -116,11 +131,13 @@ class _HomeScreenState extends State<HomeScreen> {
 class InvisibleCupertinoTabBar extends CupertinoTabBar {
   static const dummyIcon = Icon(IconData(0x0020));
 
-  InvisibleCupertinoTabBar()
+  InvisibleCupertinoTabBar({int roleId = MyString.ROLE_CASHIER})
       : super(
           items: [
-            BottomNavigationBarItem(icon: dummyIcon),
-            BottomNavigationBarItem(icon: dummyIcon),
+            if (roleId != MyString.ROLE_CASHIER)
+              BottomNavigationBarItem(icon: dummyIcon),
+            if (roleId == MyString.ROLE_SUPER_ADMIN)
+              BottomNavigationBarItem(icon: dummyIcon),
             BottomNavigationBarItem(icon: dummyIcon),
             BottomNavigationBarItem(icon: dummyIcon),
           ],

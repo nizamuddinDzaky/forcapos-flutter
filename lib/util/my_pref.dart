@@ -32,6 +32,15 @@ class MyPref {
     return prefs?.setBool(key, value) ?? Future.value(false);
   }
 
+  static int getInt(String key, [int defValue]) {
+    return _prefsInstance.getInt(key) ?? defValue;
+  }
+
+  static Future<bool> setInt(String key, int value) async {
+    var prefs = await _instance;
+    return prefs?.setInt(key, value) ?? Future.value(false);
+  }
+
   //action
   static logout() {
     //setRemember(false, null);
@@ -64,4 +73,10 @@ class MyPref {
   static setPassword(String value) {
     setString(MyString.KEY_PASSWORD, value);
   }
+
+  static setRole(int roleId) {
+    setInt(MyString.KEY_ROLE_USER, roleId);
+  }
+
+  static int getRole() => getInt(MyString.KEY_ROLE_USER);
 }
