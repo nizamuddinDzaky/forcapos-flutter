@@ -18,6 +18,7 @@ extension IndexedIterable<E> on Iterable<E> {
 }
 
 class _FilterState extends ChangeNotifier {
+  String currentPage = '';
   final Map<String, String> firstFilter;
 
   _FilterState({this.firstFilter}) {
@@ -66,12 +67,13 @@ class _FilterState extends ChangeNotifier {
   void _initFilterSB() {
     _statusDelivery.addAll([
       ['Menunggu', 'pending'],
-      ['Dikirim', 'reserved'],
+      ['Dipesan', 'reserved'],
       ['Selesai', 'closed'],
     ]);
   }
 
   void callInitFilter(String page) {
+    currentPage = page;
     _statusDelivery = [];
     switch(page) {
       case 'gr':
@@ -255,12 +257,6 @@ class _FilterScreenState extends State<FilterScreen> {
 }
 
 class Card1 extends StatelessWidget {
-//class Card1 extends StatefulWidget {
-//  @override
-//  _Card1State createState() => _Card1State();
-//}
-//
-//class _Card1State extends State<Card1> {
   ExpandableController _controller;
 
   ExpandableController get controller => _controller;
@@ -268,6 +264,17 @@ class Card1 extends StatelessWidget {
   set controller(ExpandableController controller) {
     if (_controller == null) {
       _controller = controller;
+    }
+  }
+
+  String title(String page) {
+    switch(page) {
+      case 'sb':
+        return 'Status Penjualan';
+      case 'gr':
+        return 'Status Pembelian';
+      default:
+        return 'Status';
     }
   }
 
@@ -295,7 +302,7 @@ class Card1 extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Status Pengiriman',
+                        title(state.currentPage),
                         style: Theme.of(context).textTheme.body2,
                       ),
                       Text(

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:posku/model/company.dart';
 import 'package:posku/model/login.dart';
 import 'package:posku/util/resource/my_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,4 +82,17 @@ class MyPref {
   }
 
   static int getRole() => getInt(MyString.KEY_ROLE_USER);
+
+  static setCompany(Company company) {
+    var json = jsonEncode(company.toJson());
+    print('simpan $json');
+    setString('currentCompany', json);
+  }
+
+  static Company getCompany() {
+    var json = getString('currentCompany');
+    var company = Company.fromJson(jsonDecode(json));
+    print('dapat $json');
+    return company;
+  }
 }

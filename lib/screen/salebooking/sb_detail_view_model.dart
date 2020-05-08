@@ -146,7 +146,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
   }
 
   updateState() {
-    if (sbItems != null && customer != null && warehouse != null && supplier != null) {
+    if (sbItems != null && customer != null && warehouse != null) {
       setState(() {});
     }
   }

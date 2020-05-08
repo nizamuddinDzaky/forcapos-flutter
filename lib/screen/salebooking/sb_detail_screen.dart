@@ -2,12 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
-import 'package:posku/model/delivery.dart';
-import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking_item.dart';
-import 'package:posku/screen/payment/detail_payment_screen.dart';
 import 'package:posku/screen/salebooking/sb_detail_view_model.dart';
 import 'package:posku/util/my_number.dart';
+import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -162,7 +160,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
 
   Widget sectionDetail() {
     var statusStyle = saleStatus(sb.saleStatus);
-    var deliveryStyle = deliveryStatus(sb.deliveryStatus);
+//    var deliveryStyle = saleDeliveryStatus(sb.deliveryStatus);
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -240,16 +238,16 @@ class _SBDetailScreenState extends SBDetailViewModel {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            'Status Pengiriman',
-                            style: TextStyle(color: MyColor.txtField),
-                          ),
-                          Text(
-                            '${deliveryStyle[0]}',
-                            style: TextStyle(
-                                color: deliveryStyle[1],
-                                fontWeight: FontWeight.bold),
-                          ),
+//                          Text(
+//                            'Status Pengiriman',
+//                            style: TextStyle(color: MyColor.txtField),
+//                          ),
+//                          Text(
+//                            '${deliveryStyle[0]}',
+//                            style: TextStyle(
+//                                color: deliveryStyle[1],
+//                                fontWeight: FontWeight.bold),
+//                          ),
                         ],
                       ),
                     ),
@@ -420,23 +418,23 @@ class _SBDetailScreenState extends SBDetailViewModel {
             },
           ),
           MyDivider.lineDivider(),
-          FutureBuilder(
-            future: getDetailSupplier(sb?.companyId),
-            builder: (context, snapshot) {
-              if (sbItems == null ||
-                  snapshot.connectionState != ConnectionState.done) {
-                return tileInfo('Distributor', data: null);
-              }
-
-              return tileInfo('Distributor', data: {
-                0: 'Distributor',
-                1: supplier?.name ?? '',
-                2: supplier?.address ?? '',
-                3: supplier?.state ?? ''
-              });
-            },
-          ),
-          MyDivider.lineDivider(),
+//          FutureBuilder(
+//            future: getDetailSupplier(sb?.companyId),
+//            builder: (context, snapshot) {
+//              if (sbItems == null ||
+//                  snapshot.connectionState != ConnectionState.done) {
+//                return tileInfo('Distributor', data: null);
+//              }
+//
+//              return tileInfo('Distributor', data: {
+//                0: 'Distributor',
+//                1: supplier?.name ?? '',
+//                2: supplier?.address ?? '',
+//                3: supplier?.state ?? ''
+//              });
+//            },
+//          ),
+//          MyDivider.lineDivider(),
           FutureBuilder(
             future: getDetailWarehouse(sb?.warehouseId),
             builder: (context, snapshot) {
@@ -445,7 +443,9 @@ class _SBDetailScreenState extends SBDetailViewModel {
                 return tileInfo('Gudang', data: null);
               }
 
-              return tileInfo('Gudang', data: {
+              var company = MyPref.getCompany();
+              print('gudang ${company.name} ${company.company}');
+              return tileInfo('Gudang ${company.company}', data: {
                 0: 'Gudang',
                 1: warehouse?.name ?? '',
                 2: warehouse?.address ?? '',
@@ -791,7 +791,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (buildContext, index) {
                         var deliveryStyle =
-                            deliveryStatus(listDelivery[index].status);
+                            saleDeliveryStatus(listDelivery[index].status);
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -1018,7 +1018,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                       arguments: listDelivery[index].toJson());
                                   if (result != null) {
                                     setState(() {
-                                      var newDelivery = Delivery.fromJson(result);
+                                      //var newDelivery = Delivery.fromJson(result);
                                       //sb.saleStatus = newGr.saleStatus;
                                     });
                                   }

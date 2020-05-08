@@ -100,8 +100,8 @@ String differenceDateTime(DateTime startDate, DateTime endDate) {
 //  return dateFormatOut.format(dateTime);
 }
 
-paidType(type) {
-  switch(type) {
+paidType(String type) {
+  switch(type?.toLowerCase()) {
     case 'cash':
       return ['Tunai', MyColor.mainRed];
     default:
@@ -109,10 +109,10 @@ paidType(type) {
   }
 }
 
-saleStatus(status) {
-  switch(status) {
+saleStatus(String status) {
+  switch(status?.toLowerCase()) {
     case 'reserved':
-      return ['Dikirim', MyColor.blueDio];
+      return ['Dipesan', MyColor.blueDio];
     case 'closed':
       return ['Selesai', MyColor.mainGreen];
     default:
@@ -120,8 +120,8 @@ saleStatus(status) {
   }
 }
 
-paymentStatus(status) {
-  switch(status) {
+paymentStatus(String status) {
+  switch(status?.toLowerCase()) {
     case 'paid':
       return ['Lunas', MyColor.mainGreen];
     case 'partial':
@@ -133,17 +133,48 @@ paymentStatus(status) {
   }
 }
 
-deliveryStatus(status) {
-  switch(status) {
+deliveryStatus(String status) {
+  switch(status?.toLowerCase()) {
     case 'packing':
       return ['Dikemas', MyColor.mainBlue];
     case 'delivering':
       return ['Sedang dikirim', MyColor.blueDio];
+    case 'partial':
+      return ['Sebagian', MyColor.blueDio];
     case 'delivered':
+    case 'done':
       return ['Selesai', MyColor.mainGreen];
     case 'returned':
       return ['Dikembalikan', MyColor.mainOrange];
-    default:
+    case 'pending':
       return ['Menunggu', MyColor.mainRed];
+    default:
+      return [status?.capitalize() ?? '-', MyColor.mainRed];
+  }
+}
+
+saleDeliveryStatus(String status) {
+  switch(status?.toLowerCase()) {
+    case 'packing':
+      return ['Dikemas', MyColor.mainBlue];
+    case 'delivering':
+      return ['Sedang dikirim', MyColor.blueDio];
+    case 'partial':
+      return ['Diterima sebagian', MyColor.blueDio];
+    case 'delivered':
+    case 'done':
+      return ['Sudah diterima', MyColor.mainGreen];
+    case 'returned':
+      return ['Dikembalikan', MyColor.mainOrange];
+    case 'pending':
+      return ['Menunggu', MyColor.mainRed];
+    default:
+      return [status?.capitalize() ?? '-', MyColor.mainRed];
+  }
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }

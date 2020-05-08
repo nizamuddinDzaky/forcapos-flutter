@@ -35,6 +35,7 @@ abstract class LoginViewModel extends State<LoginScreen> {
       var baseResponse = BaseResponse.fromJson(data);
       MyPref.setForcaToken(baseResponse?.data?.token);
       MyPref.setRole(int.tryParse(baseResponse?.data?.user?.groupId));
+      MyPref.setCompany(baseResponse?.data?.company);
       Get.offNamed(homeScreen);
     }, onFailed: (title, message) {
       Get.defaultDialog(title: title, content: Text(message ?? 'Gagal'));

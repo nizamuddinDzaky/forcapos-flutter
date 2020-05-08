@@ -42,7 +42,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                         middle: CupertinoSlidingSegmentedControl(
                           children: {
                             0: Container(child: Text('Menunggu')),
-                            1: Container(child: Text('Dikirim')),
+                            1: Container(child: Text('Dipesan')),
                             2: Container(child: Text('Selesai')),
                           },
                           groupValue: sliding,

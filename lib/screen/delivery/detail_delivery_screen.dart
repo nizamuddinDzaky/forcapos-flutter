@@ -135,7 +135,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
   }
 
   Widget body() {
-    var deliveryStyle = deliveryStatus(delivery.status);
+    var deliveryStyle = saleDeliveryStatus(delivery.status);
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
