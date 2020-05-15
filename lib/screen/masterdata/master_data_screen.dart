@@ -117,7 +117,6 @@ class _MasterDataScreenState extends State<MasterDataScreen>
                         onValueChanged: (newValue) {
                           setState(() {
                             sliding = newValue;
-                            if (isFirst[sliding % 3]) actionRefresh();
                           });
                         },
                       ),

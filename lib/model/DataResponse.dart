@@ -28,6 +28,7 @@ class DataResponse {
   Company company;
   User user;
   String token;
+  List<Customer> listCustomers;
 
   DataResponse(
       {this.totalGoodsReceived, this.listGoodsReceived, this.goodReceived, this.listSalesBooking});
@@ -58,6 +59,9 @@ class DataResponse {
   }
 
   DataResponse.fromJson(Map<String, dynamic> json) {
+    listCustomers = ifExistList(json, 'list_customers', (obj) {
+      return Customer.fromJson(obj);
+    });
     token = ifExist(json, 'token');
     company = ifExistObject(json, 'company', (obj) {
       return Company.fromJson(obj);

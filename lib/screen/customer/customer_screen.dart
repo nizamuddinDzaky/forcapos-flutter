@@ -56,7 +56,7 @@ class _CustomerScreenState extends CustomerViewModel {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
-//            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
                 width: 64,
@@ -77,22 +77,25 @@ class _CustomerScreenState extends CustomerViewModel {
               SizedBox(
                 width: 8,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "customer?.company ?? '~'",
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                  Text(
-                    "address?.where((dt) => dt != null)?.join(', ')",
-                    style: Theme.of(context).textTheme.subhead,
-                  ),
-                  Text(
-                    "customer?.cf1 ?? '~'",
-                    style: Theme.of(context).textTheme.subhead,
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      customer?.company ?? '~',
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    if ((customer?.cf1 ?? '').isNotEmpty)
+                      Text(
+                        customer?.cf1 ?? '~',
+                        style: Theme.of(context).textTheme.subhead,
+                      ),
+                    Text(
+                      address?.where((dt) => dt != null)?.join(', '),
+                      style: Theme.of(context).textTheme.subhead,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
