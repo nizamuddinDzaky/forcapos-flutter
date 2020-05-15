@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailPaymentScreen extends StatefulWidget {
   @override
@@ -23,8 +24,13 @@ class _DetailPaymentScreenState extends State<DetailPaymentScreen> {
     Uint8List bytes = await consolidateHttpClientResponseBytes(response);
     String refNo =
         payment?.referenceNo ?? '${DateTime.now().microsecondsSinceEpoch}';
-    await Share.file(
-        payment.referenceNo, 'pembayaran$refNo.jpg', bytes, 'image/jpg');
+//    await Share.file(
+//        payment.referenceNo, 'pembayaran$refNo.jpg', bytes, 'image/jpg');
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -47,7 +53,10 @@ class _DetailPaymentScreenState extends State<DetailPaymentScreen> {
             minSize: 0,
             child: Icon(CupertinoIcons.share),
             padding: EdgeInsets.all(0),
-            onPressed: () => shareImage(urlAttachment, payment),
+            onPressed: () {
+              //shareImage('https://pbs.twimg.com/profile_images/630285593268752384/iD1MkFQ0.png', payment);
+              shareImage(urlAttachment, payment);
+            },
           ),
         ),
         child: Scaffold(
@@ -58,16 +67,12 @@ class _DetailPaymentScreenState extends State<DetailPaymentScreen> {
                 child: CachedNetworkImage(
                   imageUrl: urlAttachment,
                   placeholder: (context, url) => CupertinoActivityIndicator(),
-                  errorWidget: (context, url, error) => CachedNetworkImage(
-                    imageUrl:
-                        'https://pbs.twimg.com/profile_images/630285593268752384/iD1MkFQ0.png',
-                    placeholder: (context, url) => CupertinoActivityIndicator(),
-                    errorWidget: (context, url, error) => Column(
-                      children: <Widget>[
-                        Icon(Icons.error),
-                        Text('Gagal memuat / Lampiran kosong'),
-                      ],
-                    ),
+                  errorWidget: (context, url, error) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(Icons.error),
+                      Text('Gagal memuat / Lampiran kosong'),
+                    ],
                   ),
                 ),
               ),

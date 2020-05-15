@@ -85,14 +85,12 @@ class MyPref {
 
   static setCompany(Company company) {
     var json = jsonEncode(company.toJson());
-    print('simpan $json');
     setString('currentCompany', json);
   }
 
   static Company getCompany() {
     var json = getString('currentCompany');
     var company = Company.fromJson(jsonDecode(json));
-    print('dapat $json');
     return company;
   }
 }

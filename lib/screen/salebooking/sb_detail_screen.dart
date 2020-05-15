@@ -444,7 +444,6 @@ class _SBDetailScreenState extends SBDetailViewModel {
               }
 
               var company = MyPref.getCompany();
-              print('gudang ${company.name} ${company.company}');
               return tileInfo('Gudang ${company.company}', data: {
                 0: 'Gudang',
                 1: warehouse?.name ?? '',
@@ -668,7 +667,9 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 color: MyColor.txtField,
                               ),
                               InkWell(
-                                onTap: () async {
+                                onTap: listPayment[index]?.attachment == null
+                                    ? null
+                                    : () async {
                                   await Get.toNamed(
                                     detailPaymentScreen,
                                     arguments: listPayment[index].toJson(),
@@ -698,7 +699,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                         ],
                                       ),
                                     ),
-                                    Container(
+                                    if (listPayment[index]?.attachment != null)
+                                      Container(
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 16),
                                       child: Text(
