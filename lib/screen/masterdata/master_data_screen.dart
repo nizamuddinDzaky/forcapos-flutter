@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
 import 'package:posku/screen/customer/customer_screen.dart';
@@ -122,15 +123,24 @@ class _MasterDataScreenState extends State<MasterDataScreen>
                           });
                         },
                       ),
-                      trailing: CupertinoButton(
-                        minSize: 16,
-                        padding: EdgeInsets.all(0.0),
-                        onPressed: () async {},
-                        child: Icon(
-                          Icons.filter_list,
-                          size: 32,
-                        ),
-                      ),
+                      trailing: sliding == 0
+                          ? CupertinoButton(
+                              padding: EdgeInsets.all(0.0),
+//                              onPressed: _showMenu,
+                              onPressed: _showDialog,
+                              child: Icon(
+                                Icons.more_vert,
+                                size: 24,
+                              ),
+                            )
+                          : CupertinoButton(
+                              padding: EdgeInsets.all(0.0),
+                              onPressed: () async {},
+                              child: Icon(
+                                Icons.filter_list,
+                                size: 32,
+                              ),
+                            ),
                       largeTitle: IOSSearchBar(
                         animation: animationController,
                         controller: TextEditingController(),
@@ -184,5 +194,58 @@ class _MasterDataScreenState extends State<MasterDataScreen>
             )
           : _body(),
     );
+  }
+
+  void _showDialog() async {
+    // flutter defined function
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return Center(
+          child: Container(
+            width: 64,
+            height: 64,
+            //color: Colors.white,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            child: CupertinoActivityIndicator(),
+          ),
+        );
+      },
+    );
+    print('selesai loading');
+  }
+
+  _showMenu() {
+    final action = CupertinoActionSheet(
+      actions: <Widget>[
+        CupertinoActionSheetAction(
+          child: Text("Filter Data Pelanggan"),
+          onPressed: () {
+            print("Action 1 is been clicked");
+            Get.back();
+          },
+        ),
+        CupertinoActionSheetAction(
+          child: Text("Sinkronisasi Data Pelanggan & BK"),
+          onPressed: () {
+            print("Action 2 is been clicked");
+            Get.back();
+            _showDialog();
+          },
+        )
+      ],
+      cancelButton: CupertinoActionSheetAction(
+        child: Text("Batal"),
+        onPressed: () {
+          Get.back();
+        },
+      ),
+    );
+
+    showCupertinoModalPopup(context: context, builder: (context) => action);
   }
 }
