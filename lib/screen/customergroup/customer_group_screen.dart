@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
-import 'package:posku/model/customer.dart';
+import 'package:posku/model/customer_group.dart';
 import 'package:posku/screen/customergroup/customer_group_view_model.dart';
+import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 
 class CustomerGroupScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
         : RefreshIndicator(
             key: refreshIndicatorKey,
             onRefresh: actionRefresh,
-            child: listCustomer.length == 0
+            child: listCustomerGroup.length == 0
                 ? LayoutBuilder(
                     builder: (BuildContext context,
                         BoxConstraints viewportConstraints) {
@@ -40,16 +41,13 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                     padding: EdgeInsets.symmetric(vertical: 8),
                     physics: ClampingScrollPhysics(),
 //      controller: isFilter? null : _controller,
-                    itemBuilder: (c, i) => _listItem(listCustomer[i], i),
-                    itemCount: listCustomer.length,
+                    itemBuilder: (c, i) => _listItem(listCustomerGroup[i], i),
+                    itemCount: listCustomerGroup.length,
                   ),
           );
   }
 
-  Widget _listItem(Customer customer, int index) {
-    List<String> address = [];
-    address.add(customer?.city);
-    address.add(customer?.country);
+  Widget _listItem(CustomerGroup cg, int index) {
     GlobalKey _keyMore = GlobalKey();
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
@@ -94,13 +92,13 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            customer?.company ?? '~',
+                            cg?.name ?? '~',
                             style: Theme.of(context).textTheme.title,
                           ),
                           PopupMenuButton<int>(
                             key: _keyMore,
                             onSelected: (int idx) {
-                              print('cek $idx ${customer.cf1}');
+                              print('cek $idx ${cg.name}');
                             },
                             child: Icon(Icons.more_vert),
                             itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
@@ -124,7 +122,7 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                         ],
                       ),
                       Text(
-                        address?.where((dt) => dt != null)?.join(', '),
+                        MyNumber.toNumberRpStr(cg?.kreditLimit ?? '0'),
                         style: Theme.of(context).textTheme.subhead,
                       ),
                     ],
