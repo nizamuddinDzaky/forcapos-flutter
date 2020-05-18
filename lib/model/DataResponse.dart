@@ -6,6 +6,7 @@ import 'package:posku/model/customer_group.dart';
 import 'package:posku/model/delivery.dart';
 import 'package:posku/model/delivery_item.dart';
 import 'package:posku/model/payment.dart';
+import 'package:posku/model/price_group.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/model/user.dart';
@@ -31,6 +32,7 @@ class DataResponse {
   String token;
   List<Customer> listCustomers;
   List<CustomerGroup> customerGroups;
+  List<PriceGroup> priceGroups;
 
   DataResponse(
       {this.totalGoodsReceived, this.listGoodsReceived, this.goodReceived, this.listSalesBooking});
@@ -61,6 +63,9 @@ class DataResponse {
   }
 
   DataResponse.fromJson(Map<String, dynamic> json) {
+    priceGroups = ifExistList(json, 'price_groups', (obj) {
+      return PriceGroup.fromJson(obj);
+    });
     customerGroups = ifExistList(json, 'customer_groups', (obj) {
       return CustomerGroup.fromJson(obj);
     });
