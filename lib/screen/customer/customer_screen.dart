@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:posku/app/my_router.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/screen/customer/customer_view_model.dart';
 import 'package:posku/util/resource/my_color.dart';
@@ -52,7 +54,11 @@ class _CustomerScreenState extends CustomerViewModel {
       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
       elevation: 8,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Get.toNamed(detailCustomerScreen, arguments: {
+            'id': customer.id,
+          });
+        },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(

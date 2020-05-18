@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/helper/custom_cupertino_page_route.dart';
+import 'package:posku/screen/customer/detail_customer_screen.dart';
 import 'package:posku/screen/delivery/detail_delivery_screen.dart';
 import 'package:posku/screen/filter/filter_screen.dart';
 import 'package:posku/screen/goodreceived/gr_confirmation_screen.dart';
@@ -22,6 +23,7 @@ const sbDetailScreen = "/SbDetailScreen";
 const filterScreen = "/FilterScreen";
 const detailDeliveryScreen = "/DetailDeliveryScreen";
 const detailPaymentScreen = "/DetailPaymentScreen";
+const detailCustomerScreen = "/DetailCustomerScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -81,6 +83,12 @@ class MyRouter {
           settings: settings,
           fullscreenDialog: true,
           page: DetailPaymentScreen(),
+        );
+      case detailCustomerScreen:
+        return GetRoute(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: DetailCustomerScreen(),
         );
       default:
         return GetRoute(
