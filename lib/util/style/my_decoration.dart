@@ -4,7 +4,10 @@ import 'package:posku/util/resource/my_dimen.dart';
 
 class MyDecoration {
   static decorationGradient(
-      {withBoxShadow = false, withRounded = false, top2bottom = false}) {
+      {withBoxShadow = false,
+      withRounded = false,
+      top2bottom = false,
+      reverse = false}) {
     return BoxDecoration(
         borderRadius:
             withRounded ? BorderRadius.circular(MyDimen.circularMedium) : null,
@@ -24,6 +27,7 @@ class MyDecoration {
           end: top2bottom
               ? FractionalOffset.bottomCenter
               : FractionalOffset.centerRight,
+          transform: reverse ? GradientRotation(3.14) : null,
         ),
         boxShadow: withBoxShadow
             ? [
