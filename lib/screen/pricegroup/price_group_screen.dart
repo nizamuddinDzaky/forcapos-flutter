@@ -2,9 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
-import 'package:posku/model/customer_group.dart';
+import 'package:posku/model/price_group.dart';
 import 'package:posku/screen/pricegroup/price_group_view_model.dart';
-import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 
 class PriceGroupScreen extends StatefulWidget {
@@ -22,7 +21,7 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
         : RefreshIndicator(
             key: refreshIndicatorKey,
             onRefresh: actionRefresh,
-            child: listCustomerGroup.length == 0
+            child: listPriceGroup.length == 0
                 ? LayoutBuilder(
                     builder: (BuildContext context,
                         BoxConstraints viewportConstraints) {
@@ -41,13 +40,13 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                     padding: EdgeInsets.symmetric(vertical: 8),
                     physics: ClampingScrollPhysics(),
 //      controller: isFilter? null : _controller,
-                    itemBuilder: (c, i) => _listItem(listCustomerGroup[i], i),
-                    itemCount: listCustomerGroup.length,
+                    itemBuilder: (c, i) => _listItem(listPriceGroup[i], i),
+                    itemCount: listPriceGroup.length,
                   ),
           );
   }
 
-  Widget _listItem(CustomerGroup cg, int index) {
+  Widget _listItem(PriceGroup pg, int index) {
     GlobalKey _keyMore = GlobalKey();
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
@@ -92,13 +91,13 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            cg?.name ?? '~',
+                            pg?.name ?? '~',
                             style: Theme.of(context).textTheme.title,
                           ),
                           PopupMenuButton<int>(
                             key: _keyMore,
                             onSelected: (int idx) {
-                              print('cek $idx ${cg.name}');
+                              print('cek $idx ${pg.name}');
                             },
                             child: Icon(Icons.more_vert),
                             itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
