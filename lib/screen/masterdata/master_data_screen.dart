@@ -5,6 +5,7 @@ import 'package:posku/helper/ios_search_bar.dart';
 import 'package:posku/screen/customer/customer_screen.dart';
 import 'package:posku/screen/customergroup/customer_group_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
+import 'package:posku/screen/pricegroup/price_group_screen.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/style/my_style.dart';
 import 'package:posku/util/widget/my_text.dart';
@@ -151,6 +152,8 @@ class _MasterDataScreenState extends State<MasterDataScreen>
     switch (sliding) {
       case 1:
         return CustomerGroupScreen();
+      case 2:
+        return PriceGroupScreen();
       default:
         return CustomerScreen();
     }
