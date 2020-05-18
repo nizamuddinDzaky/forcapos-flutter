@@ -6,26 +6,27 @@ import 'package:posku/api/api_config.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/screen/customer/detail_customer_screen.dart';
+import 'package:posku/util/resource/my_string.dart';
 
 abstract class DetailCustomerViewModel extends State<DetailCustomerScreen> {
-  List<Customer> listCustomer = [];
   bool isFirst = true;
-  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+  String id;
+  Customer customer;
 
   Future<Null> actionRefresh() async {
-    var status = await ApiClient.methodGet(ApiConfig.urlListCustomer,
-        onBefore: (status) {
-    }, onSuccess: (data, flag) {
-      isFirst = false;
+    var params = {
+      MyString.KEY_ID_CUSTOMER: id,
+    };
+    var status = await ApiClient.methodGet(ApiConfig.urlDetailCustomer,
+        params: params, onBefore: (status) {}, onSuccess: (data, flag) {
       var baseResponse = BaseResponse.fromJson(data);
-      listCustomer.clear();
-      listCustomer.addAll(baseResponse?.data?.listCustomers ?? []);
+      customer = baseResponse?.data?.customer;
     }, onFailed: (title, message) {
       Get.defaultDialog(title: title, content: Text(message));
     }, onError: (title, message) {
       Get.defaultDialog(title: title, content: Text(message));
     }, onAfter: (status) {
+      setState(() {});
     });
     setState(() {
       status.execute();
@@ -34,8 +35,13 @@ abstract class DetailCustomerViewModel extends State<DetailCustomerScreen> {
   }
 
   @override
-  void initState() {
-    actionRefresh();
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (Get.args(context) != null && isFirst) {
+      var arg = Get.args(context) as Map<String, dynamic>;
+      id = arg['id'];
+      isFirst = false;
+      actionRefresh();
+    }
   }
 }

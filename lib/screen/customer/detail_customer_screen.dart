@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:posku/screen/customer/detail_customer_view_model.dart';
+import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/style/my_decoration.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -64,25 +65,28 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                             height: 8,
                           ),
                           Text(
-                            'Nama Pelanggan',
+                            customer?.name ?? '',
                             style: Theme.of(context).textTheme.title,
                           ),
                         ],
                       ),
                     ),
                   ),
-                  _listItem('Nama Toko', val: 'tes'),
-                  _listItem('Kelompok Pelanggan'),
-                  _listItem('NPWP'),
-                  _listItem('Deposit'),
-                  _listItem('Point Pelanggan'),
-                  _listItem('Email'),
-                  _listItem('Telp/HP'),
-                  _listItem('Alamat'),
-                  _listItem('Kecamatan'),
-                  _listItem('Kab./Kota'),
-                  _listItem('Provinsi'),
-                  _listItem('ID BK'),
+                  _listItem('Nama Toko', val: customer?.company),
+                  _listItem('Kelompok Pelanggan',
+                      val: customer?.customerGroupName),
+                  _listItem('NPWP', val: customer?.vatNo),
+                  _listItem('Deposit (Rp)',
+                      val: MyNumber.toNumberIdStr(customer?.depositAmount)),
+                  _listItem('Point Pelanggan',
+                      val: MyNumber.toNumberIdStr(customer?.awardPoints)),
+                  _listItem('Email', val: customer?.email),
+                  _listItem('Telp/HP', val: customer?.phone),
+                  _listItem('Alamat', val: customer?.address),
+                  _listItem('Kecamatan', val: customer?.city),
+                  _listItem('Kab./Kota', val: customer?.state),
+                  _listItem('Provinsi', val: customer?.country),
+                  _listItem('ID BK', val: customer?.cf1, isEnd: true),
                 ],
               ),
             ),
@@ -92,7 +96,12 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
     );
   }
 
-  Widget _listItem(String title, {String val, bool forceShow = true}) {
+  Widget _listItem(
+    String title, {
+    String val,
+    bool forceShow = true,
+    bool isEnd = false,
+  }) {
     return val != null || forceShow
         ? Container(
             color: Colors.white,
@@ -110,7 +119,8 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                       ),
                       Flexible(
                         child: Text(
-                          val ?? '',
+                          (val ?? '').isEmpty ? '-' : val,
+                          //val ?? '',
                           textAlign: TextAlign.end,
                           style: Theme.of(context).textTheme.body2,
                         ),
@@ -118,7 +128,7 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                     ],
                   ),
                 ),
-                MyDivider.lineDivider(),
+                if (!isEnd) MyDivider.lineDivider(),
               ],
             ),
           )

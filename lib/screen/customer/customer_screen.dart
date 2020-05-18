@@ -55,7 +55,9 @@ class _CustomerScreenState extends CustomerViewModel {
       elevation: 8,
       child: InkWell(
         onTap: () {
-          Get.toNamed(detailCustomerScreen);
+          Get.toNamed(detailCustomerScreen, arguments: {
+            'id': customer.id,
+          });
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
