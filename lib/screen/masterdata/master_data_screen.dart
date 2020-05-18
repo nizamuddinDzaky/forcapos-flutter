@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
 import 'package:posku/screen/customer/customer_screen.dart';
+import 'package:posku/screen/customergroup/customer_group_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/style/my_style.dart';
@@ -149,7 +150,7 @@ class _MasterDataScreenState extends State<MasterDataScreen>
   Widget _body() {
     switch (sliding) {
       case 1:
-        return CustomerScreen();
+        return CustomerGroupScreen();
       default:
         return CustomerScreen();
     }
