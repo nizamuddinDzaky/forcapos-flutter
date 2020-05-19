@@ -84,8 +84,8 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,13 +97,22 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                           PopupMenuButton<int>(
                             key: _keyMore,
                             onSelected: (int idx) {
-                              print('cek $idx ${pg.name}');
+                              switch (idx) {
+                                case 0:
+                                  Get.toNamed(
+                                    pgDetailScreen,
+                                    arguments: pg.toJson(),
+                                  );
+                                  break;
+                              }
                             },
                             child: Icon(Icons.more_vert),
-                            itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+                            itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<int>>[
                               PopupMenuItem<int>(
                                 height: 30,
-                                child: const Text('Tambah Pelanggan ke Kel. Harga'),
+                                child: const Text(
+                                    'Tambah Pelanggan ke Kel. Harga'),
                                 value: 2,
                               ),
                               PopupMenuItem<int>(

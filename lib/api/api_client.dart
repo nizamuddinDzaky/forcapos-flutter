@@ -194,6 +194,63 @@ class ApiClient {
     }
     return responseApi;
   }
+
+  static Future<ApiResponse> methodPut(
+    String url,
+    dynamic body,
+    Map<String, dynamic> params, {
+    APIBeforeCallback onBefore,
+    APISuccessCallback onSuccess,
+    APIErrorCallback onError,
+    APIFailedCallback onFailed,
+    APIAfterCallback onAfter,
+    bool customHandle = false,
+    VoidCallback firstAction,
+  }) async {
+    var responseApi = ApiResponse(
+      ResponseStatus.progress,
+      onBefore,
+      onSuccess,
+      onFailed,
+      onError,
+      onAfter,
+    );
+    if (firstAction != null) firstAction();
+    try {
+      await dio
+          .put<String>(url,
+              data: body,
+              queryParameters: params,
+              options: Options(contentType: Headers.jsonContentType))
+          .then((response) {
+        var statusCode = response.statusCode;
+        if (onSuccess != null && statusCode == 200) {
+          var data = jsonDecode(response.data);
+          responseApi._setSuccess(data);
+        } else if (onFailed != null) {
+          responseApi._setFailed('', response.statusMessage);
+        }
+      });
+    } on DioError catch (error) {
+      var title = 'Operasi gagal';
+      if (error.type == DioErrorType.DEFAULT) {
+        responseApi._setError(title, 'Cek koneksi kemudian coba lagi.');
+      } else if (customHandle) {
+        responseApi._setFailed(
+            error.response.statusCode.toString(), error.response.toString());
+      } else {
+        var statusCode = error.response.statusCode;
+        if (statusCode == 405) {
+          responseApi._setFailed(title, 'Akses informasi tidak valid.');
+        } else if (statusCode == 500) {
+          responseApi._setFailed(title, error.response.toString());
+        } else {
+          responseApi._setFailed(title, error.response.toString());
+        }
+      }
+    }
+    return responseApi;
+  }
 }
 
 class ApiResponse {

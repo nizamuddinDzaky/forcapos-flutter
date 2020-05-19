@@ -4,10 +4,15 @@ import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/resource/my_dimen.dart';
 
 class LoadingButton extends StatefulWidget {
-  LoadingButton({@required this.onPressed, @required this.title});
+  LoadingButton({
+    @required this.onPressed,
+    @required this.title,
+    this.noMargin = false,
+  });
 
   final Function onPressed;
   final String title;
+  final bool noMargin;
 
   @override
   _LoadingButtonState createState() => _LoadingButtonState();
@@ -30,7 +35,7 @@ class _LoadingButtonState extends State<LoadingButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: MyDimen.marginLayout(),
+      margin: widget.noMargin ? null : MyDimen.marginLayout(),
       width: double.maxFinite,
       child: FlatButton(
         color: MyColor.mainGreen,
