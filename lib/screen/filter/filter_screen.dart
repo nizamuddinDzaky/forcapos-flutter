@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:posku/helper/custom_expandable_button.dart';
 import 'package:posku/screen/filter/multi_date_range_picker.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
@@ -699,19 +700,5 @@ class Card3 extends StatelessWidget {
         ),
       ),
     ));
-  }
-}
-
-class CustomExpandableButton extends ExpandableButton {
-  final Function shareController;
-  final Widget child;
-
-  CustomExpandableButton.custom({this.shareController, this.child})
-      : super(child: child);
-
-  @override
-  Widget build(BuildContext context) {
-    shareController(ExpandableController.of(context));
-    return super.build(context);
   }
 }

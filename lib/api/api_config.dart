@@ -49,6 +49,8 @@ class ApiConfig {
   static String urlUpdateCustomer = '${path}customers/update_customers';
   static String urlCustomerToCGAddEdit = '${path}customers/add_or_edit_customer_to_customer_group';
   static String urlSyncToBK = '${path}customers/sync_customer_to_bk';
+  static String urlProductPriceGroup = '${path}customers/group_product_in_prices_group';
+  static String urlProductPriceGroupUpdate = '${path}customers/update_product_in_price_group';
 
   //product
   static String urlListProduct = '${path}products/list_products';
