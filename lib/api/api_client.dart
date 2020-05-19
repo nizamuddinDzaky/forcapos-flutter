@@ -144,6 +144,7 @@ class ApiClient {
     APIFailedCallback onFailed,
     APIAfterCallback onAfter,
     bool customHandle = false,
+    VoidCallback firstAction,
   }) async {
     var responseApi = ApiResponse(
       ResponseStatus.progress,
@@ -153,6 +154,7 @@ class ApiClient {
       onError,
       onAfter,
     );
+    if (firstAction != null) firstAction();
     try {
       await dio
           .post<String>(url,
@@ -182,6 +184,9 @@ class ApiClient {
         } else if (statusCode == 400) {
           responseApi._setFailed(
               title, 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
+        } else if (statusCode == 500) {
+          responseApi._setFailed(
+              title, error.response.toString());
         } else {
           print('error gan $error ${error.response}');
         }

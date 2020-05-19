@@ -48,6 +48,7 @@ class ApiConfig {
   static String urlAddCustomer = '${path}customers/add_customers';
   static String urlUpdateCustomer = '${path}customers/update_customers';
   static String urlCustomerToCGAddEdit = '${path}customers/add_or_edit_customer_to_customer_group';
+  static String urlSyncToBK = '${path}customers/sync_customer_to_bk';
 
   //product
   static String urlListProduct = '${path}products/list_products';
