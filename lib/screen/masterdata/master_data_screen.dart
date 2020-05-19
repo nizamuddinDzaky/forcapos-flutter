@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:posku/api/api_client.dart';
+import 'package:posku/api/api_config.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
+import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/screen/customer/customer_screen.dart';
 import 'package:posku/screen/customergroup/customer_group_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/pricegroup/price_group_screen.dart';
+import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/style/my_style.dart';
 import 'package:posku/util/widget/my_text.dart';
@@ -63,6 +69,35 @@ class _MasterDataScreenState extends State<MasterDataScreen>
   }
 
   Future<Null> actionRefresh() async {
+    var status = await ApiClient.methodPost(
+      ApiConfig.urlSyncToBK,
+      {},
+      {},
+      firstAction: () {
+        _showDialog();
+      },
+      onBefore: (status) {
+        Get.back();
+      },
+      onSuccess: (data, flag) {
+        var baseResponse = BaseResponse.fromJson(data);
+        var msg =
+            'Jumlah data: ${MyNumber.toNumberId(baseResponse?.data?.totalCustomerData?.toDouble())}';
+        Get.defaultDialog(title: 'Sinkronisasi Berhasil', content: Text(msg));
+      },
+      onFailed: (title, message) {
+        var baseResponse = BaseResponse.fromJson(jsonDecode(message ?? '{}'));
+        var msg = '${baseResponse?.code}: ${baseResponse?.message}';
+        Get.defaultDialog(title: title, content: Text(msg));
+      },
+      onError: (title, message) {
+        Get.defaultDialog(title: title, content: Text(message ?? 'error'));
+      },
+      onAfter: (status) {},
+    );
+    setState(() {
+      status.execute();
+    });
     return null;
   }
 
@@ -87,7 +122,7 @@ class _MasterDataScreenState extends State<MasterDataScreen>
 //    showSearch();
 //    WidgetsBinding.instance
 //        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
-    actionRefresh();
+//    actionRefresh();
     super.initState();
   }
 
@@ -126,8 +161,7 @@ class _MasterDataScreenState extends State<MasterDataScreen>
                       trailing: sliding == 0
                           ? CupertinoButton(
                               padding: EdgeInsets.all(0.0),
-//                              onPressed: _showMenu,
-                              onPressed: _showDialog,
+                              onPressed: _showMenu,
                               child: Icon(
                                 Icons.more_vert,
                                 size: 24,
@@ -234,7 +268,7 @@ class _MasterDataScreenState extends State<MasterDataScreen>
           onPressed: () {
             print("Action 2 is been clicked");
             Get.back();
-            _showDialog();
+            actionRefresh();
           },
         )
       ],
