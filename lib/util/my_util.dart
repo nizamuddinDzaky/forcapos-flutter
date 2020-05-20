@@ -186,3 +186,10 @@ extension StringExtension on String {
     return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }
+
+extension IndexedIterable<E> on Iterable<E> {
+  Iterable<T> mapIndexed<T>(T f(E e, int i)) {
+    var i = 0;
+    return this.map((e) => f(e, i++));
+  }
+}

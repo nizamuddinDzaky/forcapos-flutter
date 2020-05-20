@@ -16,6 +16,7 @@ class MyDivider {
     double bottom = 0.0,
     double vertical,
     double horizontal,
+    double thickness,
   }) {
     return Container(
       padding: EdgeInsets.only(
@@ -25,7 +26,8 @@ class MyDivider {
         bottom: vertical ?? bottom,
       ),
       child: Divider(
-        height: custom ?? 1,
+        height: custom ?? 0,
+        thickness: thickness,
         color: customColor ?? MyColor.lineDivider,
       ),
     );

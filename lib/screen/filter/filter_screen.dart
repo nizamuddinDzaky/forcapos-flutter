@@ -11,13 +11,6 @@ import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/resource/my_string.dart';
 import 'package:provider/provider.dart';
 
-extension IndexedIterable<E> on Iterable<E> {
-  Iterable<T> mapIndexed<T>(T f(E e, int i)) {
-    var i = 0;
-    return this.map((e) => f(e, i++));
-  }
-}
-
 class _FilterState extends ChangeNotifier {
   String currentPage = '';
   final Map<String, String> firstFilter;

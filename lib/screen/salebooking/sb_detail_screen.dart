@@ -763,55 +763,101 @@ class _SBDetailScreenState extends SBDetailViewModel {
   }
 
   Widget widgetDelivery() {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverFillRemaining(
-          hasScrollBody: true,
-          fillOverscroll: true,
-          child: IntrinsicHeight(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.insert_drive_file,
-                        size: 16,
-                        color: MyColor.blueDio,
+    return listDelivery?.length == 0
+        ? LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return CustomScrollView(slivers: <Widget>[
+                SliverFillRemaining(
+                  hasScrollBody: true,
+                  fillOverscroll: true,
+                  child: IntrinsicHeight(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minHeight: viewportConstraints.maxHeight),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.insert_drive_file,
+                                  size: 16,
+                                  color: MyColor.blueDio,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text('Daftar Pengiriman',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle
+                                        .copyWith(color: Colors.black)),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Colors.white,
+                              child: Center(
+                                child: Text('Data Kosong'),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('Daftar Pengiriman',
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle
-                              .copyWith(color: Colors.black)),
-                    ],
+                    ),
                   ),
+                )
+              ]);
+            },
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.insert_drive_file,
+                      size: 16,
+                      color: MyColor.blueDio,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text('Daftar Pengiriman',
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle
+                            .copyWith(color: Colors.black)),
+                  ],
                 ),
-                FutureBuilder(
-                  future: getListDelivery(sb.id),
-                  builder: (buildContext, snapshot) {
-                    if (listDelivery == null ||
-                        snapshot.connectionState != ConnectionState.done) {
-                      return Expanded(
-                          child: Container(
-                        color: Colors.white,
-                        child: Center(child: CupertinoActivityIndicator()),
-                      ));
-                    }
+              ),
+              FutureBuilder(
+                future: getListDelivery(sb.id),
+                builder: (buildContext, snapshot) {
+                  if (listDelivery == null ||
+                      snapshot.connectionState != ConnectionState.done) {
+                    return Expanded(
+                        child: Container(
+                      color: Colors.white,
+                      child: Center(child: CupertinoActivityIndicator()),
+                    ));
+                  }
 
-                    if (listDelivery?.length == 0) {
-                      return Container();
-                    }
+                  if (listDelivery?.length == 0) {
+                    return Container();
+                  }
 
-                    return ListView.separated(
+                  return Expanded(
+                    child: ListView.separated(
 //            padding: EdgeInsets.symmetric(vertical: 12),
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+//                    physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (buildContext, index) {
                         var deliveryStyle =
                             saleDeliveryStatus(listDelivery[index].status);
@@ -1094,21 +1140,12 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         );
                       },
                       itemCount: listDelivery?.length ?? 0,
-                    );
-                  },
-                ),
-                if (listDelivery?.length == 0)
-                  Expanded(
-                      child: Container(
-                    color: Colors.white,
-                    child: Center(child: Text('Data Kosong')),
-                  )),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
   }
 
   Widget body() {
@@ -1124,7 +1161,9 @@ class _SBDetailScreenState extends SBDetailViewModel {
 
   Widget _actionButton() {
     if (sliding == 0) return null;
-    if (sb.saleStatus != 'reserved') return null;
+    if (sliding == 1 && sb.saleStatus != 'reserved') return null;
+    if (sliding == 2 && sb.saleStatus != 'reserved') return null;
+    if (sliding == 2 && sb.deliveryStatus == 'done') return null;
 
     return CupertinoButton(
       minSize: 0,
@@ -1136,10 +1175,19 @@ class _SBDetailScreenState extends SBDetailViewModel {
                 arguments: sb.toJson(),
               );
               if (result == 'newPayment') {
+                sbItems = null;
                 actionRefresh();
               }
             }
-          : () {},
+          : () async {
+              var result = await Get.toNamed(
+                addDeliveryScreen,
+                arguments: sb.toJson(),
+              );
+              if (result == 'newDelivery') {
+                actionRefresh();
+              }
+            },
       child: Icon(
         Icons.add,
         size: 24,
