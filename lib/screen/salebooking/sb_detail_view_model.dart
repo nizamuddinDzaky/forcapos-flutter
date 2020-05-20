@@ -68,6 +68,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
         listPayment = baseResponse?.data?.listPayment ?? [];
+        listPayment.sort((a, b) => b.date.compareTo(a.date));
       },
       onFailed: (title, message) {
         print('onfailed');

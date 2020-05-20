@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+import 'package:get/get.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
 import 'package:posku/screen/payment/add_payment_view_model.dart';
@@ -112,10 +113,20 @@ class _AddPaymentScreenState extends AddPaymentViewModel {
             ),
             LoadingButton(
               onPressed: () async {
-                print('save: ${MyNumber.strIDToDouble(amountController.text)}');
-                print('save: ${noteController.text}');
-                print('save: ${date.toStr()}');
-                await Future.delayed(Duration(seconds: 2));
+                var amount = MyNumber.strIDToDouble(amountController.text);
+                if (amount > 0) {
+                  Map<String, String> body = {
+                    'amount_paid': amount.toString(),
+                    'note': noteController.text,
+                    'date': date.toStr(),
+                  };
+                  await actionPostPayment(body);
+                } else {
+                  Get.defaultDialog(
+                    title: 'Mohon Maaf',
+                    content: Text('Jumlah tidak boleh kosong/nol'),
+                  );
+                }
               },
               title: 'Tambah Pembayaran',
             ),
