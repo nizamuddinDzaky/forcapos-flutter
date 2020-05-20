@@ -86,6 +86,14 @@ String strToDateTimeFormat(String txtDate, {BuildContext context}) {
   return dateFormatOut.format(DateTime.tryParse(txtDate));
 }
 
+extension DateTimeExtension on DateTime {
+  String toStr() {
+    if (this == null) return '';
+    var dateFormatOut = DateFormat('yyyy-MM-dd HH:mm:ss');
+    return dateFormatOut.format(this);
+  }
+}
+
 String dateToDate(DateTime dateTime) {
   if (dateTime == null) return '';
   var dateFormatOut = DateFormat('dd MMMM yyyy', 'in_ID');

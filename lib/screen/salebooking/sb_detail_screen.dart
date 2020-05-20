@@ -670,11 +670,12 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 onTap: listPayment[index]?.attachment == null
                                     ? null
                                     : () async {
-                                  await Get.toNamed(
-                                    detailPaymentScreen,
-                                    arguments: listPayment[index].toJson(),
-                                  );
-                                },
+                                        await Get.toNamed(
+                                          detailPaymentScreen,
+                                          arguments:
+                                              listPayment[index].toJson(),
+                                        );
+                                      },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
@@ -701,15 +702,15 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                     ),
                                     if (listPayment[index]?.attachment != null)
                                       Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
-                                      child: Text(
-                                        'Selengkapnya',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: MyColor.mainBlue),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        child: Text(
+                                          'Selengkapnya',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: MyColor.mainBlue),
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -1016,7 +1017,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  var result = await Get.toNamed(detailDeliveryScreen,
+                                  var result = await Get.toNamed(
+                                      detailDeliveryScreen,
                                       arguments: listDelivery[index].toJson());
                                   if (result != null) {
                                     setState(() {
@@ -1100,6 +1102,22 @@ class _SBDetailScreenState extends SBDetailViewModel {
     }
   }
 
+  Widget _actionButton() {
+    if (sliding == 0) return null;
+
+    return CupertinoButton(
+      minSize: 0,
+      padding: EdgeInsets.all(0.0),
+      onPressed: sliding == 1 ? () {
+        Get.toNamed(addPaymentScreen, arguments: sb.toJson());
+      } : () {},
+      child: Icon(
+        Icons.add,
+        size: 24,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -1119,6 +1137,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
             });
           },
         ),
+        trailing: _actionButton(),
       ),
       child: Scaffold(
         body: SafeArea(

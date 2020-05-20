@@ -9,6 +9,7 @@ import 'package:posku/screen/goodreceived/gr_detail_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/login/forgot_password_screen.dart';
 import 'package:posku/screen/login/login_screen.dart';
+import 'package:posku/screen/payment/add_payment_screen.dart';
 import 'package:posku/screen/payment/detail_payment_screen.dart';
 import 'package:posku/screen/pricegroup/pg_detail_screen.dart';
 import 'package:posku/screen/salebooking/sb_detail_screen.dart';
@@ -26,6 +27,7 @@ const detailDeliveryScreen = "/DetailDeliveryScreen";
 const detailPaymentScreen = "/DetailPaymentScreen";
 const detailCustomerScreen = "/DetailCustomerScreen";
 const pgDetailScreen = "/PgDetailScreen";
+const addPaymentScreen = "/AddPaymentScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -97,6 +99,12 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: PGDetailScreen(),
+        );
+      case addPaymentScreen:
+        return GetRoute(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: AddPaymentScreen(),
         );
       default:
         return GetRoute(

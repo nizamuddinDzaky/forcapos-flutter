@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/middle_ware.dart';
 import 'package:posku/app/my_router.dart';
@@ -22,6 +23,10 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: [
         CustomMaterialLocalizations(),
         CustomCupertinoLocalizations(),
+        CustomWidgetsLocalizations(),
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
       ],
       locale: Locale('in', 'ID'),
       navigatorObservers: [
@@ -49,6 +54,17 @@ class CustomCupertinoLocalizations extends LocalizationsDelegate<CupertinoLocali
 
   @override
   Future<CupertinoLocalizations> load(Locale locale) async => DefaultCupertinoLocalizations();
+
+  @override
+  bool shouldReload(_) => false;
+}
+
+class CustomWidgetsLocalizations extends LocalizationsDelegate<WidgetsLocalizations> {
+  @override
+  bool isSupported(Locale locale) => true;
+
+  @override
+  Future<WidgetsLocalizations> load(Locale locale) async => DefaultWidgetsLocalizations();
 
   @override
   bool shouldReload(_) => false;
