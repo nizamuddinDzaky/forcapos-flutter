@@ -14,13 +14,15 @@ class MyDivider {
     double top = 0.0,
     double right = 0.0,
     double bottom = 0.0,
+    double vertical,
+    double horizontal,
   }) {
     return Container(
       padding: EdgeInsets.only(
-        left: left,
-        right: right,
-        top: top,
-        bottom: bottom,
+        left: horizontal ?? left,
+        right: horizontal ?? right,
+        top: vertical ?? top,
+        bottom: vertical ?? bottom,
       ),
       child: Divider(
         height: custom ?? 1,

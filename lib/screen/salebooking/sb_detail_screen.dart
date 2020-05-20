@@ -418,23 +418,6 @@ class _SBDetailScreenState extends SBDetailViewModel {
             },
           ),
           MyDivider.lineDivider(),
-//          FutureBuilder(
-//            future: getDetailSupplier(sb?.companyId),
-//            builder: (context, snapshot) {
-//              if (sbItems == null ||
-//                  snapshot.connectionState != ConnectionState.done) {
-//                return tileInfo('Distributor', data: null);
-//              }
-//
-//              return tileInfo('Distributor', data: {
-//                0: 'Distributor',
-//                1: supplier?.name ?? '',
-//                2: supplier?.address ?? '',
-//                3: supplier?.state ?? ''
-//              });
-//            },
-//          ),
-//          MyDivider.lineDivider(),
           FutureBuilder(
             future: getDetailWarehouse(sb?.warehouseId),
             builder: (context, snapshot) {
@@ -491,55 +474,101 @@ class _SBDetailScreenState extends SBDetailViewModel {
   }
 
   Widget widgetPayment() {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverFillRemaining(
-          hasScrollBody: true,
-          fillOverscroll: true,
-          child: IntrinsicHeight(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.insert_drive_file,
-                        size: 16,
-                        color: MyColor.blueDio,
+    return listPayment?.length == 0
+        ? LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return CustomScrollView(slivers: <Widget>[
+                SliverFillRemaining(
+                  hasScrollBody: true,
+                  fillOverscroll: true,
+                  child: IntrinsicHeight(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          minHeight: viewportConstraints.maxHeight),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.insert_drive_file,
+                                  size: 16,
+                                  color: MyColor.blueDio,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text('Daftar Pembayaran',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle
+                                        .copyWith(color: Colors.black)),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Colors.white,
+                              child: Center(
+                                child: Text('Data Kosong'),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('Daftar Pembayaran',
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle
-                              .copyWith(color: Colors.black)),
-                    ],
+                    ),
                   ),
+                )
+              ]);
+            },
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.insert_drive_file,
+                      size: 16,
+                      color: MyColor.blueDio,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text('Daftar Pembayaran',
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle
+                            .copyWith(color: Colors.black)),
+                  ],
                 ),
-                FutureBuilder(
-                  future: getListPayment(sb.id),
-                  builder: (buildContext, snapshot) {
-                    if (listPayment == null ||
-                        snapshot.connectionState != ConnectionState.done) {
-                      return Expanded(
-                          child: Container(
-                        color: Colors.white,
-                        child: Center(child: CupertinoActivityIndicator()),
-                      ));
-                    }
+              ),
+              FutureBuilder(
+                future: getListPayment(sb.id),
+                builder: (buildContext, snapshot) {
+                  if (listPayment == null ||
+                      snapshot.connectionState != ConnectionState.done) {
+                    return Expanded(
+                        child: Container(
+                      color: Colors.white,
+                      child: Center(child: CupertinoActivityIndicator()),
+                    ));
+                  }
 
-                    if (listPayment?.length == 0) {
-                      return Container();
-                    }
+                  if ((listPayment?.length ?? 0) == 0) {
+                    return Container();
+                  }
 
-                    return ListView.separated(
+                  return Expanded(
+                    child: ListView.separated(
 //            padding: EdgeInsets.symmetric(vertical: 12),
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+//                physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (buildContext, index) {
                         return Container(
                           color: Colors.white,
@@ -670,11 +699,12 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 onTap: listPayment[index]?.attachment == null
                                     ? null
                                     : () async {
-                                  await Get.toNamed(
-                                    detailPaymentScreen,
-                                    arguments: listPayment[index].toJson(),
-                                  );
-                                },
+                                        await Get.toNamed(
+                                          detailPaymentScreen,
+                                          arguments:
+                                              listPayment[index].toJson(),
+                                        );
+                                      },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
@@ -701,15 +731,15 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                     ),
                                     if (listPayment[index]?.attachment != null)
                                       Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
-                                      child: Text(
-                                        'Selengkapnya',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: MyColor.mainBlue),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        child: Text(
+                                          'Selengkapnya',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: MyColor.mainBlue),
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -724,21 +754,12 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         );
                       },
                       itemCount: listPayment?.length ?? 0,
-                    );
-                  },
-                ),
-                if (listPayment?.length == 0)
-                  Expanded(
-                      child: Container(
-                    color: Colors.white,
-                    child: Center(child: Text('Data Kosong')),
-                  )),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
   }
 
   Widget widgetDelivery() {
@@ -1016,7 +1037,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  var result = await Get.toNamed(detailDeliveryScreen,
+                                  var result = await Get.toNamed(
+                                      detailDeliveryScreen,
                                       arguments: listDelivery[index].toJson());
                                   if (result != null) {
                                     setState(() {
@@ -1100,6 +1122,31 @@ class _SBDetailScreenState extends SBDetailViewModel {
     }
   }
 
+  Widget _actionButton() {
+    if (sliding == 0) return null;
+    if (sb.saleStatus != 'reserved') return null;
+
+    return CupertinoButton(
+      minSize: 0,
+      padding: EdgeInsets.all(0.0),
+      onPressed: sliding == 1
+          ? () async {
+              var result = await Get.toNamed(
+                addPaymentScreen,
+                arguments: sb.toJson(),
+              );
+              if (result == 'newPayment') {
+                actionRefresh();
+              }
+            }
+          : () {},
+      child: Icon(
+        Icons.add,
+        size: 24,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -1119,6 +1166,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
             });
           },
         ),
+        trailing: _actionButton(),
       ),
       child: Scaffold(
         body: SafeArea(

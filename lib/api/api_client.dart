@@ -18,7 +18,7 @@ typedef APIFailedCallback = dynamic Function(String title, String message);
 
 class ApiClient {
   static addInterceptor() {
-//    addInterceptor1();
+    addInterceptor1();
     addInterceptor2();
   }
 
@@ -171,7 +171,7 @@ class ApiClient {
         }
       });
     } on DioError catch (error) {
-      var title = 'Komunikasi gagal';
+      var title = 'Operasi gagal';
       if (error.type == DioErrorType.DEFAULT) {
         responseApi._setError(title, 'Cek koneksi kemudian coba lagi.');
       } else if (customHandle) {
@@ -181,14 +181,12 @@ class ApiClient {
         var statusCode = error.response.statusCode;
         if (statusCode == 405) {
           responseApi._setFailed(title, 'Akses informasi tidak valid.');
-        } else if (statusCode == 400) {
+        } else if (statusCode == 400 && error.request.uri.toString().contains('login')) {
           responseApi._setFailed(
-              title, 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
-        } else if (statusCode == 500) {
-          responseApi._setFailed(
-              title, error.response.toString());
+              error.request.uri.toString(), 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
         } else {
           print('error gan $error ${error.response}');
+          responseApi._setFailed(title, error.response.toString());
         }
       }
     }
