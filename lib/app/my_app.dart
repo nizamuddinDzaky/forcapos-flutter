@@ -13,7 +13,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'POSku',
       theme: ThemeData(
-          primaryColor: MyColor.mainBlue, accentColor: MyColor.mainRed),
+        primaryColor: MyColor.mainBlue,
+        accentColor: MyColor.mainRed,
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: Colors.black.withOpacity(0),
+        ),
+      ),
       navigatorKey: Get.key,
       initialRoute: "/",
       supportedLocales: [
@@ -37,34 +42,40 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class CustomMaterialLocalizations extends LocalizationsDelegate<MaterialLocalizations> {
+class CustomMaterialLocalizations
+    extends LocalizationsDelegate<MaterialLocalizations> {
   @override
   bool isSupported(Locale locale) => true;
 
   @override
-  Future<MaterialLocalizations> load(Locale locale) async => DefaultMaterialLocalizations();
+  Future<MaterialLocalizations> load(Locale locale) async =>
+      DefaultMaterialLocalizations();
 
   @override
   bool shouldReload(_) => false;
 }
 
-class CustomCupertinoLocalizations extends LocalizationsDelegate<CupertinoLocalizations> {
+class CustomCupertinoLocalizations
+    extends LocalizationsDelegate<CupertinoLocalizations> {
   @override
   bool isSupported(Locale locale) => true;
 
   @override
-  Future<CupertinoLocalizations> load(Locale locale) async => DefaultCupertinoLocalizations();
+  Future<CupertinoLocalizations> load(Locale locale) async =>
+      DefaultCupertinoLocalizations();
 
   @override
   bool shouldReload(_) => false;
 }
 
-class CustomWidgetsLocalizations extends LocalizationsDelegate<WidgetsLocalizations> {
+class CustomWidgetsLocalizations
+    extends LocalizationsDelegate<WidgetsLocalizations> {
   @override
   bool isSupported(Locale locale) => true;
 
   @override
-  Future<WidgetsLocalizations> load(Locale locale) async => DefaultWidgetsLocalizations();
+  Future<WidgetsLocalizations> load(Locale locale) async =>
+      DefaultWidgetsLocalizations();
 
   @override
   bool shouldReload(_) => false;

@@ -130,6 +130,9 @@ class _SBDetailScreenState extends SBDetailViewModel {
   }
 
   Widget sectionTotal({String totalItem}) {
+    var newGrandTotal = MyNumber.strUSToDouble(sb.grandTotal) -
+        MyNumber.strUSToDouble(sb.paid) -
+        MyNumber.strUSToDouble(sb.totalDiscount);
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -150,7 +153,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
           ),
           sectionTotalDetail(
             'Jumlah Akhir (Rp)',
-            sb.grandTotal,
+            newGrandTotal.toString(),
             color: MyColor.mainBlue,
           ),
         ],
@@ -1182,7 +1185,11 @@ class _SBDetailScreenState extends SBDetailViewModel {
           : () async {
               var result = await Get.toNamed(
                 addDeliveryScreen,
-                arguments: sb.toJson(),
+                arguments: {
+                  'sale': sb,
+                  'customer': customer,
+                  'sbItems': sbItems,
+                },
               );
               if (result == 'newDelivery') {
                 actionRefresh();
