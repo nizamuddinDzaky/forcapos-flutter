@@ -99,6 +99,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
         listDelivery = baseResponse?.data?.listDelivery ?? [];
+        listDelivery.sort((a, b) => b.date.compareTo(a.date));
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -128,7 +129,9 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       },
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
-        sb = baseResponse?.data?.salesBooking ?? sb;
+        var newSb = baseResponse?.data?.salesBooking ?? sb;
+        sb.paid = newSb.paid;
+        sb.grandTotal = newSb.grandTotal;
         sbItems = baseResponse?.data?.salesBookingItems ?? [];
       },
       onFailed: (title, message) {
