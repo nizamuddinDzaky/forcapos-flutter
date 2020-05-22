@@ -8,11 +8,13 @@ class LoadingButton extends StatefulWidget {
     @required this.onPressed,
     @required this.title,
     this.noMargin = false,
+    this.isActionNavigation = false,
   });
 
   final Function onPressed;
   final String title;
   final bool noMargin;
+  final bool isActionNavigation;
 
   @override
   _LoadingButtonState createState() => _LoadingButtonState();
@@ -36,23 +38,29 @@ class _LoadingButtonState extends State<LoadingButton> {
   Widget build(BuildContext context) {
     return Container(
       margin: widget.noMargin ? null : MyDimen.marginLayout(),
-      width: double.maxFinite,
-      child: FlatButton(
-        color: MyColor.mainGreen,
-        disabledColor: MyColor.mainGreen,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            isLoading
-                ? CupertinoActivityIndicator()
-                : Text(
-                    widget.title,
-                    style: TextStyle(color: Colors.white),
-                  ),
-          ],
-        ),
-        onPressed: isLoading ? null : actionOnPressed,
-      ),
+      width: widget.isActionNavigation ? null : double.maxFinite,
+      child: widget.isActionNavigation
+          ? CupertinoButton(
+              onPressed: isLoading ? null : actionOnPressed,
+              child:
+                  isLoading ? CupertinoActivityIndicator() : Text(widget.title),
+            )
+          : FlatButton(
+              color: MyColor.mainGreen,
+              disabledColor: MyColor.mainGreen,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  isLoading
+                      ? CupertinoActivityIndicator()
+                      : Text(
+                          widget.title,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                ],
+              ),
+              onPressed: isLoading ? null : actionOnPressed,
+            ),
     );
   }
 }
