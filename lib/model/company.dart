@@ -1,3 +1,5 @@
+import 'package:posku/model/user.dart';
+
 class Company {
   String id;
   String groupId;
@@ -46,6 +48,7 @@ class Company {
   String isActive;
   String createdAt;
   String updatedAt;
+  User user;
 
   Company(
       {this.id,
@@ -94,7 +97,8 @@ class Company {
         this.salesPersonRef,
         this.isActive,
         this.createdAt,
-        this.updatedAt});
+        this.updatedAt,
+        this.user});
 
   Company.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -144,6 +148,9 @@ class Company {
     isActive = json['is_active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    if (json['user'] != null) {
+      user = User.fromJson(json['user']);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -195,6 +202,7 @@ class Company {
     data['is_active'] = this.isActive;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['user'] = this.user?.toJson();
     return data;
   }
 }
