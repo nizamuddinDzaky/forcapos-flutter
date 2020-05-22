@@ -47,6 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     var screen = MyScreen(MediaQuery.of(context).size);
+    var company = MyPref.getCompany();
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -64,17 +65,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: <Widget>[
                         SafeArea(
                           child: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                MyText.textBlackSmall('PT. Sinergi Informatika',
-                                    isBold: true),
-                                MyDivider.spaceDividerLogin(custom: 4),
-                                MyText.textBlackSmall(
-                                    'Jalan Tubanan Barat\nGresik\nJawa Timur'),
-                                MyDivider.spaceDividerLogin(custom: 4),
-                              ],
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  MyText.textBlackSmall(company?.company ?? '',
+                                      isBold: true),
+                                  MyDivider.spaceDividerLogin(custom: 4),
+                                  MyText.textBlackSmall(
+                                      company?.user?.address ?? ''),
+                                  MyDivider.spaceDividerLogin(custom: 4),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -93,10 +97,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Hero(
                               tag: 'logoForcaPoS',
                               child: CupertinoButton(
+                                minSize: 0,
+                                padding: EdgeInsets.all(0),
                                 onPressed: () => Get.toNamed(profileScreen),
                                 child: Image.asset(
                                   kAvatar,
-                                  width: 48,
+                                  width: 40,
                                   fit: BoxFit.cover,
                                 ),
                               ),

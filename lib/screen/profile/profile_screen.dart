@@ -1,12 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
-import 'package:posku/model/company.dart';
-import 'package:posku/util/my_pref.dart';
+import 'package:posku/screen/profile/profile_view_model.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
 
@@ -44,11 +40,7 @@ class InputModel {
   });
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  bool isFirst = true;
-  Company company;
-  String gender;
-
+class _ProfileScreenState extends ProfileViewModel {
   Widget _bodySheetMenu({
     String title,
     String unitCode,
@@ -88,10 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         body[data2[2].key] = data2[2].value ?? data2[1];
                     });
                     print('cek map $body');
-//                    await Future.delayed(Duration(seconds: 2));
-//                    var rand = Random().nextInt(3);
-//                    print('random $rand');
-//                    if (rand == 1) Get.back();
+                    await actionPutProfile(body);
                   },
                   title: 'Selesai',
                   noMargin: true,
@@ -289,7 +278,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var listProfile = [
       [
         'Nama Depan',
-        company?.name,
+        company?.user?.firstName ?? company?.name,
         InputModel(
           inputType: InputType.text,
           key: 'first_name',
@@ -297,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
       [
         'Nama Belakang',
-        '',
+        company?.user?.lastName ?? company?.name,
         InputModel(
           inputType: InputType.text,
           key: 'last_name',
@@ -305,7 +294,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
       [
         'Jenis Kelamin',
-        '',
+        gender == 'male'
+            ? 'Laki-laki'
+            : (gender == 'female' ? 'Perempuan' : ''),
         InputModel(
           inputType: InputType.radio,
           key: 'gender',
@@ -320,7 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var listAddress = [
       [
         'Provinsi',
-        company?.state,
+        company?.user?.country ?? company?.state,
         InputModel(
           inputType: InputType.dropdown,
           key: 'state',
@@ -328,7 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
       [
         'Kota',
-        company?.city,
+        company?.user?.city ?? company?.city,
         InputModel(
           inputType: InputType.dropdown,
           key: 'city',
@@ -336,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
       [
         'Desa',
-        company?.region,
+        company?.state,
         InputModel(
           inputType: InputType.dropdown,
           key: 'region',
@@ -389,7 +380,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
       [
         'No. Telp.',
-        company?.phone,
+        company?.user?.phone,
         InputModel(
           inputType: InputType.text,
           key: 'phone',
@@ -519,12 +510,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     builder: (builder) {
                       return _bodySheetMenu(title: 'Ubah Kata Sandi', list: [
                         [
+                          'Kata Sandi Lama',
+                          '',
+                          InputModel(
+                            inputType: InputType.text,
+                            textInputType: TextInputType.visiblePassword,
+                            key: 'old_password',
+                          ),
+                        ],
+                        [
                           'Kata Sandi Baru',
                           '',
                           InputModel(
                             inputType: InputType.text,
                             textInputType: TextInputType.visiblePassword,
-                            key: 'password',
+                            key: 'new_password',
                           ),
                         ],
                         [
@@ -533,7 +533,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           InputModel(
                             inputType: InputType.text,
                             textInputType: TextInputType.visiblePassword,
-                            key: 'new_password',
+                            key: 'new_password_confirm',
                           ),
                         ],
                       ]);
@@ -560,18 +560,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Material(
         child: SafeArea(
-          child: _body(),
+          child: RefreshIndicator(
+            key: refreshIndicatorKey,
+            onRefresh: actionGetProfile,
+            child: _body(),
+          ),
         ),
       ),
     );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (isFirst) {
-      company = MyPref.getCompany();
-      isFirst = false;
-    }
   }
 }
