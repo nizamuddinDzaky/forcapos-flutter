@@ -13,9 +13,6 @@ import 'package:posku/screen/customergroup/customer_group_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/pricegroup/price_group_screen.dart';
 import 'package:posku/util/my_number.dart';
-import 'package:posku/util/resource/my_color.dart';
-import 'package:posku/util/style/my_style.dart';
-import 'package:posku/util/widget/my_text.dart';
 import 'package:provider/provider.dart';
 
 class MasterDataScreen extends StatefulWidget {

@@ -117,7 +117,7 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                               ),
                               PopupMenuItem<int>(
                                 height: 30,
-                                child: const Text('Ubah Rincian Kel. Harga'),
+                                child: const Text('Ubah Kelompok Harga'),
                                 value: 1,
                               ),
                               PopupMenuItem<int>(

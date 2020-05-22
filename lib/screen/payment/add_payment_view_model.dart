@@ -8,6 +8,7 @@ import 'package:posku/helper/custom_dialog.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/payment/add_payment_screen.dart';
+import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_string.dart';
 
 abstract class AddPaymentViewModel extends State<AddPaymentScreen> {
@@ -54,6 +55,9 @@ abstract class AddPaymentViewModel extends State<AddPaymentScreen> {
     if (Get.args(context) != null && isFirst) {
       var arg = Get.args(context) as Map<String, dynamic>;
       sb = SalesBooking.fromJson(arg);
+      var unpaid = MyNumber.strUSToDouble(sb.grandTotal) -
+          MyNumber.strUSToDouble(sb.paid);
+      amountController.text = MyNumber.toNumberId(unpaid);
       isFirst = false;
     }
   }

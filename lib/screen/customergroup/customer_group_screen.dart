@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:posku/app/my_router.dart';
 import 'package:posku/model/customer_group.dart';
 import 'package:posku/screen/customergroup/customer_group_view_model.dart';
 import 'package:posku/util/my_number.dart';
