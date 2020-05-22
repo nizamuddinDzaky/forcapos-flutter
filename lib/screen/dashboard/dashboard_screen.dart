@@ -92,10 +92,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           children: <Widget>[
                             Hero(
                               tag: 'logoForcaPoS',
-                              child: Image.asset(
-                                kAvatar,
-                                width: 48,
-                                fit: BoxFit.cover,
+                              child: CupertinoButton(
+                                onPressed: () => Get.toNamed(profileScreen),
+                                child: Image.asset(
+                                  kAvatar,
+                                  width: 48,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ],
