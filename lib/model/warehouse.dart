@@ -77,4 +77,9 @@ class Warehouse {
     data['active'] = this.active;
     return data;
   }
+
+  @override
+  String toString() {
+    return name;
+  }
 }

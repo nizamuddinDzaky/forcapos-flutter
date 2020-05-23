@@ -92,6 +92,17 @@ extension DateTimeExtension on DateTime {
     var dateFormatOut = DateFormat('yyyy-MM-dd HH:mm:ss');
     return dateFormatOut.format(this);
   }
+
+  String toMonthStr({bool showDiffYear = false}) {
+    if (this == null) return '';
+    var now = DateTime.now();
+    if (showDiffYear && now.year != this.year) {
+      var dateFormatOut = DateFormat('MMMM yyyy');
+      return dateFormatOut.format(this);
+    }
+    var dateFormatOut = DateFormat('MMMM');
+    return dateFormatOut.format(this);
+  }
 }
 
 String dateToDate(DateTime dateTime) {
