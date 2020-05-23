@@ -88,11 +88,14 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            pg?.name ?? '~',
-                            style: Theme.of(context).textTheme.title,
+                          Flexible(
+                            child: Text(
+                              pg?.name ?? '~',
+                              style: Theme.of(context).textTheme.title,
+                            ),
                           ),
                           PopupMenuButton<int>(
                             key: _keyMore,

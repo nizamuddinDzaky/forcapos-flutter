@@ -144,9 +144,24 @@ class _MasterDataScreenState extends State<MasterDataScreen>
                       heroTag: 'logoForcaPoS',
                       middle: CupertinoSlidingSegmentedControl(
                         children: {
-                          0: Container(child: Text('Pelanggan')),
-                          1: Container(child: Text('K. Pelanggan')),
-                          2: Container(child: Text('K. Harga')),
+                          0: Container(
+                            child: Text(
+                              'Pelanggan',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          1: Container(
+                            child: Text(
+                              'K. Pelanggan',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          2: Container(
+                            child: Text(
+                              'K. Harga',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         },
                         groupValue: sliding,
                         onValueChanged: (newValue) {

@@ -87,11 +87,14 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                   mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            cg?.name ?? '~',
-                            style: Theme.of(context).textTheme.title,
+                          Flexible(
+                            child: Text(
+                              cg?.name ?? '~',
+                              style: Theme.of(context).textTheme.title,
+                            ),
                           ),
                           PopupMenuButton<int>(
                             key: _keyMore,
