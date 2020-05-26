@@ -97,10 +97,10 @@ extension DateTimeExtension on DateTime {
     if (this == null) return '';
     var now = DateTime.now();
     if (showDiffYear && now.year != this.year) {
-      var dateFormatOut = DateFormat('MMMM yyyy');
+      var dateFormatOut = DateFormat('MMMM yyyy', 'in_ID');
       return dateFormatOut.format(this);
     }
-    var dateFormatOut = DateFormat('MMMM');
+    var dateFormatOut = DateFormat('MMMM', 'in_ID');
     return dateFormatOut.format(this);
   }
 }

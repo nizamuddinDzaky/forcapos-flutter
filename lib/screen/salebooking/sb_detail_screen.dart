@@ -130,7 +130,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
   }
 
   Widget sectionTotal({String totalItem}) {
-    var newGrandTotal = MyNumber.strUSToDouble(sb.grandTotal) -
+    var newGrandTotal = MyNumber.strUSToDouble(sb.total) -
         MyNumber.strUSToDouble(sb.paid) -
         MyNumber.strUSToDouble(sb.totalDiscount);
     return Container(
@@ -1164,7 +1164,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
 
   Widget _actionButton() {
     if (sliding == 0) return null;
-    if (sliding == 1 && sb.saleStatus != 'reserved') return null;
+    if (sliding == 1 && sb.saleStatus == 'pending') return null;
+    if (sliding == 1 && sb.paymentStatus == 'paid') return null;
     if (sliding == 2 && sb.saleStatus != 'reserved') return null;
     if (sliding == 2 && sb.deliveryStatus == 'done') return null;
 
