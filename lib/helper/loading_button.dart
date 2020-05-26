@@ -9,12 +9,14 @@ class LoadingButton extends StatefulWidget {
     @required this.title,
     this.noMargin = false,
     this.isActionNavigation = false,
+    this.noPadding = false,
   });
 
   final Function onPressed;
   final String title;
   final bool noMargin;
   final bool isActionNavigation;
+  final bool noPadding;
 
   @override
   _LoadingButtonState createState() => _LoadingButtonState();
@@ -41,6 +43,12 @@ class _LoadingButtonState extends State<LoadingButton> {
       width: widget.isActionNavigation ? null : double.maxFinite,
       child: widget.isActionNavigation
           ? CupertinoButton(
+              minSize: widget.noPadding ? 0 : null,
+              padding: widget.noPadding
+                  ? EdgeInsets.symmetric(
+                      vertical: 8,
+                    )
+                  : null,
               onPressed: isLoading ? null : actionOnPressed,
               child:
                   isLoading ? CupertinoActivityIndicator() : Text(widget.title),

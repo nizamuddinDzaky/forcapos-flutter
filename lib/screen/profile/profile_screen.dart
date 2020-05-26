@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/helper/loading_button.dart';
+import 'package:posku/model/zone.dart';
 import 'package:posku/screen/profile/profile_view_model.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -18,11 +20,25 @@ enum InputType {
   radio,
 }
 
+class DetailZone {
+  Zone province;
+  Zone city;
+  Zone state;
+
+  DetailZone({
+    this.province,
+    this.city,
+    this.state,
+  });
+}
+
 class InputModel {
   InputType inputType;
   TextInputType textInputType;
   String key;
   String value;
+  DetailZone zone;
+  Zone curZone;
   String prefixText;
   String suffixText;
   String currentRadio;
@@ -33,6 +49,8 @@ class InputModel {
     this.textInputType,
     this.key,
     this.value,
+    this.zone,
+    this.curZone,
     this.prefixText,
     this.suffixText,
     this.currentRadio,
@@ -97,42 +115,38 @@ class _ProfileScreenState extends ProfileViewModel {
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ...(list ?? []).map((data) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        if (data != null)
-                          Text(
-                            data[0],
-                            style: Theme.of(context).textTheme.subtitle,
-                          ),
-                        if (data[2].inputType == InputType.text)
-                          TextFormField(
-                            //controller: qtySentController,
-                            initialValue: data[1],
-                            autofocus: true,
-                            onChanged: (value) {
-                              data[2].value = value;
-                            },
-                            keyboardType: data[2].textInputType,
-                            decoration: new InputDecoration(
-//                              prefixText: 'Jumlah Kirim : ',
-//                              suffixText: unitCode ?? '',
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: 8,
+              child: StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ...(list ?? []).map((data) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          if (data != null)
+                            Text(
+                              data[0],
+                              style: Theme.of(context).textTheme.subtitle,
+                            ),
+                          if (data[2].inputType == InputType.text)
+                            TextFormField(
+                              initialValue: data[1],
+                              //autofocus: true,
+                              onChanged: (value) {
+                                data[2].value = value;
+                              },
+                              keyboardType: data[2].textInputType,
+                              decoration: new InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                ),
                               ),
                             ),
-                          ),
-                        if (data[2].inputType == InputType.radio)
-                          StatefulBuilder(builder:
-                              (BuildContext context, StateSetter setState
-                                  /*You can rename this!*/) {
-                            return GridView.count(
+                          if (data[2].inputType == InputType.radio)
+                            GridView.count(
                               shrinkWrap: true,
                               crossAxisCount: 2,
                               crossAxisSpacing: 4,
@@ -167,16 +181,68 @@ class _ProfileScreenState extends ProfileViewModel {
                                   );
                                 }).toList(),
                               ],
-                            );
-                          }),
-                        SizedBox(
-                          height: 4,
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ],
-              ),
+                            ),
+                          if (data[2].inputType == InputType.dropdown)
+                            LoadingButton(
+                              onPressed: () async {
+                                List<Zone> zones = await actionGetAddress(
+                                  data[2].key,
+                                  province: data[2].zone?.province?.txt,
+                                  city: data[2].zone?.city?.txt,
+                                );
+                                if (zones != null) {
+                                  DataPicker.showDatePicker(
+                                    context,
+                                    locale: 'id',
+                                    datas: zones,
+                                    title: 'Pilih ${data[0]} ${data[2].key}',
+                                    onConfirm: (selected) {
+                                      Zone newZone = selected;
+                                      DetailZone detailZone = data[2].zone;
+                                      setState(() {
+                                        if (data[2].key == 'province') {
+                                          detailZone.province = newZone
+                                            ..toProvince();
+                                          data[2].curZone = detailZone.province;
+                                          detailZone.city.txt = null;
+                                          listCity = null;
+                                          detailZone.state.txt = null;
+                                          listState = null;
+                                        }
+                                        if (data[2].key == 'city') {
+                                          detailZone.city = newZone..toCity();
+                                          data[2].curZone = detailZone.city;
+                                          detailZone.state.txt = null;
+                                          listState = null;
+                                        }
+                                        if (data[2].key == 'state') {
+                                          detailZone.state = newZone..toCity();
+                                          data[2].curZone = detailZone.state;
+                                        }
+                                        data[2].value = newZone.txt;
+                                      });
+                                    },
+                                  );
+                                } else {
+                                  setState(() {
+                                    data[2].curZone?.txt = null;
+                                  });
+                                }
+                              },
+                              title: data[2].curZone?.txt ?? '-- Pilih --',
+                              noMargin: true,
+                              isActionNavigation: true,
+                              noPadding: true,
+                            ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ],
+                );
+              }),
             ),
           ),
           SizedBox(height: 10),
@@ -311,26 +377,32 @@ class _ProfileScreenState extends ProfileViewModel {
     var listAddress = [
       [
         'Provinsi',
-        company?.user?.country ?? company?.state,
+        province?.provinceName,
         InputModel(
           inputType: InputType.dropdown,
-          key: 'state',
+          zone: zone,
+          curZone: zone.province,
+          key: 'province',
         ),
       ],
       [
-        'Kota',
-        company?.user?.city ?? company?.city,
+        'Kab./Kota',
+        city?.kabupatenName,
         InputModel(
           inputType: InputType.dropdown,
+          zone: zone,
+          curZone: zone.city,
           key: 'city',
         ),
       ],
       [
-        'Desa',
-        company?.state,
+        'Kecamatan',
+        state?.kecamatanName,
         InputModel(
           inputType: InputType.dropdown,
-          key: 'region',
+          zone: zone,
+          curZone: zone.state,
+          key: 'state',
         ),
       ],
       [

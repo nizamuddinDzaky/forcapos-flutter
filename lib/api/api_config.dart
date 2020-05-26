@@ -2,6 +2,7 @@ class ApiConfig {
   static String host = 'https://qp.forca.id/';
 //  static String host = 'http://10.15.4.102:9090/';
   static String path = '${host}api/v1/distributor/';
+  static String local = '${host}api/Local/';
 
   //auth
   static String urlLogin = '${path}auth/login';
@@ -54,4 +55,9 @@ class ApiConfig {
 
   //product
   static String urlListProduct = '${path}products/list_products';
+
+  //local
+  static String urlListProvince = '${local}list_province';
+  static String urlListCity = '${local}list_city';
+  static String urlListStates = '${local}list_states';
 }
