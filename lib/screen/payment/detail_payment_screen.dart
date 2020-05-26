@@ -35,8 +35,8 @@ class _DetailPaymentScreenState extends State<DetailPaymentScreen> {
   Widget build(BuildContext context) {
     String urlAttachment = '';
     Payment payment;
-    if (Get.args(context) != null) {
-      var arg = Get.args(context) as Map<String, dynamic>;
+    if (Get.arguments != null) {
+      var arg = Get.arguments as Map<String, dynamic>;
       payment = Payment.fromJson(arg ?? {});
       urlAttachment = payment.attachment ?? '';
     }

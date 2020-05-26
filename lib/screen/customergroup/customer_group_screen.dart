@@ -73,7 +73,7 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                     child: Text('PoS',
                         style: Theme.of(context)
                             .textTheme
-                            .title
+                            .headline6
                             .copyWith(color: Colors.white)),
                   ),
                 ),
@@ -93,7 +93,7 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                           Flexible(
                             child: Text(
                               cg?.name ?? '~',
-                              style: Theme.of(context).textTheme.title,
+                              style: Theme.of(context).textTheme.headline6,
                             ),
                           ),
                           PopupMenuButton<int>(
@@ -124,7 +124,7 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                       ),
                       Text(
                         MyNumber.toNumberRpStr(cg?.kreditLimit ?? '0'),
-                        style: Theme.of(context).textTheme.subhead,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ],
                   ),

@@ -52,8 +52,8 @@ abstract class AddPaymentViewModel extends State<AddPaymentScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (Get.args(context) != null && isFirst) {
-      var arg = Get.args(context) as Map<String, dynamic>;
+    if (Get.arguments != null && isFirst) {
+      var arg = Get.arguments as Map<String, dynamic>;
       sb = SalesBooking.fromJson(arg);
       var unpaid = MyNumber.strUSToDouble(sb.grandTotal) -
           MyNumber.strUSToDouble(sb.paid);

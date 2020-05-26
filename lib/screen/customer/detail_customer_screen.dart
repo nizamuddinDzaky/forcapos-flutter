@@ -57,7 +57,7 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                               child: Text('PoS',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .title
+                                      .headline6
                                       .copyWith(color: Colors.white)),
                             ),
                           ),
@@ -66,7 +66,7 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                           ),
                           Text(
                             customer?.name ?? '',
-                            style: Theme.of(context).textTheme.title,
+                            style: Theme.of(context).textTheme.headline6,
                           ),
                         ],
                       ),
@@ -122,7 +122,7 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                           (val ?? '').isEmpty ? '-' : val,
                           //val ?? '',
                           textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.body2,
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
                     ],

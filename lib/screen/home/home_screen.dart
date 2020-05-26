@@ -17,6 +17,7 @@ class HomeState extends ChangeNotifier {
   bool get isSearch => _isSearch;
 
   int get roleId => _roleId;
+
 //  int get roleId => MyString.ROLE_SUPER_ADMIN;
 //  int get roleId => MyString.ROLE_WAREHOUSE_ADMIN;
 //  int get roleId => MyString.ROLE_CASHIER;
@@ -150,16 +151,16 @@ class InvisibleCupertinoTabBar extends CupertinoTabBar {
   Widget build(BuildContext context) => SizedBox();
 
   @override
-  InvisibleCupertinoTabBar copyWith({
+  CupertinoTabBar copyWith({
     Key key,
     List<BottomNavigationBarItem> items,
     Color backgroundColor,
     Color activeColor,
     Color inactiveColor,
-    Size iconSize,
+    double iconSize,
     Border border,
     int currentIndex,
-    ValueChanged<int> onTap,
+    onTap,
   }) =>
       InvisibleCupertinoTabBar();
 }

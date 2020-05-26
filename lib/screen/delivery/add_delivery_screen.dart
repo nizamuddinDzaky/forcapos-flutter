@@ -5,7 +5,6 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
-import 'package:posku/model/delivery_item.dart';
 import 'package:posku/screen/delivery/add_delivery_view_model.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_util.dart';
@@ -40,7 +39,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                 alignment: Alignment.center,
                 child: Text(
                   title ?? 'Masukkan Jumlah',
-                  style: Theme.of(context).textTheme.title,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               CupertinoButton(
@@ -102,7 +101,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                 children: <Widget>[
                   Text(
                     'Referensi Nomor Penjualan',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Row(
                     children: <Widget>[
@@ -133,7 +132,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                   ),
                   Text(
                     'Tanggal',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Row(
                     children: <Widget>[
@@ -178,7 +177,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                   ),
                   Text(
                     'Status',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   GridView.count(
                     shrinkWrap: true,
@@ -220,7 +219,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                   ),
                   Text(
                     'Dikirim oleh',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Row(
                     children: <Widget>[
@@ -251,7 +250,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                   ),
                   Text(
                     'Diterima oleh',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Row(
                     children: <Widget>[
@@ -282,7 +281,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                   ),
                   Text(
                     'Pelanggan',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Row(
                     children: <Widget>[
@@ -313,7 +312,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                   ),
                   Text(
                     'Alamat',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Row(
                     children: <Widget>[
@@ -369,7 +368,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                 child: Text('PPC',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .title
+                                        .headline6
                                         .copyWith(color: Colors.white)),
                               ),
                             ),
@@ -383,7 +382,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                   Text(sbi.productName ?? '',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .title
+                                          .headline6
                                           .copyWith()),
                                   Text(sbi.productCode ?? '',
                                       style: Theme.of(context)
@@ -397,7 +396,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                       '${MyNumber.toNumberIdStr(sbi.quantity)} ${sbi.productUnitCode}',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .subtitle
+                                          .subtitle2
                                           .copyWith(color: MyColor.txtField)),
                                 ],
                               ),
@@ -416,14 +415,14 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                 Text('Belum Terkirim',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle
+                                        .subtitle2
                                         .copyWith(color: MyColor.txtField)),
                                 Row(
                                   children: <Widget>[
                                     Text('${MyNumber.toNumberId(qtyUnsent)}',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .title
+                                            .headline6
                                             .copyWith(color: MyColor.mainRed)),
                                     SizedBox(
                                       width: 8,
@@ -431,7 +430,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                     Text('${sbi.productUnitCode}',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .title
+                                            .headline6
                                             .copyWith(color: MyColor.mainRed)),
                                   ],
                                 ),
@@ -442,7 +441,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                 Text('Jumlah Kirim',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle
+                                        .subtitle2
                                         .copyWith(color: MyColor.txtField)),
                                 Container(
                                   padding: EdgeInsets.only(bottom: 4),
@@ -516,7 +515,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                             )}',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .title
+                                                .headline6
                                                 .copyWith(
                                                     color: MyColor.blueDio)),
                                         minSize: 24,
@@ -568,7 +567,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                 children: <Widget>[
                   Text(
                     'Lampiran',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 8),
@@ -595,12 +594,12 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                 Text('Telusuri',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle
+                                        .subtitle2
                                         .copyWith(color: MyColor.blueDio)),
                                 Text(' file untuk upload',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle
+                                        .subtitle2
                                         .copyWith(color: MyColor.txtField)),
                               ],
                             ),
@@ -616,7 +615,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                   ),
                   Text(
                     'Catatan',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   TextFormField(
                     //controller: noteController,
@@ -670,7 +669,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
         previousPageTitle: 'Dftr Krm',
         middle: Text(
           'Tambah Pengiriman',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline6,
         ),
       ),
       child: Material(

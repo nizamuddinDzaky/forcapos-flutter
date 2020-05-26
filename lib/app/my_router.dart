@@ -37,30 +37,30 @@ class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case root:
-        return GetRoute(
+        return GetRouteBase(
           page: SplashScreen(),
           settings: settings,
         );
       case loginScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.fade,
           page: LoginScreen(),
         );
       case forgotPasswordScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: ForgotPasswordScreen(),
         );
       case homeScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: HomeScreen(),
         );
       case grConfirmationScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: GRConfirmationScreen(),
@@ -81,49 +81,49 @@ class MyRouter {
           builder: (BuildContext context) => DetailDeliveryScreen(),
         );
       case filterScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: FilterScreen(),
         );
       case detailPaymentScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           fullscreenDialog: true,
           page: DetailPaymentScreen(),
         );
       case detailCustomerScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: DetailCustomerScreen(),
         );
       case pgDetailScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: PGDetailScreen(),
         );
       case addPaymentScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: AddPaymentScreen(),
         );
       case addDeliveryScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: AddDeliveryScreen(),
         );
       case profileScreen:
-        return GetRoute(
+        return GetRouteBase(
           settings: settings,
           transition: Transition.rightToLeft,
           page: ProfileScreen(),
         );
       default:
-        return GetRoute(
+        return GetRouteBase(
             settings: settings,
             transition: Transition.fade,
             page: Scaffold(

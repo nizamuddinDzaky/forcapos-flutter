@@ -73,8 +73,8 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (Get.args(context) != null && isFirst) {
-      var arg = Get.args(context) as Map<String, dynamic>;
+    if (Get.arguments != null && isFirst) {
+      var arg = Get.arguments as Map<String, dynamic>;
       gr = GoodReceived.fromJson(arg ?? {});
       var qtyDo = MyNumber.strUSToDouble(gr.qtyDo);
       var total = MyNumber.strUSToDouble(gr.total);
@@ -83,7 +83,7 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
       priceController.text = MyNumber.toNumberId(price);
       qtyController.text = MyNumber.toNumberId(double.tryParse(gr.qtyDo));
       isFirst = false;
-//      print('cek gr $price ${gr.total} ${Get.args(context)}');
+//      print('cek gr $price ${gr.total} ${Get.arguments}');
     }
   }
 

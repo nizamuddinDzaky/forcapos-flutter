@@ -37,8 +37,8 @@ abstract class DetailCustomerViewModel extends State<DetailCustomerScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (Get.args(context) != null && isFirst) {
-      var arg = Get.args(context) as Map<String, dynamic>;
+    if (Get.arguments != null && isFirst) {
+      var arg = Get.arguments as Map<String, dynamic>;
       id = arg['id'];
       isFirst = false;
       actionRefresh();

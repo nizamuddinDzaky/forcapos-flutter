@@ -5,7 +5,6 @@ import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/report_sale.dart';
 import 'package:posku/model/warehouse.dart';
 import 'package:posku/screen/dashboard/report_screen.dart';
-import 'package:posku/util/resource/my_string.dart';
 
 class PieModel {
   Color color;

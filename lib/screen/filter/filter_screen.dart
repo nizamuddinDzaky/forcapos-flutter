@@ -204,8 +204,8 @@ class _FilterScreenState extends State<FilterScreen> {
   Widget build(BuildContext context) {
     Map<String, String> firstData;
     String page = '';
-    if (Get.args(context) != null) {
-      firstData = Get.args(context) as Map<String, String>;
+    if (Get.arguments != null) {
+      firstData = Get.arguments as Map<String, String>;
       if (firstData.containsKey('page')) page = firstData['page'];
     }
     return ChangeNotifierProvider(

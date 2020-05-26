@@ -76,7 +76,7 @@ class _CustomerScreenState extends CustomerViewModel {
                   child: Text('PoS',
                       style: Theme.of(context)
                           .textTheme
-                          .title
+                          .headline6
                           .copyWith(color: Colors.white)),
                 ),
               ),
@@ -89,16 +89,16 @@ class _CustomerScreenState extends CustomerViewModel {
                   children: <Widget>[
                     Text(
                       customer?.company ?? '~',
-                      style: Theme.of(context).textTheme.title,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                     if ((customer?.cf1 ?? '').isNotEmpty)
                       Text(
                         customer?.cf1 ?? '~',
-                        style: Theme.of(context).textTheme.subhead,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                     Text(
                       address?.where((dt) => dt != null)?.join(', '),
-                      style: Theme.of(context).textTheme.subhead,
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],
                 ),

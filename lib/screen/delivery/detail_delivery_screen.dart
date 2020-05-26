@@ -189,7 +189,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                 Text('Produk',
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle
+                        .subtitle2
                         .copyWith(color: Colors.black)),
               ],
             ),
@@ -221,7 +221,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                         child: Text('PPC',
                             style: Theme.of(context)
                                 .textTheme
-                                .title
+                                .headline6
                                 .copyWith(color: Colors.white)),
                       ),
                     ),
@@ -234,7 +234,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                         children: <Widget>[
                           Text(data.productName ?? '',
                               style:
-                                  Theme.of(context).textTheme.title.copyWith()),
+                                  Theme.of(context).textTheme.headline6.copyWith()),
                           Text(data.productCode ?? '',
                               style: Theme.of(context)
                                   .textTheme
@@ -247,7 +247,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                               '${MyNumber.toNumberIdStr(data.quantitySent)} ${data.productUnitCode}',
                               style: Theme.of(context)
                                   .textTheme
-                                  .subtitle
+                                  .subtitle2
                                   .copyWith(color: MyColor.txtField)),
                         ],
                       ),
@@ -269,7 +269,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                       Text('Buruk',
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle
+                              .subtitle2
                               .copyWith(color: MyColor.mainRed)),
                       RichText(
                         textAlign: TextAlign.left,
@@ -288,7 +288,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                                           previous + current)),
                               style: Theme.of(context)
                                   .textTheme
-                                  .title
+                                  .headline6
                                   .copyWith(color: MyColor.txtField)),
                           TextSpan(
                               text:
@@ -296,7 +296,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                                       '',
                               style: Theme.of(context)
                                   .textTheme
-                                  .title
+                                  .headline6
                                   .copyWith(color: MyColor.txtField)),
                         ]),
                       ),
@@ -307,7 +307,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                       Text('Baik',
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle
+                              .subtitle2
                               .copyWith(color: MyColor.mainGreen)),
                       RichText(
                         textAlign: TextAlign.left,
@@ -326,7 +326,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                                   previous + current)),
                               style: Theme.of(context)
                                   .textTheme
-                                  .title
+                                  .headline6
                                   .copyWith(color: MyColor.txtField)),
                           TextSpan(
                               text:
@@ -334,7 +334,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                                   '',
                               style: Theme.of(context)
                                   .textTheme
-                                  .title
+                                  .headline6
                                   .copyWith(color: MyColor.txtField)),
                         ]),
                       ),

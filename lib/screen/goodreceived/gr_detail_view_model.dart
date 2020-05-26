@@ -63,8 +63,8 @@ abstract class GRDetailViewModel extends State<GRDetailScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (Get.args(context) != null && isFirst) {
-      var arg = Get.args(context) as Map<String, dynamic>;
+    if (Get.arguments != null && isFirst) {
+      var arg = Get.arguments as Map<String, dynamic>;
       gr = GoodReceived.fromJson(arg ?? {});
       idGr = gr.id;
       actionGetDetailGR();
