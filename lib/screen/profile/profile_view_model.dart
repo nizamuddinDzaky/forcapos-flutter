@@ -36,7 +36,7 @@ abstract class ProfileViewModel extends State<ProfileScreen> {
     if (key == 'state') url = ApiConfig.urlListStates;
     List<Zone> zones;
     var status = await ApiClient.methodGet(
-      url+'s',
+      url,
       params: params,
       onBefore: (status) {},
       onSuccess: (data, _) {

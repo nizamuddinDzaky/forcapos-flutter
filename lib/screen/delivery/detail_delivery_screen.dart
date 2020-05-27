@@ -147,7 +147,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
               children: <Widget>[
                 sectionDetailItem(data: {
                   0: 'Tanggal',
-                  1: strToDateTimeFormat(delivery.createdAt),
+                  1: strToDateTimeFormat(delivery.date),
                   2: null
                 }),
                 sectionDetailItem(data: {
@@ -161,7 +161,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                     data: {0: 'Status', 1: deliveryStyle[0], 2: null}),
                 sectionDetailItem(data: {
                   0: 'Tanggal Pengiriman',
-                  1: strToDateTimeFormat(delivery.date),
+                  1: strToDateTimeFormat(delivery.createdAt),
                   2: null
                 }),
                 sectionDetailItem(

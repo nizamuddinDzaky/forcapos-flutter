@@ -347,6 +347,10 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                 ...sbItems.map((sbi) {
                   var qtyUnsent = MyNumber.strUSToDouble(sbi.quantity) -
                       MyNumber.strUSToDouble(sbi.sentQuantity);
+                  final qtyController = TextEditingController(
+                      text: MyNumber.toNumberIdStr(
+                    sbi.unitQuantity,
+                  ));
                   return Container(
                     color: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -407,7 +411,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                           height: 16,
                         ),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             Column(
@@ -445,13 +449,13 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                         .copyWith(color: MyColor.txtField)),
                                 Container(
                                   padding: EdgeInsets.only(bottom: 4),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.black,
-                                      width: 1.0,
-                                    ),
-                                  )),
+//                                  decoration: BoxDecoration(
+//                                      border: Border(
+//                                    bottom: BorderSide(
+//                                      color: Colors.black,
+//                                      width: 1.0,
+//                                    ),
+//                                  )),
                                   child: Row(
                                     children: <Widget>[
                                       //btnMinus
@@ -478,7 +482,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                         width: 8,
                                       ),
                                       //labelQty
-                                      CupertinoButton(
+                                      /*CupertinoButton(
                                         onPressed: () async {
                                           qtySentController.text =
                                               MyNumber.toNumberIdStr(
@@ -520,6 +524,41 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                                     color: MyColor.blueDio)),
                                         minSize: 24,
                                         padding: EdgeInsets.all(0),
+                                      ),*/
+                                      Container(
+                                        width: 75,
+                                        child: TextFormField(
+                                          controller: qtyController,
+                                          onChanged: (newValue) {
+                                            var newQty = MyNumber.strIDToDouble(newValue);
+                                            sbi.unitQuantity =
+                                                newQty.toString();
+                                            if (newQty > qtyUnsent) {
+                                              qtyController.text =
+                                                  MyNumber.toNumberId(qtyUnsent);
+                                              sbi.unitQuantity =
+                                                  qtyUnsent.toString();
+                                            }
+                                          },
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(color: MyColor.blueDio),
+                                          inputFormatters: [
+                                            NumericTextFormatter()
+                                          ],
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(
+                                                  signed: false),
+                                          decoration: new InputDecoration(
+                                            isDense: true,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              vertical: 0,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: 8,
