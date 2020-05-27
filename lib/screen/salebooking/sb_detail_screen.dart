@@ -724,7 +724,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                             color: MyColor.txtField,
                                           ),
                                           Text(
-                                            ' ${strToDate(sb.createdAt)}',
+                                            ' ${strToDate(listPayment[index]?.date)}',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: MyColor.txtField),
