@@ -11,12 +11,18 @@ import 'package:posku/screen/payment/add_payment_screen.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_string.dart';
 
+enum PaymentType {
+  cash,
+  transfer,
+}
+
 abstract class AddPaymentViewModel extends State<AddPaymentScreen> {
   DateTime date = DateTime.now();
   var amountController = TextEditingController();
   var noteController = TextEditingController();
   bool isFirst = true;
   SalesBooking sb;
+  List<dynamic> paymentType = ['', 'cash', PaymentType.cash];
 
   actionPostPayment(Map<String, String> body) async {
     var params = {

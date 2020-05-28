@@ -17,6 +17,10 @@ class AddPaymentScreen extends StatefulWidget {
 
 class _AddPaymentScreenState extends AddPaymentViewModel {
   Widget _body() {
+    var listPaymentType = [
+      ['Tunai', 'cash', PaymentType.cash],
+      ['Transfer Bank', 'bank', PaymentType.transfer],
+    ];
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Container(
@@ -25,23 +29,43 @@ class _AddPaymentScreenState extends AddPaymentViewModel {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: RawMaterialButton(
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                constraints: BoxConstraints(),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  side: BorderSide(color: MyColor.mainRed),
-                ),
-                fillColor: MyColor.mainRed,
-                onPressed: () {},
-                child: Text(
-                  'Tunai',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+              height: 32,
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 14),
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: listPaymentType.length,
+                itemBuilder: (ctx, idx) {
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 2),
+                    child: RawMaterialButton(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      constraints: BoxConstraints(),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        side: BorderSide(color: MyColor.mainRed),
+                      ),
+                      fillColor: listPaymentType[idx][2] == paymentType[2]
+                          ? MyColor.mainRed
+                          : Colors.white,
+                      onPressed: () {
+                        setState(() {
+                          paymentType = listPaymentType[idx];
+                        });
+                      },
+                      child: Text(
+                        listPaymentType[idx][0],
+                        style: TextStyle(
+                          color: listPaymentType[idx][2] == paymentType[2]
+                              ? Colors.white
+                              : MyColor.txtField,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             MyDivider.lineDivider(vertical: 8),
@@ -119,7 +143,9 @@ class _AddPaymentScreenState extends AddPaymentViewModel {
                     'amount_paid': amount.toString(),
                     'note': noteController.text,
                     'date': date.toStr(),
+                    'paid_by': paymentType[1],
                   };
+                  //print('cek data $body');
                   await actionPostPayment(body);
                 } else {
                   Get.defaultDialog(

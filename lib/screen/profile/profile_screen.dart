@@ -216,7 +216,7 @@ class _ProfileScreenState extends ProfileViewModel {
                                           listState = null;
                                         }
                                         if (data[2].key == 'state') {
-                                          detailZone.state = newZone..toCity();
+                                          detailZone.state = newZone..toState();
                                           data[2].curZone = detailZone.state;
                                         }
                                         data[2].value = newZone.txt;
@@ -274,6 +274,7 @@ class _ProfileScreenState extends ProfileViewModel {
               Flexible(
                 child: Text(
                   list[idx][1] ?? '',
+                  textAlign: TextAlign.end,
                   style: Theme.of(context).textTheme.subhead.copyWith(
                         color: MyColor.txtField,
                       ),
@@ -333,10 +334,10 @@ class _ProfileScreenState extends ProfileViewModel {
 
   Widget _body() {
     var address = [
-      company?.address,
-      company?.region,
-      company?.city,
-      company?.state,
+      company?.user?.address,
+      state?.kecamatanName,
+      city?.kabupatenName,
+      province?.provinceName,
       company?.postalCode,
     ].where((data) => data != null).join(', ');
     var padSpace = SizedBox(height: 12);
@@ -374,6 +375,7 @@ class _ProfileScreenState extends ProfileViewModel {
         ),
       ],
     ];
+    print('alamat ${company?.user?.address} ${company?.address}');
     var listAddress = [
       [
         'Provinsi',
@@ -407,7 +409,7 @@ class _ProfileScreenState extends ProfileViewModel {
       ],
       [
         'Alamat',
-        company?.address,
+        company?.user?.address,
         InputModel(
           inputType: InputType.text,
           key: 'address',

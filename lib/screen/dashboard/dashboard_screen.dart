@@ -30,14 +30,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Get.back();
               Get.offNamed(loginScreen);
             },
-            child: Text("Ya", style: TextStyle(color: MyColor.mainRed),),
+            child: Text(
+              "Ya",
+              style: TextStyle(color: MyColor.mainRed),
+            ),
           ),
           CupertinoDialogAction(
             isDefaultAction: true,
             onPressed: () {
               Get.back();
             },
-            child: Text("Tidak", style: TextStyle(fontWeight: FontWeight.bold),),
+            child: Text(
+              "Tidak",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           )
         ],
       ),
@@ -48,6 +54,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     var screen = MyScreen(MediaQuery.of(context).size);
     var company = MyPref.getCompany();
+    var address = [
+      company?.user?.address,
+      company?.user?.state,
+      company?.user?.city,
+      company?.user?.country,
+    ].where((data) => data != null).join(', ');
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -74,8 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   MyText.textBlackSmall(company?.company ?? '',
                                       isBold: true),
                                   MyDivider.spaceDividerLogin(custom: 4),
-                                  MyText.textBlackSmall(
-                                      company?.user?.address ?? ''),
+                                  MyText.textBlackSmall(address ?? ''),
                                   MyDivider.spaceDividerLogin(custom: 4),
                                 ],
                               ),
@@ -99,7 +110,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: CupertinoButton(
                                 minSize: 0,
                                 padding: EdgeInsets.all(0),
-                                onPressed: () => Get.toNamed(profileScreen),
+                                onPressed: () async {
+                                  await Get.toNamed(profileScreen);
+                                  setState(() {});
+                                },
                                 child: Image.asset(
                                   kAvatar,
                                   width: 40,
@@ -118,7 +132,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   CupertinoButton(
                     child:
                         MyText.textWhite('Keluar', fontSize: FontSize.medium),
-                      onPressed: _dialogLogout,
+                    onPressed: _dialogLogout,
                   ),
                 ]),
             new SliverAppBar(
