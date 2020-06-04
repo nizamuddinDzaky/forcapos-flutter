@@ -64,6 +64,10 @@ class _LoginScreenState extends LoginViewModel {
                     initialValue: currentData.password,
                     maxLength: 30,
                     obscureText: !isShow,
+                    textInputAction: TextInputAction.go,
+                    onFieldSubmitted: (val) {
+                      showDialogProgress();
+                    },
                     decoration: InputDecoration(
                       contentPadding: MyDimen.paddingTxtField(),
                       labelText: 'Kata Sandi',
