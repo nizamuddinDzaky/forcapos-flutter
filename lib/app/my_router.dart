@@ -4,6 +4,7 @@ import 'package:posku/helper/custom_cupertino_page_route.dart';
 import 'package:posku/screen/customer/detail_customer_screen.dart';
 import 'package:posku/screen/delivery/add_delivery_screen.dart';
 import 'package:posku/screen/delivery/detail_delivery_screen.dart';
+import 'package:posku/screen/delivery/edit_delivery_screen.dart';
 import 'package:posku/screen/filter/filter_screen.dart';
 import 'package:posku/screen/goodreceived/gr_confirmation_screen.dart';
 import 'package:posku/screen/goodreceived/gr_detail_screen.dart';
@@ -34,6 +35,7 @@ const addPaymentScreen = "/AddPaymentScreen";
 const addDeliveryScreen = "/AddDeliveryScreen";
 const profileScreen = "/ProfileScreen";
 const editPaymentScreen = "/EditPaymentScreen";
+const editDeliveryScreen = "/EditDeliveryScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -129,6 +131,12 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: EditPaymentScreen(),
+        );
+      case editDeliveryScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: EditDeliveryScreen(),
         );
       default:
         return GetRouteBase(

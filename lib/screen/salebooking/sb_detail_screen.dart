@@ -391,6 +391,9 @@ class _SBDetailScreenState extends SBDetailViewModel {
       elevation: 8.0,
     );
     print('hasil $result');
+    if (result == 1) {
+      Get.toNamed(editDeliveryScreen);
+    }
   }
 
   Widget widgetDetail() {
