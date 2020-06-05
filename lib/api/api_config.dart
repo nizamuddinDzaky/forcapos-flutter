@@ -12,6 +12,7 @@ class ApiConfig {
 
   //sales booking
   static String urlAddPaymentBooking = '${path}sales_booking/add_payments';
+  static String urlEditPaymentBooking = '${path}sales_booking/edit_payments';
   static String urlAddSalesBooking = '${path}sales_booking/add_sales_booking';
   static String urlAddDeliveriesBooking = '${path}sales_booking/add_deliveries_booking';
   static String urlListSalesBookingTrx = '${path}sales_booking/list_transaction_sales_booking';

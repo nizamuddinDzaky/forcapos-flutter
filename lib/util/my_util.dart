@@ -198,6 +198,17 @@ extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${this.substring(1)}";
   }
+
+  DateTime toDateTime() {
+    var dateFormatIn = DateFormat('yyyy-MM-dd HH:mm:ss');
+    var newDate = DateTime.now();
+    try {
+      newDate = dateFormatIn.parse(this);
+    } catch (e) {
+      print(e.message);
+    }
+    return newDate;
+  }
 }
 
 extension IndexedIterable<E> on Iterable<E> {

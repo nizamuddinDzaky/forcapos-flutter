@@ -38,6 +38,7 @@ class MyString {
 
   // payment
   static const KEY_PAYMENT_STATUS = "payment_status";
+  static const KEY_ID_PAYMENT = "id_payments";
 
   // delivery
   static const KEY_ID_DELIVERY = "id_delivery";
