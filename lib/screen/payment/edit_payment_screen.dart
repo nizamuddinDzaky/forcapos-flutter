@@ -1,22 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
-import 'package:get/get.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
-import 'package:posku/screen/payment/add_payment_view_model.dart';
-import 'package:posku/util/my_number.dart';
+import 'package:posku/screen/payment/edit_payment_view_model.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/payment_cons.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
 
-class AddPaymentScreen extends StatefulWidget {
+class EditPaymentScreen extends StatefulWidget {
   @override
-  _AddPaymentScreenState createState() => _AddPaymentScreenState();
+  _EditPaymentScreenState createState() => _EditPaymentScreenState();
 }
 
-class _AddPaymentScreenState extends AddPaymentViewModel {
+class _EditPaymentScreenState extends EditPaymentViewModel {
   Widget _body() {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 8),
@@ -133,25 +131,8 @@ class _AddPaymentScreenState extends AddPaymentViewModel {
               height: 16,
             ),
             LoadingButton(
-              onPressed: () async {
-                var amount = MyNumber.strIDToDouble(amountController.text);
-                if (amount > 0) {
-                  Map<String, String> body = {
-                    'amount_paid': amount.toString(),
-                    'note': noteController.text,
-                    'date': date.toStr(),
-                    'paid_by': paymentType[1],
-                  };
-                  //print('cek data $body');
-                  await actionPostPayment(body);
-                } else {
-                  Get.defaultDialog(
-                    title: 'Mohon Maaf',
-                    content: Text('Jumlah tidak boleh kosong/nol'),
-                  );
-                }
-              },
-              title: 'Tambah Pembayaran',
+              onPressed: submitChanges,
+              title: 'Kirim Pembaruan',
             ),
           ],
         ),
@@ -165,7 +146,7 @@ class _AddPaymentScreenState extends AddPaymentViewModel {
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: 'Dftr Byr',
         middle: Text(
-          'Tambah Pembayaran',
+          'Ubah Pembayaran',
           style: Theme.of(context).textTheme.title,
         ),
       ),

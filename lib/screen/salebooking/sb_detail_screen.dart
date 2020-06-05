@@ -603,92 +603,137 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                       width: 12,
                                     ),
                                     Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.only(left: 8),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              'No Referensi',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: MyColor.txtField,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              listPayment[index].referenceNo ??
-                                                  '1234567890',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: MyColor.txtField,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Container(
+                                            padding: EdgeInsets.only(left: 8),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      'Nominal',
-                                                      textScaleFactor: 1.0,
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: MyColor.txtField,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      MyNumber.toNumberRpStr(
-                                                          listPayment[index]
-                                                              .amount),
-                                                      textScaleFactor: 1.0,
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: MyColor.txtField,
-                                                      ),
-                                                    ),
-                                                  ],
+                                                Text(
+                                                  'No Referensi',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: MyColor.txtField,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                Text(
+                                                  listPayment[index]
+                                                          .referenceNo ??
+                                                      '1234567890',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: MyColor.txtField,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: <Widget>[
-                                                    Text(
-                                                      'Tipe Pembayaran',
-                                                      textScaleFactor: 1.0,
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: MyColor.txtField,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          'Nominal',
+                                                          textScaleFactor: 1.0,
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: MyColor
+                                                                .txtField,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          MyNumber
+                                                              .toNumberRpStr(
+                                                                  listPayment[
+                                                                          index]
+                                                                      .amount),
+                                                          textScaleFactor: 1.0,
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: MyColor
+                                                                .txtField,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Text(
-                                                      paidType(
-                                                          listPayment[index]
-                                                              .paidBy)[0],
-                                                      textScaleFactor: 1.0,
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: MyColor.txtField,
-                                                      ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          'Tipe Pembayaran',
+                                                          textScaleFactor: 1.0,
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: MyColor
+                                                                .txtField,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          paidType(
+                                                              listPayment[index]
+                                                                  .paidBy)[0],
+                                                          textScaleFactor: 1.0,
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: MyColor
+                                                                .txtField,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                          Positioned(
+                                            right: 0,
+                                            child: PopupMenuButton<int>(
+                                              onSelected: (int idx) async {
+                                                if (idx == 0) {
+                                                  var result =
+                                                      await Get.toNamed(
+                                                    editPaymentScreen,
+                                                    arguments: {
+                                                      'payment':
+                                                          listPayment[index]
+                                                              .toJson(),
+                                                    },
+                                                  );
+                                                  if (result == 'editPayment') {
+                                                    listPayment = null;
+                                                    actionRefresh();
+                                                  }
+                                                }
+                                              },
+                                              child: Icon(Icons.more_vert),
+                                              itemBuilder:
+                                                  (BuildContext context) =>
+                                                      <PopupMenuEntry<int>>[
+                                                PopupMenuItem<int>(
+                                                  height: 30,
+                                                  child: const Text('Ubah'),
+                                                  value: 0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],

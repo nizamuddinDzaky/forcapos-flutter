@@ -123,8 +123,10 @@ paidType(String type) {
   switch(type?.toLowerCase()) {
     case 'cash':
       return ['Tunai', MyColor.mainRed];
+    case 'bank':
+      return ['Transfer Bank', MyColor.mainRed];
     default:
-      return ['Tunai', MyColor.mainRed];
+      return [type, MyColor.mainRed];
   }
 }
 
