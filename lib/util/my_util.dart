@@ -123,8 +123,10 @@ paidType(String type) {
   switch(type?.toLowerCase()) {
     case 'cash':
       return ['Tunai', MyColor.mainRed];
+    case 'bank':
+      return ['Transfer Bank', MyColor.mainRed];
     default:
-      return ['Tunai', MyColor.mainRed];
+      return [type, MyColor.mainRed];
   }
 }
 
@@ -195,6 +197,17 @@ saleDeliveryStatus(String status) {
 extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${this.substring(1)}";
+  }
+
+  DateTime toDateTime() {
+    var dateFormatIn = DateFormat('yyyy-MM-dd HH:mm:ss');
+    var newDate = DateTime.now();
+    try {
+      newDate = dateFormatIn.parse(this);
+    } catch (e) {
+      print(e.message);
+    }
+    return newDate;
   }
 }
 

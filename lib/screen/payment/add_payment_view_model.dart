@@ -9,12 +9,8 @@ import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/payment/add_payment_screen.dart';
 import 'package:posku/util/my_number.dart';
+import 'package:posku/util/payment_cons.dart';
 import 'package:posku/util/resource/my_string.dart';
-
-enum PaymentType {
-  cash,
-  transfer,
-}
 
 abstract class AddPaymentViewModel extends State<AddPaymentScreen> {
   DateTime date = DateTime.now();
