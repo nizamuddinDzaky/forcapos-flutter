@@ -1,14 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:posku/api/api_client.dart';
+import 'package:posku/api/api_config.dart';
+import 'package:posku/helper/custom_dialog.dart';
+import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/company.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/model/delivery.dart';
+import 'package:posku/model/delivery_item.dart';
 import 'package:posku/model/sales_booking.dart';
-import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/screen/delivery/edit_delivery_screen.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/my_util.dart';
+import 'package:posku/util/resource/my_string.dart';
 
 abstract class EditDeliveryViewModel extends State<EditDeliveryScreen> {
   bool isFirst = true;
@@ -16,7 +23,7 @@ abstract class EditDeliveryViewModel extends State<EditDeliveryScreen> {
   Customer customer;
   Company company;
   Delivery delivery;
-  List<SalesBookingItem> sbItems = [];
+  List<DeliveryItem> deliveryItems = [];
   DateTime currentDate = DateTime.now();
   var refNoController = TextEditingController();
   var refNoDeliveryController = TextEditingController();
@@ -26,28 +33,99 @@ abstract class EditDeliveryViewModel extends State<EditDeliveryScreen> {
   var addressController = TextEditingController();
   var noteController = TextEditingController();
   var qtySentController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  actionPutDelivery(body) async {}
+  Future<Delivery> getDetailDelivery() async {
+    var params = {
+      MyString.KEY_ID_DELIVERY: delivery?.id ?? '',
+    };
+    var status = await ApiClient.methodGet(
+      ApiConfig.urlDetailDeliveries,
+      params: params,
+      onBefore: (status) {
+        print('onbefore');
+      },
+      onSuccess: (data, flag) {
+        var baseResponse = BaseResponse.fromJson(data);
+        delivery = baseResponse?.data?.delivery ?? Delivery();
+        deliveryItems = baseResponse?.data?.deliveryItems ?? [];
+      },
+      onFailed: (title, message) {
+        print('onfailed');
+      },
+      onError: (title, message) {
+        print('onerror');
+      },
+      onAfter: (status) {
+        print('onafter');
+        setState(() {});
+      },
+    );
+    status.execute();
+    return null;
+  }
+
+  actionPutDelivery(Map body) async {
+    var params = {
+      MyString.KEY_ID_DELIVERIES_BOOKING: delivery.id,
+    };
+    var status = await ApiClient.methodPut(
+      ApiConfig.urlEditDeliveriesBooking,
+      body,
+      params,
+      onBefore: (status) {},
+      onSuccess: (data, _) {
+        Get.snackbar('Pengiriman', 'Berhasil diperbaharui');
+        Get.back(result: 'editDelivery');
+      },
+      onFailed: (title, message) {
+        var errorData = BaseResponse.fromJson(jsonDecode(message));
+        CustomDialog.showAlertDialog(context,
+            title: title,
+            message: 'Kode error: ${errorData?.code}',
+            leftAction: CustomDialog.customAction());
+      },
+      onError: (title, message) {
+        CustomDialog.showAlertDialog(context,
+            title: title,
+            message: message,
+            leftAction: CustomDialog.customAction());
+      },
+      onAfter: (status) {},
+    );
+    status.execute();
+  }
 
   actionSubmit() async {
+    formKey.currentState.save();
+    FocusScope.of(context).requestFocus(new FocusNode());
     var body = {
       'date': currentDate.toStr(),
-      'sale_reference_no': refNoController.text,
       'customer': customerController.text,
       'address': addressController.text,
       'status': delivery.status,
       'delivered_by': deliveredController.text,
       'received_by': receivedController.text,
       'note': noteController.text,
-      'products': sbItems.map((sbi) {
+      'products': deliveryItems.map((item) {
         return {
-          'sale_items_id': sbi.id,
-          'sent_quantity': sbi.unitQuantity,
+          'delivery_items_id': item.id,
+          'sent_quantity': item.quantitySent,
         };
       }).toList(),
     };
     print('edit delivery $body');
     await actionPutDelivery(body);
+  }
+
+  lastCursorQty(TextEditingController qtyController, double newQty) {
+    var newValue = MyNumber.toNumberId(newQty);
+    qtyController.value = TextEditingValue(
+      text: newValue,
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: newValue.length),
+      ),
+    );
   }
 
   @override
@@ -58,11 +136,7 @@ abstract class EditDeliveryViewModel extends State<EditDeliveryScreen> {
       sb = arg['sale'];
       customer = arg['customer'];
       delivery = arg['delivery'];
-      List<SalesBookingItem> originSbItems = arg['sbItems'];
-      sbItems.addAll(originSbItems.map((sbi) {
-        var qtySent = MyNumber.strUSToDouble(sbi.sentQuantity);
-        return sbi..unitQuantity = qtySent.toString();
-      }).toList());
+      getDetailDelivery();
       company = MyPref.getCompany();
       deliveredController.text = company.name;
       receivedController.text = customer.name;

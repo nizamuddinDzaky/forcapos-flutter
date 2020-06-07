@@ -130,9 +130,10 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
               Expanded(
                 child: TextFormField(
                   controller: refNoDeliveryController,
+                  enabled: false,
                   decoration: new InputDecoration(
                     isDense: true,
-                    hintText: sb?.referenceNo ?? 'SALE/2020/...',
+                    hintText: delivery?.doReferenceNo ?? 'DO/2020/...',
                     contentPadding: EdgeInsets.symmetric(
                       vertical: 8,
                     ),
@@ -162,6 +163,7 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
               Expanded(
                 child: TextFormField(
                   controller: refNoController,
+                  enabled: false,
                   decoration: new InputDecoration(
                     isDense: true,
                     hintText: sb?.referenceNo ?? 'SALE/2020/...',
@@ -306,13 +308,13 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
     return Container(
       child: Column(
         children: <Widget>[
-          ...sbItems.map((sbi) {
-            var qtyUnsent = MyNumber.strUSToDouble(sbi.quantity) -
-                MyNumber.strUSToDouble(sbi.unitQuantity);
-            var maxQty = MyNumber.strUSToDouble(sbi.quantity);
+          ...deliveryItems.map((di) {
+            var qtyUnsent = MyNumber.strUSToDouble(di.quantityOrdered) -
+                MyNumber.strUSToDouble(di.quantitySent);
+            var maxQty = MyNumber.strUSToDouble(di.quantityOrdered);
             final qtyController = TextEditingController(
               text: MyNumber.toNumberIdStr(
-                sbi.unitQuantity,
+                di.quantitySent,
               ),
             );
             return Container(
@@ -345,12 +347,12 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(sbi.productName ?? '',
+                            Text(di.productName ?? '',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline6
                                     .copyWith()),
-                            Text(sbi.productCode ?? '',
+                            Text(di.productCode ?? '',
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle1
@@ -359,7 +361,7 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
                               height: 8,
                             ),
                             Text(
-                                '${MyNumber.toNumberIdStr(sbi.quantity)} ${sbi.productUnitCode}',
+                                '${MyNumber.toNumberIdStr(di.quantityOrdered)} ${di.productUnitCode}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle2
@@ -393,7 +395,7 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
                               SizedBox(
                                 width: 8,
                               ),
-                              Text('${sbi.productUnitCode}',
+                              Text('${di.productUnitCode}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline6
@@ -417,12 +419,12 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
                                 CupertinoButton(
                                   onPressed: () {
                                     var newQty = MyNumber.strUSToDouble(
-                                          sbi.unitQuantity,
+                                          di.quantitySent,
                                         ) -
                                         1;
                                     if (newQty < 1) newQty = 1;
                                     setState(() {
-                                      sbi.unitQuantity = newQty.toString();
+                                      di.quantitySent = newQty.toString();
                                     });
                                   },
                                   child: Icon(
@@ -440,27 +442,24 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
                                   width: 75,
                                   child: TextFormField(
                                     controller: qtyController,
+                                    onSaved: (newValue) {
+                                      if (newValue.isNotEmpty) return;
+                                      var newQty = MyNumber.toNumberIdStr(
+                                        di.quantitySent
+                                      );
+                                      qtyController.text = newQty;
+                                    },
                                     onChanged: (newValue) {
                                       if (newValue.isEmpty) return;
                                       var newQty =
                                           MyNumber.strIDToDouble(newValue);
                                       if (newQty > maxQty) {
                                         newQty = maxQty;
-                                        qtyController.value = TextEditingValue(
-                                          text: MyNumber.toNumberId(newQty),
-                                          selection: TextSelection.fromPosition(
-                                            TextPosition(offset: newValue.length),
-                                          ),
-                                        );
+                                        lastCursorQty(qtyController, newQty);
                                       }
                                       if (newQty < 1) {
                                         newQty = 1;
-                                        qtyController.value = TextEditingValue(
-                                          text: MyNumber.toNumberId(newQty),
-                                          selection: TextSelection.fromPosition(
-                                            TextPosition(offset: newValue.length),
-                                          ),
-                                        );
+                                        lastCursorQty(qtyController, newQty);
                                       }
                                     },
                                     onFieldSubmitted: (newValue) {
@@ -469,7 +468,7 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
                                       if (newQty > maxQty) newQty = maxQty;
                                       if (newQty < 1) newQty = 1;
                                       setState(() {
-                                        sbi.unitQuantity = newQty.toString();
+                                        di.quantitySent = newQty.toString();
                                       });
                                     },
                                     textAlign: TextAlign.center,
@@ -496,12 +495,12 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
                                 CupertinoButton(
                                   onPressed: () {
                                     var newQty = MyNumber.strUSToDouble(
-                                          sbi.unitQuantity,
+                                          di.quantitySent,
                                         ) +
                                         1;
                                     if (newQty > maxQty) newQty = maxQty;
                                     setState(() {
-                                      sbi.unitQuantity = newQty.toString();
+                                      di.quantitySent = newQty.toString();
                                     });
                                   },
                                   child: Icon(
@@ -625,7 +624,10 @@ class _EditDeliveryScreenState extends EditDeliveryViewModel {
                 children: <Widget>[
                   _sectionDetail(),
                   MyDivider.spaceDividerLogin(custom: 6),
-                  _listDeliveries(),
+                  Form(
+                    key: formKey,
+                    child: _listDeliveries(),
+                  ),
                   MyDivider.lineDivider(customColor: MyColor.txtField),
                   _footer(),
                 ],

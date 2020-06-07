@@ -1088,7 +1088,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                           ),
                                                           Text(
                                                             listDelivery[index]
-                                                                .customer,
+                                                                .deliveredBy,
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
