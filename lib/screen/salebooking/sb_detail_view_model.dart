@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/custom_cupertino_page_route.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/company.dart';
@@ -47,8 +48,6 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       listPayment = null;
     } else if (sliding == 2) {
       listDelivery = null;
-    } else {
-
     }
     setState(() {});
     return null;
@@ -247,6 +246,78 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
     );
     status.execute();
     return null;
+  }
+
+  goToDetailPayment(Payment payment) async {
+    await Get.toNamed(
+      detailPaymentScreen,
+      arguments: payment.toJson(),
+    );
+  }
+
+  goToAddPayment() async {
+    var result = await Get.toNamed(
+      addPaymentScreen,
+      arguments: sb.toJson(),
+    );
+    if (result == 'newPayment') {
+      sbItems = null;
+      actionRefresh();
+    }
+  }
+
+  goToEditPayment(int idx, {Payment payment}) async {
+    if (idx == 0) {
+      var result = await Get.toNamed(
+        editPaymentScreen,
+        arguments: {
+          'payment': payment.toJson(),
+        },
+      );
+      if (result == 'editPayment') {
+        listPayment = null;
+        actionRefresh();
+      }
+    }
+  }
+
+  goToAddDelivery() async {
+    var result = await Get.toNamed(
+      addDeliveryScreen,
+      arguments: {
+        'sale': sb,
+        'customer': customer,
+        'sbItems': sbItems,
+      },
+    );
+    if (result == 'newDelivery') {
+      actionRefresh();
+    }
+  }
+
+  goToEditDelivery(Delivery delivery) async {
+    var result = await Get.toNamed(
+      editDeliveryScreen,
+      arguments: {
+        'sale': sb,
+        'customer': customer,
+        'delivery': delivery,
+        'sbItems': sbItems,
+      },
+    );
+    if (result == 'editDelivery') {
+      listDelivery = null;
+      actionRefresh();
+    }
+  }
+
+  goToDetailDelivery(Delivery delivery) async {
+    var result = await Get.toNamed(
+        detailDeliveryScreen,
+        arguments: delivery.toJson());
+    if (result != null) {
+      setState(() {});
+    }
   }
 
   @override

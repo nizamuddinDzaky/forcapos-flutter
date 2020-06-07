@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:posku/app/my_router.dart';
+import 'package:posku/model/delivery.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/screen/salebooking/sb_detail_view_model.dart';
 import 'package:posku/util/my_number.dart';
@@ -283,7 +282,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
               child: Text('PoS',
                   style: Theme.of(context)
                       .textTheme
-                      .title
+                      .headline6
                       .copyWith(color: Colors.white)),
             ),
           ),
@@ -364,7 +363,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
     );
   }
 
-  void _showPopupMenu(Offset offset) async {
+  void _showPopupMenu(Offset offset, Delivery delivery) async {
     double left = offset.dx;
     double top = offset.dy;
     var result = await showMenu(
@@ -390,9 +389,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
       ],
       elevation: 8.0,
     );
-    print('hasil $result');
     if (result == 1) {
-      Get.toNamed(editDeliveryScreen);
+      goToEditDelivery(delivery);
     }
   }
 
@@ -510,7 +508,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 Text('Daftar Pembayaran',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle
+                                        .subtitle2
                                         .copyWith(color: Colors.black)),
                               ],
                             ),
@@ -549,7 +547,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                     Text('Daftar Pembayaran',
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle
+                            .subtitle2
                             .copyWith(color: Colors.black)),
                   ],
                 ),
@@ -598,7 +596,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                         child: Text('PoS',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .title
+                                                .headline6
                                                 .copyWith(color: Colors.white)),
                                       ),
                                     ),
@@ -707,23 +705,11 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                           Positioned(
                                             right: 0,
                                             child: PopupMenuButton<int>(
-                                              onSelected: (int idx) async {
-                                                if (idx == 0) {
-                                                  var result =
-                                                      await Get.toNamed(
-                                                    editPaymentScreen,
-                                                    arguments: {
-                                                      'payment':
-                                                          listPayment[index]
-                                                              .toJson(),
-                                                    },
-                                                  );
-                                                  if (result == 'editPayment') {
-                                                    listPayment = null;
-                                                    actionRefresh();
-                                                  }
-                                                }
-                                              },
+                                              onSelected: (idx) =>
+                                                  goToEditPayment(
+                                                idx,
+                                                payment: listPayment[index],
+                                              ),
                                               child: Icon(Icons.more_vert),
                                               itemBuilder:
                                                   (BuildContext context) =>
@@ -749,13 +735,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                               InkWell(
                                 onTap: listPayment[index]?.attachment == null
                                     ? null
-                                    : () async {
-                                        await Get.toNamed(
-                                          detailPaymentScreen,
-                                          arguments:
-                                              listPayment[index].toJson(),
-                                        );
-                                      },
+                                    : goToDetailPayment(listPayment[index]),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
@@ -844,7 +824,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 Text('Daftar Pengiriman',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle
+                                        .subtitle2
                                         .copyWith(color: Colors.black)),
                               ],
                             ),
@@ -883,7 +863,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                     Text('Daftar Pengiriman',
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle
+                            .subtitle2
                             .copyWith(color: Colors.black)),
                   ],
                 ),
@@ -922,7 +902,10 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                     right: 0,
                                     child: GestureDetector(
                                       onTapDown: (TapDownDetails details) {
-                                        _showPopupMenu(details.globalPosition);
+                                        _showPopupMenu(
+                                          details.globalPosition,
+                                          listDelivery[index],
+                                        );
                                       },
                                       child: Container(
                                         padding:
@@ -951,7 +934,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                             child: Text('Deliv',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .title
+                                                    .headline6
                                                     .copyWith(
                                                         color: Colors.white)),
                                           ),
@@ -1133,17 +1116,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 color: MyColor.txtField,
                               ),
                               InkWell(
-                                onTap: () async {
-                                  var result = await Get.toNamed(
-                                      detailDeliveryScreen,
-                                      arguments: listDelivery[index].toJson());
-                                  if (result != null) {
-                                    setState(() {
-                                      //var newDelivery = Delivery.fromJson(result);
-                                      //sb.saleStatus = newGr.saleStatus;
-                                    });
-                                  }
-                                },
+                                onTap: () => goToDetailDelivery(listDelivery[index]),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
@@ -1221,29 +1194,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
       minSize: 0,
       padding: EdgeInsets.all(0.0),
       onPressed: sliding == 1
-          ? () async {
-              var result = await Get.toNamed(
-                addPaymentScreen,
-                arguments: sb.toJson(),
-              );
-              if (result == 'newPayment') {
-                sbItems = null;
-                actionRefresh();
-              }
-            }
-          : () async {
-              var result = await Get.toNamed(
-                addDeliveryScreen,
-                arguments: {
-                  'sale': sb,
-                  'customer': customer,
-                  'sbItems': sbItems,
-                },
-              );
-              if (result == 'newDelivery') {
-                actionRefresh();
-              }
-            },
+          ? () => goToAddPayment()
+          : () => goToAddDelivery(),
       child: Icon(
         Icons.add,
         size: 24,
