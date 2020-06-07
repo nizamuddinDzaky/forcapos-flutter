@@ -85,7 +85,7 @@ class _ProfileScreenState extends ProfileViewModel {
                 height: 48,
                 child: Text(
                   title ?? 'Masukkan Jumlah',
-                  style: Theme.of(context).textTheme.title,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               Positioned(
@@ -128,7 +128,7 @@ class _ProfileScreenState extends ProfileViewModel {
                           if (data != null)
                             Text(
                               data[0],
-                              style: Theme.of(context).textTheme.subtitle,
+                              style: Theme.of(context).textTheme.subtitle2,
                             ),
                           if (data[2].inputType == InputType.text)
                             TextFormField(
@@ -264,7 +264,7 @@ class _ProfileScreenState extends ProfileViewModel {
             children: <Widget>[
               Text(
                 list[idx][0],
-                style: Theme.of(context).textTheme.subtitle.copyWith(
+                style: Theme.of(context).textTheme.subtitle2.copyWith(
                       color: MyColor.txtField,
                     ),
               ),
@@ -275,7 +275,7 @@ class _ProfileScreenState extends ProfileViewModel {
                 child: Text(
                   list[idx][1] ?? '',
                   textAlign: TextAlign.end,
-                  style: Theme.of(context).textTheme.subhead.copyWith(
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
                         color: MyColor.txtField,
                       ),
                 ),
@@ -305,14 +305,13 @@ class _ProfileScreenState extends ProfileViewModel {
         children: <Widget>[
           Text(
             title,
-            style: Theme.of(context).textTheme.title,
+            style: Theme.of(context).textTheme.headline6,
           ),
           CupertinoButton(
             minSize: 0,
             padding: EdgeInsets.all(0),
-            //onPressed: () => action ?? {},
             onPressed: () async {
-              var result = await showModalBottomSheet<String>(
+              await showModalBottomSheet<String>(
                   context: context,
                   isDismissible: false,
                   isScrollControlled: true,
@@ -322,7 +321,7 @@ class _ProfileScreenState extends ProfileViewModel {
             },
             child: Text(
               actionTxt ?? 'Ubah',
-              style: Theme.of(context).textTheme.title.copyWith(
+              style: Theme.of(context).textTheme.headline6.copyWith(
                     color: MyColor.blueDio,
                   ),
             ),
@@ -496,7 +495,7 @@ class _ProfileScreenState extends ProfileViewModel {
                           Flexible(
                             child: Text(
                               company?.company ?? '',
-                              style: Theme.of(context).textTheme.title,
+                              style: Theme.of(context).textTheme.headline6,
                             ),
                           ),
                           SizedBox(
@@ -514,7 +513,7 @@ class _ProfileScreenState extends ProfileViewModel {
                       ),
                       Text(
                         address,
-                        style: Theme.of(context).textTheme.subhead,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ],
                   ),
@@ -550,7 +549,7 @@ class _ProfileScreenState extends ProfileViewModel {
                         child: Center(
                           child: Text(
                             'Ubah',
-                            style: Theme.of(context).textTheme.subhead.copyWith(
+                            style: Theme.of(context).textTheme.subtitle1.copyWith(
                                   color: Colors.white,
                                   fontSize: 12,
                                 ),
@@ -577,7 +576,7 @@ class _ProfileScreenState extends ProfileViewModel {
             padSpace,
             LoadingButton(
               onPressed: () async {
-                var result = await showModalBottomSheet<String>(
+                await showModalBottomSheet<String>(
                     context: context,
                     isDismissible: false,
                     isScrollControlled: true,
@@ -629,7 +628,7 @@ class _ProfileScreenState extends ProfileViewModel {
         previousPageTitle: 'Beranda',
         middle: Text(
           'Akun',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline6,
         ),
       ),
       child: Material(

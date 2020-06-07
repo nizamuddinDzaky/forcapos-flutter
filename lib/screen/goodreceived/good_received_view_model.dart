@@ -9,7 +9,7 @@ import 'package:posku/screen/goodreceived/good_received_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
 
 abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ChangeNotifier {
   int sliding = 0;
   final TextEditingController searchTextController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();

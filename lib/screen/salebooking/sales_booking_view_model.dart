@@ -10,7 +10,7 @@ import 'package:posku/screen/salebooking/sale_booking_screen.dart';
 import 'package:posku/util/resource/my_string.dart';
 
 abstract class SalesBookingViewModel extends State<SalesBookingScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ChangeNotifier {
   int sliding = 0;
   final TextEditingController searchTextController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();

@@ -71,7 +71,7 @@ class _EditPaymentScreenState extends EditPaymentViewModel {
                 children: <Widget>[
                   Text(
                     'Tanggal',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   CupertinoButton(
                     onPressed: () async {
@@ -93,7 +93,7 @@ class _EditPaymentScreenState extends EditPaymentViewModel {
                   ),
                   Text(
                     'Jumlah',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   TextFormField(
                     controller: amountController,
@@ -113,7 +113,7 @@ class _EditPaymentScreenState extends EditPaymentViewModel {
                   ),
                   Text(
                     'Catatan',
-                    style: Theme.of(context).textTheme.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   TextFormField(
                     controller: noteController,
@@ -147,7 +147,7 @@ class _EditPaymentScreenState extends EditPaymentViewModel {
         previousPageTitle: 'Dftr Byr',
         middle: Text(
           'Ubah Pembayaran',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline6,
         ),
       ),
       child: Material(

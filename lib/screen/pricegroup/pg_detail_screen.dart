@@ -95,7 +95,7 @@ class _PGDetailScreenState extends PGDetailViewModel {
                             child: Text('PoS',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .title
+                                    .headline6
                                     .copyWith(color: Colors.white)),
                           ),
                         ),
@@ -108,11 +108,11 @@ class _PGDetailScreenState extends PGDetailViewModel {
                             children: <Widget>[
                               Text(
                                 product?.productName ?? '',
-                                style: Theme.of(context).textTheme.title,
+                                style: Theme.of(context).textTheme.headline6,
                               ),
                               Text(
                                 product?.productCode ?? '',
-                                style: Theme.of(context).textTheme.subhead,
+                                style: Theme.of(context).textTheme.subtitle1,
                               ),
                             ],
                           ),

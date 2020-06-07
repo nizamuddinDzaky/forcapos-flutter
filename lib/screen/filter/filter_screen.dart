@@ -250,6 +250,7 @@ class _FilterScreenState extends State<FilterScreen> {
   }
 }
 
+// ignore: must_be_immutable
 class Card1 extends StatelessWidget {
   ExpandableController _controller;
 
@@ -297,7 +298,7 @@ class Card1 extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         title(state.currentPage),
-                        style: Theme.of(context).textTheme.body2,
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Text(
                         state.selectedStatus[0],
@@ -425,7 +426,7 @@ class Card2 extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         'Rentang tanggal',
-                        style: Theme.of(context).textTheme.body2,
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Text(
                         state.differenceDate ?? '',
@@ -553,7 +554,7 @@ class Card3 extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         'Urutan',
-                        style: Theme.of(context).textTheme.body2,
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Row(
                         children: <Widget>[

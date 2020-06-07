@@ -1,9 +1,5 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/model/payment.dart';
@@ -17,13 +13,6 @@ class DetailPaymentScreen extends StatefulWidget {
 
 class _DetailPaymentScreenState extends State<DetailPaymentScreen> {
   void shareImage(String url, Payment payment) async {
-    var request = await HttpClient().getUrl(Uri.parse(url));
-    var response = await request.close();
-    Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-    String refNo =
-        payment?.referenceNo ?? '${DateTime.now().microsecondsSinceEpoch}';
-//    await Share.file(
-//        payment.referenceNo, 'pembayaran$refNo.jpg', bytes, 'image/jpg');
     if (await canLaunch(url)) {
       await launch(url);
     } else {

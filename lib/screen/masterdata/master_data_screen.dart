@@ -21,7 +21,7 @@ class MasterDataScreen extends StatefulWidget {
 }
 
 class _MasterDataScreenState extends State<MasterDataScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ChangeNotifier {
   final TextEditingController searchTextController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
   Animation animation;
@@ -213,33 +213,6 @@ class _MasterDataScreenState extends State<MasterDataScreen>
       default:
         return CustomerScreen();
     }
-  }
-
-  Widget _contentSearch() {
-    return RefreshIndicator(
-      key: refreshIndicatorKey,
-      onRefresh: actionRefresh,
-      child: (listSearch == null || listSearch.isEmpty)
-          ? LayoutBuilder(
-              builder:
-                  (BuildContext context, BoxConstraints viewportConstraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                        minHeight: viewportConstraints.maxHeight),
-                    child: Center(
-                      child: Text(
-                        listSearch == null
-                            ? 'Mau cari apa nih?'
-                            : 'Tidak menemukan hasil',
-                      ),
-                    ),
-                  ),
-                );
-              },
-            )
-          : _body(),
-    );
   }
 
   void _showDialog() async {

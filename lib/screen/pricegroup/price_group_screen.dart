@@ -74,7 +74,7 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                     child: Text('PoS',
                         style: Theme.of(context)
                             .textTheme
-                            .title
+                            .headline6
                             .copyWith(color: Colors.white)),
                   ),
                 ),
@@ -94,7 +94,7 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                           Flexible(
                             child: Text(
                               pg?.name ?? '~',
-                              style: Theme.of(context).textTheme.title,
+                              style: Theme.of(context).textTheme.headline6,
                             ),
                           ),
                           PopupMenuButton<int>(
