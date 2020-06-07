@@ -37,6 +37,20 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                   return [
                     if (homeState.isSearch == false)
                       CupertinoSliverNavigationBar(
+                        leading: CupertinoButton(
+                          minSize: 0,
+                          padding: EdgeInsets.all(0.0),
+                          onPressed: () async {
+                            var result = await Get.toNamed(addSalesBookingScreen);
+                            if (result == 'newSalesBooking') {
+                              setState(() {});
+                            }
+                          },
+                          child: Icon(
+                            Icons.add,
+                            size: 24,
+                          ),
+                        ),
                         transitionBetweenRoutes: false,
                         heroTag: 'logoForcaPoS',
                         middle: CupertinoSlidingSegmentedControl(
