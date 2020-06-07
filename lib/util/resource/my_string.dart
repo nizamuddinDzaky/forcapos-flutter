@@ -42,6 +42,7 @@ class MyString {
 
   // delivery
   static const KEY_ID_DELIVERY = "id_delivery";
+  static const KEY_ID_DELIVERIES_BOOKING = "id_deliveries_booking";
 
   // dashboard
   static const KEY_PIE_CHART_DATE = "year_month";

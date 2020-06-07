@@ -2,7 +2,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
-import 'package:get/get.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
 import 'package:posku/screen/delivery/add_delivery_view_model.dart';
@@ -17,67 +16,6 @@ class AddDeliveryScreen extends StatefulWidget {
 }
 
 class _AddDeliveryScreenState extends AddDeliveryViewModel {
-  Widget _bodySheetMenu({String title, String unitCode}) {
-    return Container(
-      decoration: new BoxDecoration(
-          color: Colors.white,
-          borderRadius: new BorderRadius.only(
-              topLeft: const Radius.circular(14.0),
-              topRight: const Radius.circular(14.0))),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              CupertinoButton(
-                onPressed: () => Get.back(),
-                child: Text('Batal'),
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  title ?? 'Masukkan Jumlah',
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-              ),
-              CupertinoButton(
-                onPressed: () => Get.back(result: qtySentController.text),
-                child: Text('Selesai'),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: TextFormField(
-                controller: qtySentController,
-                autofocus: true,
-                inputFormatters: [NumericTextFormatter()],
-                keyboardType: TextInputType.numberWithOptions(signed: false),
-                decoration: new InputDecoration(
-                  prefixText: 'Jumlah Kirim : ',
-                  suffixText: unitCode ?? '',
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 8,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-        ],
-      ),
-    );
-  }
-
   Widget _body() {
     List<List<String>> statusDeliveries = [];
     statusDeliveries.addAll([
@@ -89,8 +27,6 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
     return Container(
       color: MyColor.mainBg,
       child: SingleChildScrollView(
-//        padding: EdgeInsets.symmetric(vertical: 8),
-//        padding: EdgeInsets.only(bottom: 16),
         child: Column(
           children: <Widget>[
             Container(
@@ -391,7 +327,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                   Text(sbi.productCode ?? '',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .subhead
+                                          .subtitle1
                                           .copyWith(color: MyColor.txtField)),
                                   SizedBox(
                                     height: 8,
@@ -482,49 +418,6 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                                         width: 8,
                                       ),
                                       //labelQty
-                                      /*CupertinoButton(
-                                        onPressed: () async {
-                                          qtySentController.text =
-                                              MyNumber.toNumberIdStr(
-                                            sbi.unitQuantity,
-                                          );
-                                          var result =
-                                              await showModalBottomSheet<
-                                                      String>(
-                                                  context: context,
-                                                  isDismissible: false,
-                                                  isScrollControlled: true,
-                                                  builder: (builder) {
-                                                    return _bodySheetMenu(
-                                                      title: sbi.productCode,
-                                                      unitCode:
-                                                          sbi.productUnitCode,
-                                                    );
-                                                  });
-                                          if (result != null) {
-                                            var newQty =
-                                                MyNumber.strUSToDouble(result);
-                                            if (newQty < 0) newQty = 0;
-                                            if (newQty > qtyUnsent)
-                                              newQty = qtyUnsent;
-                                            setState(() {
-                                              sbi.unitQuantity =
-                                                  newQty.toString();
-                                            });
-                                          }
-                                        },
-                                        child: Text(
-                                            '${MyNumber.toNumberIdStr(
-                                              sbi.unitQuantity,
-                                            )}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6
-                                                .copyWith(
-                                                    color: MyColor.blueDio)),
-                                        minSize: 24,
-                                        padding: EdgeInsets.all(0),
-                                      ),*/
                                       Container(
                                         width: 75,
                                         child: TextFormField(

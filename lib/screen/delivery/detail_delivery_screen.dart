@@ -238,7 +238,7 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                           Text(data.productCode ?? '',
                               style: Theme.of(context)
                                   .textTheme
-                                  .subhead
+                                  .subtitle1
                                   .copyWith(color: MyColor.txtField)),
                           SizedBox(
                             height: 8,
