@@ -18,6 +18,7 @@ import 'package:posku/screen/pricegroup/pg_detail_screen.dart';
 import 'package:posku/screen/profile/profile_screen.dart';
 import 'package:posku/screen/salebooking/add_sales_booking_screen.dart';
 import 'package:posku/screen/salebooking/sb_detail_screen.dart';
+import 'package:posku/screen/salebooking/sb_order_screen.dart';
 import 'package:posku/screen/splash_screen.dart';
 
 const String root = "/";

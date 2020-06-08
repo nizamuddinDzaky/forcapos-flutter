@@ -6,7 +6,7 @@ import 'package:posku/api/api_config.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/home/home_screen.dart';
-import 'package:posku/screen/salebooking/sale_booking_screen.dart';
+import 'package:posku/screen/salebooking/sales_booking_screen.dart';
 import 'package:posku/util/resource/my_string.dart';
 
 abstract class SalesBookingViewModel extends State<SalesBookingScreen>

@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/loading_button.dart';
-import 'package:posku/screen/salebooking/add_sb_view_model.dart';
+import 'package:posku/screen/salebooking/sb_order_controller.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -15,34 +14,8 @@ class AddSalesBookingScreen extends StatefulWidget {
   _AddSalesBookingScreenState createState() => _AddSalesBookingScreenState();
 }
 
-class _AddSalesBookingScreenState extends AddSBViewModel {
-  void showWarehousePicker() {
-    DataPicker.showDatePicker(
-      context,
-      locale: 'id',
-      datas: listWarehouse,
-      title: 'Pilih Gudang',
-      onConfirm: (data) {
-        currentWarehouse = data;
-        refreshData();
-      },
-    );
-  }
-
-  void showCustomerPicker() {
-    DataPicker.showDatePicker(
-      context,
-      locale: 'id',
-      datas: listCustomer,
-      title: 'Pilih Pelanggan',
-      onConfirm: (data) {
-        currentCustomer = data;
-        refreshData();
-      },
-    );
-  }
-
-  Widget _sectionDetail() {
+class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
+  Widget _sectionDetail(SBOrderController vm) {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -71,16 +44,17 @@ class _AddSalesBookingScreenState extends AddSBViewModel {
                     onPressed: () async {
                       DateTime newDateTime = await showRoundedDatePicker(
                         context: context,
-                        initialDate: currentDate,
+                        initialDate: vm.currentDate,
                         locale: Locale('in', 'ID'),
                         borderRadius: 16,
                       );
-                      setState(() {
-                        currentDate = newDateTime ?? currentDate;
-                      });
+                      vm.setDate(newDateTime);
+//                      setState(() {
+//                        currentDate = newDateTime ?? currentDate;
+//                      });
                     },
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text('${strToDate(currentDate.toString())}'),
+                    child: Text('${strToDate(vm.currentDate.toString())}'),
                   ),
                 ],
               ),
@@ -114,12 +88,14 @@ class _AddSalesBookingScreenState extends AddSBViewModel {
                   CupertinoButton(
                     minSize: 0,
                     onPressed: () async {
-                      await actionGetWarehouse();
-                      showWarehousePicker();
+//                      await actionGetWarehouse(vm);
+                      await vm.actionGetWarehouse();
+                      vm.showWarehousePicker(context);
+//                      showWarehousePicker();
                     },
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: Text(
-                      currentWarehouse?.name ?? 'Pilih Gudang',
+                      vm.currentWarehouse?.name ?? 'Pilih Gudang',
 //                      style: TextStyle(
 //                        color: currentWarehouse == null ? null : Colors.black,
 //                      ),
@@ -145,7 +121,7 @@ class _AddSalesBookingScreenState extends AddSBViewModel {
           Row(
             children: <Widget>[
               Icon(
-                Icons.store,
+                Icons.perm_identity,
                 size: 16,
                 color: MyColor.blueDio,
               ),
@@ -157,12 +133,14 @@ class _AddSalesBookingScreenState extends AddSBViewModel {
                   CupertinoButton(
                     minSize: 0,
                     onPressed: () async {
-                      await actionGetCustomer();
-                      showCustomerPicker();
+//                      await actionGetCustomer(vm);
+                      await vm.actionGetCustomer();
+                      vm.showCustomerPicker(context);
+//                      showCustomerPicker();
                     },
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: Text(
-                      currentCustomer?.name ?? 'Pilih Pelanggan',
+                      vm.currentCustomer?.name ?? 'Pilih Pelanggan',
 //                      style: TextStyle(
 //                        color: currentWarehouse == null ? null : Colors.black,
 //                      ),
@@ -180,12 +158,22 @@ class _AddSalesBookingScreenState extends AddSBViewModel {
           SizedBox(
             height: 24,
           ),
+          Center(
+            child: Text(
+              'Semua kolom wajib terisi',
+              style: TextStyle(
+                color: (vm.currentWarehouse != null && vm.currentCustomer != null)
+                    ? Colors.transparent
+                    : Colors.red,
+              ),
+            ),
+          ),
           LoadingButton(
             title: 'Lanjutkan',
             noMargin: true,
             onPressed: () {
-              //Get.to(SalesBookingOrderScreen());
-              Get.toNamed(salesBookingOrderScreen);
+              if (vm.currentWarehouse != null && vm.currentCustomer != null)
+                Get.toNamed(salesBookingOrderScreen);
             },
           ),
         ],
@@ -193,7 +181,7 @@ class _AddSalesBookingScreenState extends AddSBViewModel {
     );
   }
 
-  Widget _body() {
+  Widget _body(SBOrderController vm) {
     return Container(
       color: MyColor.mainBg,
       child: SingleChildScrollView(
@@ -202,7 +190,7 @@ class _AddSalesBookingScreenState extends AddSBViewModel {
             Container(
               child: Column(
                 children: <Widget>[
-                  _sectionDetail(),
+                  _sectionDetail(vm),
 //                  MyDivider.spaceDividerLogin(custom: 6),
 //                  Form(
 //                    key: formKey,
@@ -225,60 +213,17 @@ class _AddSalesBookingScreenState extends AddSBViewModel {
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: 'Dftr Jual',
         middle: Text(
-          'Tambah Penjualan',
+          //'Tambah Penjualan',
+          'Data Pemesanan',
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
       child: Material(
         child: SafeArea(
-          child: _body(),
-        ),
-      ),
-    );
-  }
-}
-
-class SalesBookingOrderScreen extends StatefulWidget {
-  @override
-  _SalesBookingOrderScreenState createState() =>
-      _SalesBookingOrderScreenState();
-}
-
-class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
-  Widget _body() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      margin: EdgeInsets.only(bottom: 8),
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(),
+          child: GetBuilder<SBOrderController>(
+            init: SBOrderController(),
+            builder: (vm) => _body(vm),
           ),
-          LoadingButton(
-            title: 'Kirim',
-            noMargin: true,
-            onPressed: () {
-              Get.until(ModalRoute.withName(homeScreen));
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        previousPageTitle: 'Kembali',
-        middle: Text(
-          'Pemesanan',
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ),
-      child: Material(
-        child: SafeArea(
-          child: _body(),
         ),
       ),
     );
