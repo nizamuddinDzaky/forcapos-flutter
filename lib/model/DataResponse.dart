@@ -37,6 +37,7 @@ class DataResponse {
   int totalCustomerData;
   List<Product> listGroupProductPrice;
   List<Warehouse> listWarehouses;
+  List<Product> listProducts;
 
   DataResponse(
       {this.totalGoodsReceived, this.listGoodsReceived, this.goodReceived, this.listSalesBooking});
@@ -67,6 +68,9 @@ class DataResponse {
   }
 
   DataResponse.fromJson(Map<String, dynamic> json) {
+    listProducts = ifExistList(json, 'list_products', (obj) {
+      return Product.fromJson(obj);
+    });
     listWarehouses = ifExistList(json, 'list_warehouses', (obj) {
       return Warehouse.fromJson(obj);
     });

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:intl/intl.dart';
+import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 
 bool get isIos => foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS;
@@ -208,6 +209,22 @@ extension StringExtension on String {
       print(e.message);
     }
     return newDate;
+  }
+
+  String toRp() {
+    return MyNumber.toNumberRpStr(this);
+  }
+
+  String toNumId() {
+    return MyNumber.toNumberIdStr(this);
+  }
+
+  double toDouble() {
+    return MyNumber.strUSToDouble(this);
+  }
+
+  double toDoubleID() {
+    return MyNumber.strIDToDouble(this);
   }
 }
 
