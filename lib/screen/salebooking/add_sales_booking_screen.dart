@@ -4,7 +4,7 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/loading_button.dart';
-import 'package:posku/screen/salebooking/sb_order_controller.dart';
+import 'package:posku/screen/salebooking/sales_booking_controller.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -15,7 +15,7 @@ class AddSalesBookingScreen extends StatefulWidget {
 }
 
 class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
-  Widget _sectionDetail(SBOrderController vm) {
+  Widget _sectionDetail(SalesBookingController vm) {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -181,7 +181,7 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
     );
   }
 
-  Widget _body(SBOrderController vm) {
+  Widget _body(SalesBookingController vm) {
     return Container(
       color: MyColor.mainBg,
       child: SingleChildScrollView(
@@ -220,8 +220,8 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
       ),
       child: Material(
         child: SafeArea(
-          child: GetBuilder<SBOrderController>(
-            init: SBOrderController(),
+          child: GetBuilder<SalesBookingController>(
+            init: SalesBookingController(),
             builder: (vm) => _body(vm),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
@@ -8,8 +9,8 @@ import 'package:posku/model/product.dart';
 import 'package:posku/model/warehouse.dart';
 import 'package:posku/util/my_util.dart';
 
-class SBOrderController extends GetController {
-  static SBOrderController get to => Get.find();
+class SalesBookingController extends GetController {
+  static SalesBookingController get to => Get.find();
 
   DateTime currentDate = DateTime.now();
   List<Product> cartList;
@@ -20,6 +21,43 @@ class SBOrderController extends GetController {
   Customer currentCustomer;
   List<Customer> listCustomer = [];
   bool isFirst = true;
+
+  void qtyMinus(Product p) {
+    var newQty = p.minOrder.toDouble() - 1;
+    if (newQty < 1) newQty = 1;
+    p.minOrder = newQty.toString();
+    refresh();
+  }
+
+  void qtyPlus(Product p) {
+    var newQty = p.minOrder.toDouble() + 1;
+    p.minOrder = newQty.toString();
+    refresh();
+  }
+
+  void qtyCustom(Product p, String newValue) {
+    var newQty = newValue.toDoubleID();
+    if (newQty < 1) {
+      newQty = 1;
+    }
+    p.minOrder = newQty.toString();
+    refresh();
+  }
+
+  void qtyEdit(String newValue, TextEditingController qtyController) {
+    if (newValue.isEmpty) return;
+    var newQty =
+    newValue.toDoubleID();
+    if (newQty < 1) {
+      newQty = 1;
+      lastCursorEditText(
+          qtyController, newQty);
+    }
+  }
+
+  void refresh() {
+    update(this);
+  }
 
   String getTotal() {
     var total = 0.0;
@@ -58,8 +96,7 @@ class SBOrderController extends GetController {
     if (cartList == null) cartList = [];
     var order = p.minOrder.toDouble();
     p.minOrder = customQty?.toString() ?? (order + qty).toString();
-    if (!cartList.contains(p))
-      cartList.add(p);
+    if (!cartList.contains(p)) cartList.add(p);
     update(this);
   }
 

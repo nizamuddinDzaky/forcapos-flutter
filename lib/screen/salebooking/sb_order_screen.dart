@@ -5,7 +5,7 @@ import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
 import 'package:posku/model/product.dart';
-import 'package:posku/screen/salebooking/sb_order_controller.dart';
+import 'package:posku/screen/salebooking/sales_booking_controller.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
@@ -32,7 +32,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
     );
   }
 
-  Widget _bottomSheetQty(SBOrderController vm, Product p, {title}) {
+  Widget _bottomSheetQty(SalesBookingController vm, Product p, {title}) {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       final qtyController = TextEditingController();
@@ -236,7 +236,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
     });
   }
 
-  Widget _layoutProduct(SBOrderController vm) {
+  Widget _layoutProduct(SalesBookingController vm) {
     var listProducts = vm.getListProducts();
     if (listProducts == null)
       return Center(child: CupertinoActivityIndicator());
@@ -323,7 +323,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
     );
   }
 
-  Widget _body(SBOrderController vm) {
+  Widget _body(SalesBookingController vm) {
     return Container(
       color: MyColor.mainBg,
       child: Column(
@@ -531,11 +531,11 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SBOrderController>(
-      init: SBOrderController(),
+    return GetBuilder<SalesBookingController>(
+      init: SalesBookingController(),
       builder: (vm) => CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          previousPageTitle: 'Kembali',
+          previousPageTitle: 'Dt Pemesanan',
           middle: Text(
             'Pemesanan',
             style: Theme.of(context).textTheme.headline6,
@@ -543,7 +543,10 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
           trailing: CupertinoButton(
             minSize: 0,
             padding: EdgeInsets.all(0),
-            onPressed: () {},
+            onPressed: () {
+              if ((vm.cartList?.length ?? 0) > 0)
+                Get.toNamed(salesBookingCartScreen);
+            },
             child: Container(
               child: Stack(
                 children: <Widget>[

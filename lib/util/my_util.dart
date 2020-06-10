@@ -234,3 +234,13 @@ extension IndexedIterable<E> on Iterable<E> {
     return this.map((e) => f(e, i++));
   }
 }
+
+lastCursorEditText(TextEditingController qtyController, double newQty) {
+  var newValue = MyNumber.toNumberId(newQty);
+  qtyController.value = TextEditingValue(
+    text: newValue,
+    selection: TextSelection.fromPosition(
+      TextPosition(offset: newValue.length),
+    ),
+  );
+}
