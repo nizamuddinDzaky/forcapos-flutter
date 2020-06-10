@@ -69,6 +69,7 @@ class Product implements Copyable<Product> {
   String priceKredit;
   String minOrder;
   String unitName;
+  String discount;
   String isMultiple;
 
   Product(
@@ -140,6 +141,7 @@ class Product implements Copyable<Product> {
         this.priceKredit,
         this.minOrder,
         this.unitName,
+        this.discount,
         this.isMultiple});
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -211,6 +213,7 @@ class Product implements Copyable<Product> {
     priceKredit = json['price_kredit'];
     minOrder = json['min_order'];
     unitName = json['unit_name'];
+    discount = json['discount'];
     isMultiple = json['is_multiple'];
   }
 
@@ -284,6 +287,7 @@ class Product implements Copyable<Product> {
     data['price_kredit'] = this.priceKredit;
     data['min_order'] = this.minOrder;
     data['unit_name'] = this.unitName;
+    data['discount'] = this.discount;
     data['is_multiple'] = this.isMultiple;
     return data;
   }

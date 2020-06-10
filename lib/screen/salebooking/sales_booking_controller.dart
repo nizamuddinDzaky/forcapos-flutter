@@ -35,13 +35,13 @@ class SalesBookingController extends GetController {
     refresh();
   }
 
-  void qtyCustom(Product p, String newValue) {
+  void qtyCustom(Product p, String newValue, {bool isRefresh = true}) {
     var newQty = newValue.toDoubleID();
     if (newQty < 1) {
       newQty = 1;
     }
     p.minOrder = newQty.toString();
-    refresh();
+    if (isRefresh) refresh();
   }
 
   void qtyEdit(String newValue, TextEditingController qtyController) {
@@ -63,6 +63,7 @@ class SalesBookingController extends GetController {
     var total = 0.0;
     cartList?.forEach((element) {
       total += element.minOrder.toDouble() * element.price.toDouble();
+      total -= element.minOrder.toDouble() * element.discount.toDouble();
     });
     return total.toString().toRp();
   }

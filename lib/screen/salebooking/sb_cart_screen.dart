@@ -229,18 +229,33 @@ class _SalesBookingCartScreenState extends State<SalesBookingCartScreen> {
                           },
                         );
                       },
-                      child: Center(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 16,
-                          ),
-                          child: Text(
-                            'Ubah Data Item',
-                            style: Theme.of(Get.context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(fontWeight: FontWeight.bold),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 16,
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                'Ubah',
+                                style: Theme.of(Get.context)
+                                    .textTheme
+                                    .subtitle1
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                '(Diskon, dll)',
+                                style: Theme.of(Get.context)
+                                    .textTheme
+                                    .bodyText2
+                                    .copyWith(color: Colors.grey),
+                              ),
+                            ],
                           ),
                         ),
                       ),

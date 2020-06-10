@@ -6,6 +6,11 @@ class MyNumber {
     return f.format(newValue);
   }
 
+  static String toDecimalIdStr(String newValue) {
+    final f = NumberFormat('#,###.##', 'id');
+    return f.format(strUSToDouble(newValue));
+  }
+
   static String toNumberIdStr(String newValue) {
     final f = NumberFormat('#,###', 'id');
     return f.format(strUSToDouble(newValue));

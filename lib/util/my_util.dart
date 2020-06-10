@@ -219,6 +219,10 @@ extension StringExtension on String {
     return MyNumber.toNumberIdStr(this);
   }
 
+  String toDecId() {
+    return MyNumber.toDecimalIdStr(this);
+  }
+
   double toDouble() {
     return MyNumber.strUSToDouble(this);
   }
