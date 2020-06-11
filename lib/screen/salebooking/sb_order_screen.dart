@@ -5,9 +5,11 @@ import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
 import 'package:posku/model/product.dart';
+import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/salebooking/sales_booking_controller.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
+import 'package:posku/util/sales_cons.dart';
 import 'package:posku/util/widget/my_divider.dart';
 import 'package:posku/util/my_util.dart';
 
@@ -514,18 +516,344 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                     ),
                   ],
                 ),
-                LoadingButton(
-                  title: 'Kirim',
-                  noMargin: true,
-                  onPressed: () {
-                    Get.until(ModalRoute.withName(homeScreen));
-                  },
+                Row(
+                  children: <Widget>[
+                    LoadingButton(
+                      title: 'Opsi',
+                      color: MyColor.mainBlue,
+                      noMargin: true,
+                      onPressed: () async {
+                        _bottomSheetOption(vm);
+                      },
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      child: LoadingButton(
+                        title: 'Kirim',
+                        noMargin: true,
+                        onPressed: vm.actionSubmit,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  _bottomSheetOption(SalesBookingController vm) {
+    if (vm.sales == null) vm.sales = SalesBooking(saleStatus: 'pending');
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      enableDrag: true,
+      isDismissible: true,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      builder: (BuildContext ctx) {
+        return StatefulBuilder(
+          builder: (bctx, setState) {
+            return Container(
+              decoration: new BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: new BorderRadius.only(
+                      topLeft: const Radius.circular(14.0),
+                      topRight: const Radius.circular(14.0))),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.center,
+                        height: 48,
+                        child: Text(
+                          'Opsi Tambahan',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Form(
+                        child: Container(
+                          color: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              //Diskon
+                              Text(
+                                'Diskon',
+                                style:
+                                    Theme.of(Get.context).textTheme.subtitle2,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.description,
+                                    size: 16,
+                                    color: MyColor.blueDio,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      //controller: deliveredController,
+                                      initialValue:
+                                          vm.sales?.orderDiscount?.toNumId() ??
+                                              '0',
+                                      onChanged: (val) {
+                                        var sale = val.toDoubleID().toString();
+                                        vm.sales?.orderDiscount = sale;
+                                        vm.refresh();
+                                      },
+                                      inputFormatters: [NumericTextFormatter()],
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: false),
+                                      decoration: new InputDecoration(
+                                        prefixText: 'Rp ',
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              //Biaya Pengiriman
+                              Text(
+                                'Biaya Pengiriman',
+                                style:
+                                    Theme.of(Get.context).textTheme.subtitle2,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.description,
+                                    size: 16,
+                                    color: MyColor.blueDio,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      //controller: deliveredController,
+                                      initialValue:
+                                          vm.sales?.shipping?.toNumId() ?? '0',
+                                      onChanged: (val) {
+                                        var pay = val.toDoubleID().toString();
+                                        vm.sales?.shipping = pay;
+                                        vm.refresh();
+                                      },
+                                      inputFormatters: [NumericTextFormatter()],
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: false),
+                                      decoration: new InputDecoration(
+                                        prefixText: 'Rp ',
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              //status
+                              Text(
+                                'Status',
+                                style: Theme.of(context).textTheme.subtitle2,
+                              ),
+                              GridView.count(
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 4,
+                                mainAxisSpacing: 4,
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                physics: NeverScrollableScrollPhysics(),
+                                childAspectRatio: 16 / 3,
+                                children: <Widget>[
+                                  ...statusSales.mapIndexed((data, index) {
+                                    return RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                        side:
+                                            BorderSide(color: MyColor.mainRed),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          vm.sales?.saleStatus = data[1];
+                                        });
+                                      },
+                                      color: vm.sales?.saleStatus == data[1]
+                                          ? MyColor.mainRed
+                                          : Colors.white,
+                                      child: Text(
+                                        data[0],
+                                        style: TextStyle(
+                                          color: vm.sales?.saleStatus == data[1]
+                                              ? Colors.white
+                                              : MyColor.txtField,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              //Jangka Waktu Pembayaran
+                              Text(
+                                'Jangka Waktu Pembayaran',
+                                style:
+                                    Theme.of(Get.context).textTheme.subtitle2,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.description,
+                                    size: 16,
+                                    color: MyColor.blueDio,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      //controller: deliveredController,
+                                      initialValue:
+                                          vm.sales?.paymentTerm?.toNumId() ??
+                                              '0',
+                                      onSaved: (newValue) {
+                                        //p.code = newValue;
+                                      },
+                                      decoration: new InputDecoration(
+                                        suffixText: 'hari',
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              //Catatan Pegawai
+                              Text(
+                                'Catatan Pegawai',
+                                style:
+                                    Theme.of(Get.context).textTheme.subtitle2,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.description,
+                                    size: 16,
+                                    color: MyColor.blueDio,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      //controller: deliveredController,
+                                      initialValue:
+                                          vm.sales?.staffNote,
+                                      onSaved: (newValue) {
+                                        //p.code = newValue;
+                                      },
+                                      decoration: new InputDecoration(
+                                        hintText: 'Tulis Catatan',
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              //Catatan Penjualan
+                              Text(
+                                'Catatan Penjualan',
+                                style:
+                                    Theme.of(Get.context).textTheme.subtitle2,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.description,
+                                    size: 16,
+                                    color: MyColor.blueDio,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      //controller: deliveredController,
+                                      initialValue:
+                                          vm.sales?.note,
+                                      onSaved: (newValue) {
+                                        //p.code = newValue;
+                                      },
+                                      decoration: new InputDecoration(
+                                        hintText: 'Tulis Catatan',
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

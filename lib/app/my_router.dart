@@ -67,7 +67,7 @@ class MyRouter {
         );
       case homeScreen:
         return GetRouteBase(
-          settings: settings,
+          settings: RouteSettings(name: homeScreen, arguments: Map()),
           transition: Transition.rightToLeft,
           page: HomeScreen(),
         );

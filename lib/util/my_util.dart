@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
@@ -247,4 +248,12 @@ lastCursorEditText(TextEditingController qtyController, double newQty) {
       TextPosition(offset: newValue.length),
     ),
   );
+}
+
+dynamic getArg(index) {
+  var arg = Get.arguments;
+  if (arg == null) return null;
+  if (arg is Map) {
+    return arg[index];
+  }
 }

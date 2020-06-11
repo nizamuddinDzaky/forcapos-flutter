@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/app/my_router.dart';
+import 'package:posku/helper/custom_dialog.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/model/product.dart';
+import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/warehouse.dart';
 import 'package:posku/util/my_util.dart';
 
@@ -21,6 +26,7 @@ class SalesBookingController extends GetController {
   Customer currentCustomer;
   List<Customer> listCustomer = [];
   bool isFirst = true;
+  SalesBooking sales;
 
   void qtyMinus(Product p) {
     var newQty = p.minOrder.toDouble() - 1;
@@ -65,6 +71,8 @@ class SalesBookingController extends GetController {
       total += element.minOrder.toDouble() * element.price.toDouble();
       total -= element.minOrder.toDouble() * element.discount.toDouble();
     });
+    total -= sales?.orderDiscount?.toDouble() ?? 0.0;
+    total += sales?.shipping?.toDouble() ?? 0.0;
     return total.toString().toRp();
   }
 
@@ -179,5 +187,68 @@ class SalesBookingController extends GetController {
         update(this);
       },
     );
+  }
+
+  actionSubmit() async {
+    List<Map<String, String>> salesItem = [];
+    cartList?.forEach((p) {
+      salesItem.add({
+        'product_id': p.id,
+        'price': p.price,
+        'quantity': p.minOrder,
+      });
+    });
+    var body = {
+      'date': currentDate.toStr(),
+      'warehouse': currentWarehouse?.id ?? '',
+      'customer': currentCustomer?.id ?? '',
+      'order_discount': sales?.orderDiscount ?? '',
+      'shipping': sales?.shipping ?? '',
+      'sale_status': sales?.saleStatus ?? 'pending',
+      'payment_term': sales?.paymentTerm ?? '',
+      'staff_note': sales?.staffNote ?? '',
+      'note': sales?.note ?? '',
+      'products': salesItem,
+    };
+    print('add sales $body');
+    await _actionPostSB(body);
+  }
+
+  _actionPostSB(body) async {
+    var status = await ApiClient.methodPost(
+      ApiConfig.urlAddSalesBooking,
+      body,
+      {},
+      onBefore: (status) {},
+      onSuccess: (data, _) {
+        Get.snackbar('Sales', 'Tambah Penjualan Berhasil');
+        Get.until((route) {
+          if (route.settings.name == homeScreen) {
+            var arg = (route.settings.arguments as Map);
+            arg['result'] = DateTime.now().millisecondsSinceEpoch;
+            arg['status'] = sales?.saleStatus;
+            return true;
+          } else {
+            return false;
+          }
+        });
+      },
+      onFailed: (title, message) {
+        print(message);
+        var errorData = BaseResponse.fromJson(jsonDecode(message));
+        CustomDialog.showAlertDialog(context,
+            title: title,
+            message: 'Kode error: ${errorData?.code}',
+            leftAction: CustomDialog.customAction());
+      },
+      onError: (title, message) {
+        CustomDialog.showAlertDialog(context,
+            title: title,
+            message: message,
+            leftAction: CustomDialog.customAction());
+      },
+      onAfter: (status) {},
+    );
+    status.execute();
   }
 }

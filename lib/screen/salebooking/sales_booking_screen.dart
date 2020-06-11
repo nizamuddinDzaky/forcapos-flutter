@@ -41,9 +41,23 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                           minSize: 0,
                           padding: EdgeInsets.all(0.0),
                           onPressed: () async {
-                            var result = await Get.toNamed(addSalesBookingScreen);
-                            if (result == 'newSalesBooking') {
-                              setState(() {});
+                            var old = getArg('result');
+                            await Get.toNamed(addSalesBookingScreen);
+                            if (old != getArg('result')) {
+                              setState(() {
+                                switch (getArg('status')) {
+                                  case 'reserved':
+                                    sliding = 1;
+                                    break;
+                                  case 'closed':
+                                    sliding = 2;
+                                    break;
+                                  default:
+                                    sliding = 0;
+                                    break;
+                                }
+                                refreshIndicatorKey.currentState.show();
+                              });
                             }
                           },
                           child: Icon(
