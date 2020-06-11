@@ -320,6 +320,16 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
     }
   }
 
+  goToEditSales() async {
+    var result = await Get.toNamed(
+      editSalesBookingScreen,
+      arguments: {},
+    );
+    if (result != null) {
+      setState(() {});
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
