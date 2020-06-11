@@ -16,7 +16,11 @@ import 'package:posku/screen/payment/detail_payment_screen.dart';
 import 'package:posku/screen/payment/edit_payment_screen.dart';
 import 'package:posku/screen/pricegroup/pg_detail_screen.dart';
 import 'package:posku/screen/profile/profile_screen.dart';
+import 'package:posku/screen/salebooking/add_sales_booking_screen.dart';
+import 'package:posku/screen/salebooking/sb_cart_screen.dart';
 import 'package:posku/screen/salebooking/sb_detail_screen.dart';
+import 'package:posku/screen/salebooking/sb_item_screen.dart';
+import 'package:posku/screen/salebooking/sb_order_screen.dart';
 import 'package:posku/screen/splash_screen.dart';
 
 const String root = "/";
@@ -36,6 +40,10 @@ const addDeliveryScreen = "/AddDeliveryScreen";
 const profileScreen = "/ProfileScreen";
 const editPaymentScreen = "/EditPaymentScreen";
 const editDeliveryScreen = "/EditDeliveryScreen";
+const addSalesBookingScreen = "/AddSalesBookingScreen";
+const salesBookingOrderScreen = "/SalesBookingOrderScreen";
+const salesBookingCartScreen = "/SalesBookingCartScreen";
+const salesBookingItemScreen = "/SalesBookingItemScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -59,7 +67,7 @@ class MyRouter {
         );
       case homeScreen:
         return GetRouteBase(
-          settings: settings,
+          settings: RouteSettings(name: homeScreen, arguments: Map()),
           transition: Transition.rightToLeft,
           page: HomeScreen(),
         );
@@ -137,6 +145,30 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: EditDeliveryScreen(),
+        );
+      case addSalesBookingScreen:
+        return GetRouteBase(
+          settings: settings,
+          fullscreenDialog: true,
+          page: AddSalesBookingScreen(),
+        );
+      case salesBookingOrderScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: SalesBookingOrderScreen(),
+        );
+      case salesBookingCartScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: SalesBookingCartScreen(),
+        );
+      case salesBookingItemScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: SalesBookingItemScreen(),
         );
       default:
         return GetRouteBase(

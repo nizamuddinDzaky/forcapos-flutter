@@ -10,6 +10,7 @@ class LoadingButton extends StatefulWidget {
     this.noMargin = false,
     this.isActionNavigation = false,
     this.noPadding = false,
+    this.color,
   });
 
   final Function onPressed;
@@ -17,6 +18,7 @@ class LoadingButton extends StatefulWidget {
   final bool noMargin;
   final bool isActionNavigation;
   final bool noPadding;
+  final Color color;
 
   @override
   _LoadingButtonState createState() => _LoadingButtonState();
@@ -40,7 +42,7 @@ class _LoadingButtonState extends State<LoadingButton> {
   Widget build(BuildContext context) {
     return Container(
       margin: widget.noMargin ? null : MyDimen.marginLayout(),
-      width: widget.isActionNavigation ? null : double.maxFinite,
+//      width: widget.isActionNavigation ? null : double.maxFinite,
       child: widget.isActionNavigation
           ? CupertinoButton(
               minSize: widget.noPadding ? 0 : null,
@@ -54,7 +56,7 @@ class _LoadingButtonState extends State<LoadingButton> {
                   isLoading ? CupertinoActivityIndicator() : Text(widget.title),
             )
           : FlatButton(
-              color: MyColor.mainGreen,
+              color: widget.color ?? MyColor.mainGreen,
               disabledColor: MyColor.mainGreen,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

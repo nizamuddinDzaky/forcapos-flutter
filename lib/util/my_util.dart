@@ -2,7 +2,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 
 bool get isIos => foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS;
@@ -209,11 +211,49 @@ extension StringExtension on String {
     }
     return newDate;
   }
+
+  String toRp() {
+    return MyNumber.toNumberRpStr(this);
+  }
+
+  String toNumId() {
+    return MyNumber.toNumberIdStr(this);
+  }
+
+  String toDecId() {
+    return MyNumber.toDecimalIdStr(this);
+  }
+
+  double toDouble() {
+    return MyNumber.strUSToDouble(this);
+  }
+
+  double toDoubleID() {
+    return MyNumber.strIDToDouble(this);
+  }
 }
 
 extension IndexedIterable<E> on Iterable<E> {
   Iterable<T> mapIndexed<T>(T f(E e, int i)) {
     var i = 0;
     return this.map((e) => f(e, i++));
+  }
+}
+
+lastCursorEditText(TextEditingController qtyController, double newQty) {
+  var newValue = MyNumber.toNumberId(newQty);
+  qtyController.value = TextEditingValue(
+    text: newValue,
+    selection: TextSelection.fromPosition(
+      TextPosition(offset: newValue.length),
+    ),
+  );
+}
+
+dynamic getArg(index) {
+  var arg = Get.arguments;
+  if (arg == null) return null;
+  if (arg is Map) {
+    return arg[index];
   }
 }

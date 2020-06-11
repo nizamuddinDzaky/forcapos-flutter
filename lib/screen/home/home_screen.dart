@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:posku/screen/dashboard/dashboard_screen.dart';
 import 'package:posku/screen/goodreceived/good_received_screen.dart';
 import 'package:posku/screen/masterdata/master_data_screen.dart';
-import 'package:posku/screen/salebooking/sale_booking_screen.dart';
+import 'package:posku/screen/salebooking/sales_booking_screen.dart';
 import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/resource/my_string.dart';
