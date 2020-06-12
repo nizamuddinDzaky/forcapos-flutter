@@ -1116,7 +1116,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                 color: MyColor.txtField,
                               ),
                               InkWell(
-                                onTap: () => goToDetailDelivery(listDelivery[index]),
+                                onTap: () =>
+                                    goToDetailDelivery(listDelivery[index]),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
@@ -1184,7 +1185,13 @@ class _SBDetailScreenState extends SBDetailViewModel {
   }
 
   Widget _actionButton() {
-    if (sliding == 0) return null;
+    if (sliding == 0)
+      return CupertinoButton(
+        minSize: 0,
+        padding: EdgeInsets.all(0.0),
+        onPressed: () => goToEditSales(),
+        child: Text('Ubah'),
+      );
     if (sliding == 1 && sb.saleStatus == 'pending') return null;
     if (sliding == 1 && sb.paymentStatus == 'paid') return null;
     if (sliding == 2 && sb.saleStatus != 'reserved') return null;
@@ -1193,9 +1200,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
     return CupertinoButton(
       minSize: 0,
       padding: EdgeInsets.all(0.0),
-      onPressed: sliding == 1
-          ? () => goToAddPayment()
-          : () => goToAddDelivery(),
+      onPressed:
+          sliding == 1 ? () => goToAddPayment() : () => goToAddDelivery(),
       child: Icon(
         Icons.add,
         size: 24,

@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'my_util.dart';
 
 class MyNumber {
   static String toNumberId(double newValue) {
@@ -36,5 +37,15 @@ class MyNumber {
     final f = NumberFormat('#,###', 'en');
     var resValue = (newValue ?? '').isEmpty ? '0' : newValue;
     return f.parse(resValue) ?? 0;
+  }
+
+  static double tryStrIDToDouble(String newValue) {
+    var resValue = (newValue ?? '').isEmpty ? '0' : newValue;
+    return double.tryParse(resValue.changeComma()) ?? 0.0;
+  }
+
+  static double tryStrUSToDouble(String newValue) {
+    var resValue = (newValue ?? '').isEmpty ? '0' : newValue;
+    return double.tryParse(resValue) ?? 0.0;
   }
 }

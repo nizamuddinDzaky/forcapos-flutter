@@ -62,7 +62,7 @@ class SalesBookingController extends GetController {
   }
 
   void refresh() {
-    update(this);
+    update();
   }
 
   String getTotal() {
@@ -85,19 +85,19 @@ class SalesBookingController extends GetController {
       listSearch.addAll(listProducts?.where((element) =>
           element.name.toLowerCase().contains(txtSearch.toLowerCase())));
     }
-    update(this);
+    refresh();
   }
 
   cancelSearch() {
     listSearch?.clear();
     listSearch = null;
-    update(this);
+    refresh();
   }
 
   void deleteFromCart(Product p) {
     p.minOrder = null;
     cartList?.remove(p);
-    update(this);
+    refresh();
     Get.back();
   }
 
@@ -106,7 +106,7 @@ class SalesBookingController extends GetController {
     var order = p.minOrder.toDouble();
     p.minOrder = customQty?.toString() ?? (order + qty).toString();
     if (!cartList.contains(p)) cartList.add(p);
-    update(this);
+    refresh();
   }
 
   List<Product> getListProducts() {
@@ -118,7 +118,7 @@ class SalesBookingController extends GetController {
 
   void setDate(DateTime newDateTime) {
     currentDate = newDateTime ?? currentDate;
-    update(this);
+    refresh();
   }
 
   actionGetWarehouse() async {
@@ -157,7 +157,7 @@ class SalesBookingController extends GetController {
         if (listProducts == null) listProducts = [];
         listProducts.addAll(baseResponse?.data?.listProducts ?? []);
         isFirst = false;
-        update(this);
+        refresh();
       },
     );
     status.execute();
@@ -171,7 +171,7 @@ class SalesBookingController extends GetController {
       title: 'Pilih Gudang',
       onConfirm: (data) {
         currentWarehouse = data;
-        update(this);
+        refresh();
       },
     );
   }
@@ -184,7 +184,7 @@ class SalesBookingController extends GetController {
       title: 'Pilih Pelanggan',
       onConfirm: (data) {
         currentCustomer = data;
-        update(this);
+        refresh();
       },
     );
   }
@@ -236,13 +236,13 @@ class SalesBookingController extends GetController {
       onFailed: (title, message) {
         print(message);
         var errorData = BaseResponse.fromJson(jsonDecode(message));
-        CustomDialog.showAlertDialog(context,
+        CustomDialog.showAlertDialog(Get.overlayContext,
             title: title,
             message: 'Kode error: ${errorData?.code}',
             leftAction: CustomDialog.customAction());
       },
       onError: (title, message) {
-        CustomDialog.showAlertDialog(context,
+        CustomDialog.showAlertDialog(Get.overlayContext,
             title: title,
             message: message,
             leftAction: CustomDialog.customAction());

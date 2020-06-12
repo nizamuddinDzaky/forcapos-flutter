@@ -340,13 +340,9 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
           ),
           InkWell(
             onTap: () async {
-              var result =
-                  await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
-              if (result != null) {
-                setState(() {
-                  var newGr = SalesBooking.fromJson(result);
-                  sb.saleStatus = newGr.saleStatus;
-                });
+              var result = await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
+              if (getArg('result', myArg: result) == 'editSales') {
+                actionRefresh();
               }
             },
             child: Row(

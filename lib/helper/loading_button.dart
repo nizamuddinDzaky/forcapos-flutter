@@ -10,6 +10,7 @@ class LoadingButton extends StatefulWidget {
     this.noMargin = false,
     this.isActionNavigation = false,
     this.noPadding = false,
+    this.shrinkWrap = false,
     this.color,
   });
 
@@ -18,6 +19,7 @@ class LoadingButton extends StatefulWidget {
   final bool noMargin;
   final bool isActionNavigation;
   final bool noPadding;
+  final bool shrinkWrap;
   final Color color;
 
   @override
@@ -56,6 +58,8 @@ class _LoadingButtonState extends State<LoadingButton> {
                   isLoading ? CupertinoActivityIndicator() : Text(widget.title),
             )
           : FlatButton(
+              materialTapTargetSize:
+                  widget.shrinkWrap ? MaterialTapTargetSize.shrinkWrap : null,
               color: widget.color ?? MyColor.mainGreen,
               disabledColor: MyColor.mainGreen,
               child: Row(

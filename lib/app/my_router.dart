@@ -17,6 +17,9 @@ import 'package:posku/screen/payment/edit_payment_screen.dart';
 import 'package:posku/screen/pricegroup/pg_detail_screen.dart';
 import 'package:posku/screen/profile/profile_screen.dart';
 import 'package:posku/screen/salebooking/add_sales_booking_screen.dart';
+import 'package:posku/screen/salebooking/edit_sales_booking_screen.dart';
+import 'package:posku/screen/salebooking/edit_sb_item_screen.dart';
+import 'package:posku/screen/salebooking/edit_sb_product_screen.dart';
 import 'package:posku/screen/salebooking/sb_cart_screen.dart';
 import 'package:posku/screen/salebooking/sb_detail_screen.dart';
 import 'package:posku/screen/salebooking/sb_item_screen.dart';
@@ -44,6 +47,9 @@ const addSalesBookingScreen = "/AddSalesBookingScreen";
 const salesBookingOrderScreen = "/SalesBookingOrderScreen";
 const salesBookingCartScreen = "/SalesBookingCartScreen";
 const salesBookingItemScreen = "/SalesBookingItemScreen";
+const editSalesBookingScreen = "/EditSalesBookingScreen";
+const editSBProductScreen = "/EditSBProductScreen";
+const editSBItemScreen = "/EditSBItemScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -169,6 +175,24 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: SalesBookingItemScreen(),
+        );
+      case editSalesBookingScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: EditSalesBookingScreen(),
+        );
+      case editSBProductScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: EditSBProductScreen(),
+        );
+      case editSBItemScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: EditSBItemScreen(),
         );
       default:
         return GetRouteBase(

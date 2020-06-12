@@ -231,6 +231,35 @@ extension StringExtension on String {
   double toDoubleID() {
     return MyNumber.strIDToDouble(this);
   }
+
+  String strDoubleID() {
+    return MyNumber.strIDToDouble(this).toString();
+  }
+
+  double tryIDtoDouble() {
+    return MyNumber.tryStrIDToDouble(this);
+  }
+
+  double tryToDouble() {
+    return MyNumber.tryStrUSToDouble(this);
+  }
+
+  String changeComma() { //format ID
+    return this
+        .split('')
+        .map((e) => e == ',' ? '.' : (e == '.' ? '' : e))
+        .join();
+  }
+}
+
+extension DoubleExtension on double {
+  String toRp() {
+    return MyNumber.toNumberRpStr(this.toString());
+  }
+
+  String toDecId() {
+    return MyNumber.toDecimalIdStr(this.toString());
+  }
 }
 
 extension IndexedIterable<E> on Iterable<E> {
@@ -250,10 +279,16 @@ lastCursorEditText(TextEditingController qtyController, double newQty) {
   );
 }
 
-dynamic getArg(index) {
-  var arg = Get.arguments;
+dynamic getArg(index, {myArg}) {
+  var arg = myArg ?? Get.arguments;
   if (arg == null) return null;
   if (arg is Map) {
     return arg[index];
+  }
+}
+
+putArg(arg, index, result) {
+  if (arg is Map) {
+    arg[index] = result;
   }
 }
