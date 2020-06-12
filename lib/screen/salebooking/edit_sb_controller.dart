@@ -23,6 +23,7 @@ class EditSBController extends GetController {
   List<Product> listSearch;
   List<Warehouse> listWarehouse = [];
   List<Customer> listCustomer = [];
+  SalesBookingItem editSBI;
 
   SalesBooking get sales => cSales;
 
@@ -42,6 +43,17 @@ class EditSBController extends GetController {
 
   bool checkItemIsExist(Product p) {
     return salesItem.where((sbi) => sbi.productId == p.id).toList().isNotEmpty;
+  }
+
+  toEditItem(SalesBookingItem sbi) async {
+    editSBI = sbi;
+    await Get.toNamed(editSBItemScreen);
+    editSBI = null;
+  }
+
+  toAddItem() {
+    cancelSearch();
+    Get.toNamed(editSBProductScreen);
   }
 
   addProduct(Product p) {
@@ -154,8 +166,7 @@ class EditSBController extends GetController {
 
   actionGetProduct() async {
     if (listProducts?.isNotEmpty ?? false) {
-      cancelSearch();
-      Get.toNamed(editSBProductScreen);
+      toAddItem();
       return;
     }
 
@@ -166,6 +177,9 @@ class EditSBController extends GetController {
         if (listProducts == null) listProducts = [];
         listProducts.addAll(baseResponse?.data?.listProducts ?? []);
         refresh();
+      },
+      onAfter: (_) {
+        toAddItem();
       },
     );
     status.execute();

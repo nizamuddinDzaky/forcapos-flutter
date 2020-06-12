@@ -231,11 +231,30 @@ extension StringExtension on String {
   double toDoubleID() {
     return MyNumber.strIDToDouble(this);
   }
+
+  double tryIDtoDouble() {
+    return MyNumber.tryStrIDToDouble(this);
+  }
+
+  double tryToDouble() {
+    return MyNumber.tryStrUSToDouble(this);
+  }
+
+  String changeComma() { //format ID
+    return this
+        .split('')
+        .map((e) => e == ',' ? '.' : (e == '.' ? '' : e))
+        .join();
+  }
 }
 
 extension DoubleExtension on double {
   String toRp() {
     return MyNumber.toNumberRpStr(this.toString());
+  }
+
+  String toDecId() {
+    return MyNumber.toDecimalIdStr(this.toString());
   }
 }
 

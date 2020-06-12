@@ -258,7 +258,9 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
             physics: NeverScrollableScrollPhysics(),
             childAspectRatio: 16 / 3,
             children: <Widget>[
-              ...statusSales.mapIndexed((data, index) {
+              ...statusSales
+                  .where((element) => element[1] != 'close')
+                  .mapIndexed((data, index) {
                 return RaisedButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
@@ -638,13 +640,8 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               MyDivider.lineDivider(top: 8),
               InkWell(
-                onTap: () {
-//                  Get.toNamed(
-//                    salesBookingItemScreen,
-//                    arguments: {
-//                      'index': idx,
-//                    },
-//                  );
+                onTap: () async {
+                  await vm.toEditItem(sbi);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
