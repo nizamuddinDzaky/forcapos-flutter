@@ -232,6 +232,10 @@ extension StringExtension on String {
     return MyNumber.strIDToDouble(this);
   }
 
+  String strDoubleID() {
+    return MyNumber.strIDToDouble(this).toString();
+  }
+
   double tryIDtoDouble() {
     return MyNumber.tryStrIDToDouble(this);
   }
@@ -275,10 +279,16 @@ lastCursorEditText(TextEditingController qtyController, double newQty) {
   );
 }
 
-dynamic getArg(index) {
-  var arg = Get.arguments;
+dynamic getArg(index, {myArg}) {
+  var arg = myArg ?? Get.arguments;
   if (arg == null) return null;
   if (arg is Map) {
     return arg[index];
+  }
+}
+
+putArg(arg, index, result) {
+  if (arg is Map) {
+    arg[index] = result;
   }
 }

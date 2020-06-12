@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/helper/custom_dialog.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/model/product.dart';
@@ -11,9 +14,11 @@ import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/model/warehouse.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/app/my_router.dart';
+import 'package:posku/util/resource/my_string.dart';
 
 class EditSBController extends GetController {
   static EditSBController get to => Get.find();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   SalesBooking cSales;
   List<SalesBookingItem> cSalesItem;
@@ -34,7 +39,7 @@ class EditSBController extends GetController {
   Warehouse get warehouse => cWarehouse;
 
   void refresh() {
-    update(this);
+    update();
   }
 
   List<Product> getListProducts() {
@@ -209,6 +214,70 @@ class EditSBController extends GetController {
         refresh();
       },
     );
+  }
+
+  editSales({orderDiscount, shipping, paymentTerm, staffNote, note}) {
+    sales?.orderDiscount = orderDiscount ?? sales?.orderDiscount;
+    sales?.shipping = shipping ?? sales?.shipping;
+    sales?.paymentTerm = paymentTerm ?? sales?.paymentTerm;
+    sales?.staffNote = staffNote ?? sales?.staffNote;
+    sales?.note = note ?? sales?.note;
+    refresh();
+  }
+
+  actionSubmit() async {
+    formKey.currentState.save();
+    //await Future.delayed(Duration(seconds: 1));
+    Map<String, dynamic> body = {
+      'date': sales?.date,
+      'customer': customer?.id,
+      'warehouse': warehouse?.id,
+      'order_discount': sales?.orderDiscount,
+      'shipping': sales?.shipping,
+      'sale_status': sales?.saleStatus,
+      'payment_term': sales?.paymentTerm,
+      'staff_note': sales?.staffNote,
+      'note': sales?.note,
+      'products': salesItem?.map((sbi) => {
+        'product_id': sbi.productId,
+        'price': sbi.netUnitPrice,
+        'quantity': sbi.quantity,
+      })?.toList(),
+    };
+    print('action put sales $body');
+    await actionPutSales(body);
+  }
+
+  actionPutSales(Map<String, dynamic> body) async {
+    var params = {
+      MyString.KEY_ID_SALES_BOOKING: sales.id,
+    };
+    var status = await ApiClient.methodPut(
+      ApiConfig.urlSalesBookingUpdate,
+      body,
+      params,
+      onBefore: (status) {},
+      onSuccess: (data, _) {
+        Get.snackbar('Penjualan', 'Berhasil diperbaharui');
+        Get.back(result: 'editSales');
+      },
+      onFailed: (title, message) {
+        print(message);
+        var errorData = BaseResponse.fromJson(jsonDecode(message));
+        CustomDialog.showAlertDialog(Get.overlayContext,
+            title: title,
+            message: 'Kode error: ${errorData?.code}',
+            leftAction: CustomDialog.customAction());
+      },
+      onError: (title, message) {
+        CustomDialog.showAlertDialog(Get.overlayContext,
+            title: title,
+            message: message,
+            leftAction: CustomDialog.customAction());
+      },
+      onAfter: (status) {},
+    );
+    status.execute();
   }
 
   set salesItem(List<SalesBookingItem> salesItem) {

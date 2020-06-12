@@ -181,12 +181,15 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Expanded(
                 child: TextFormField(
-                  //controller: deliveredController,
                   initialValue: vm.cSales?.orderDiscount?.toNumId() ?? '0',
+                  onSaved: (val) {
+                    vm.editSales(orderDiscount: val.strDoubleID());
+                  },
                   onChanged: (val) {
-//                    var sale = val.toDoubleID().toString();
-//                    vm.sales?.orderDiscount = sale;
-//                    vm.refresh();
+                    vm.editSales(orderDiscount: val.strDoubleID());
+                  },
+                  onFieldSubmitted: (val) {
+                    vm.editSales(orderDiscount: val.strDoubleID());
                   },
                   inputFormatters: [NumericTextFormatter()],
                   keyboardType: TextInputType.numberWithOptions(signed: false),
@@ -221,12 +224,15 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Expanded(
                 child: TextFormField(
-                  //controller: deliveredController,
                   initialValue: vm.cSales?.shipping?.toNumId() ?? '0',
+                  onSaved: (val) {
+                    vm.editSales(shipping: val.strDoubleID());
+                  },
                   onChanged: (val) {
-//                    var pay = val.toDoubleID().toString();
-//                    vm.sales?.shipping = pay;
-//                    vm.refresh();
+                    vm.editSales(shipping: val.strDoubleID());
+                  },
+                  onFieldSubmitted: (val) {
+                    vm.editSales(shipping: val.strDoubleID());
                   },
                   inputFormatters: [NumericTextFormatter()],
                   keyboardType: TextInputType.numberWithOptions(signed: false),
@@ -306,10 +312,9 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Expanded(
                 child: TextFormField(
-                  //controller: deliveredController,
                   initialValue: vm.cSales?.paymentTerm?.toNumId() ?? '0',
-                  onSaved: (newValue) {
-                    //p.code = newValue;
+                  onSaved: (val) {
+                    vm.editSales(paymentTerm: val.strDoubleID());
                   },
                   decoration: new InputDecoration(
                     suffixText: 'hari',
@@ -342,10 +347,9 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Expanded(
                 child: TextFormField(
-                  //controller: deliveredController,
                   initialValue: vm.cSales?.staffNote,
-                  onSaved: (newValue) {
-                    //p.code = newValue;
+                  onSaved: (val) {
+                    vm.editSales(staffNote: val);
                   },
                   decoration: new InputDecoration(
                     hintText: 'Tulis Catatan',
@@ -378,10 +382,9 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Expanded(
                 child: TextFormField(
-                  //controller: deliveredController,
                   initialValue: vm.cSales?.note,
-                  onSaved: (newValue) {
-                    //p.code = newValue;
+                  onSaved: (val) {
+                    vm.editSales(note: val);
                   },
                   decoration: new InputDecoration(
                     hintText: 'Tulis Catatan',
@@ -408,79 +411,71 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
       child: SingleChildScrollView(
         controller: _scrollController,
         padding: EdgeInsets.only(top: 10),
-        child: Column(
-          children: <Widget>[
-            _header(vm),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    'Produk',
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                ],
+        child: Form(
+          key: vm.formKey,
+          child: Column(
+            children: <Widget>[
+              _header(vm),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      'Produk',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (bctx, index) {
-                var sbi = vm.cSalesItem[index];
-                return _listItem(vm, sbi);
-              },
-              separatorBuilder: (bctx, index) {
-                return MyDivider.lineDivider(thickness: 2);
-              },
-              itemCount: vm.cSalesItem?.length ?? 0,
-            ),
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              margin: EdgeInsets.only(top: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Jumlah',
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  Text(
-                    vm.grandTotal().toRp(),
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                ],
-              ),
-            ),
-            Center(
-              child: LoadingButton(
-                title: 'TAMBAH (PRODUK) ITEM',
-                noMargin: true,
-                isActionNavigation: true,
-                onPressed: () async {
-                  await vm.actionGetProduct();
+              ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (bctx, index) {
+                  var sbi = vm.cSalesItem[index];
+                  return _listItem(vm, sbi);
                 },
+                separatorBuilder: (bctx, index) {
+                  return MyDivider.lineDivider(thickness: 2);
+                },
+                itemCount: vm.cSalesItem?.length ?? 0,
               ),
-            ),
-            _footer(vm),
-            /*VisibilityDetector(
-              key: Key("unique key"),
-              onVisibilityChanged: (VisibilityInfo info) {
-                isVisible = info.visibleFraction <= 0.7;
-                debugPrint("${info.visibleFraction} of my widget is visible $isVisible");
-                if (info.visibleFraction == 0.0 || info.visibleFraction > 0.7) {
-                  setState(() {});
-                }
-              },
-              child: Text('ok'),
-            ),*/
-            LoadingButton(
-              title: 'Simpan Perubahan',
-              noMargin: true,
-              shrinkWrap: true,
-              onPressed: () {},
-            ),
-          ],
+              Center(
+                child: LoadingButton(
+                  title: 'TAMBAH (PRODUK) ITEM',
+                  noMargin: true,
+                  isActionNavigation: true,
+                  onPressed: () async {
+                    await vm.actionGetProduct();
+                  },
+                ),
+              ),
+              Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: EdgeInsets.only(bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Jumlah',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    Text(
+                      vm.grandTotal().toRp(),
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                  ],
+                ),
+              ),
+              _footer(vm),
+              LoadingButton(
+                title: 'Simpan Perubahan',
+                noMargin: true,
+                shrinkWrap: true,
+                onPressed: () async => await vm.actionSubmit(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -775,11 +770,12 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
             ),
             trailing: isVisible
                 ? null
-                : CupertinoButton(
-                    minSize: 0,
-                    padding: EdgeInsets.all(0.0),
-                    onPressed: () {},
-                    child: Text('Simpan'),
+                : LoadingButton(
+                    title: 'Simpan',
+                    isActionNavigation: true,
+                    noMargin: true,
+                    noPadding: true,
+                    onPressed: () async => await vm.actionSubmit(),
                   ),
           ),
           child: Material(
