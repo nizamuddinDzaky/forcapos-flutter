@@ -233,6 +233,12 @@ extension StringExtension on String {
   }
 }
 
+extension DoubleExtension on double {
+  String toRp() {
+    return MyNumber.toNumberRpStr(this.toString());
+  }
+}
+
 extension IndexedIterable<E> on Iterable<E> {
   Iterable<T> mapIndexed<T>(T f(E e, int i)) {
     var i = 0;

@@ -14,6 +14,7 @@ import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/model/warehouse.dart';
+import 'package:posku/screen/salebooking/edit_sb_controller.dart';
 import 'package:posku/screen/salebooking/sb_detail_screen.dart';
 import 'package:posku/util/resource/my_string.dart';
 
@@ -132,6 +133,8 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
         sb.paid = newSb.paid;
         sb.grandTotal = newSb.grandTotal;
         sbItems = baseResponse?.data?.salesBookingItems ?? [];
+        EditSBController.to.sales = newSb;
+        EditSBController.to.salesItem = sbItems;
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -172,6 +175,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
         customer = baseResponse?.data?.customer ?? Customer();
+        EditSBController.to.customer = customer;
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -232,6 +236,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
         warehouse = baseResponse?.data?.warehouse ?? Warehouse();
+        EditSBController.to.warehouse = warehouse;
       },
       onFailed: (title, message) {
         print('onfailed');
@@ -340,5 +345,11 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
     }
     (ModalRoute.of(context) as CustomCupertinoPageRoute)?.resultPop =
         newSb?.toJson();
+  }
+
+  @override
+  void initState() {
+    Get.put(EditSBController());
+    super.initState();
   }
 }

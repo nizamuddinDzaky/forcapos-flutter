@@ -4,7 +4,7 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
-import 'package:posku/model/product.dart';
+import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/screen/salebooking/edit_sb_controller.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
@@ -20,7 +20,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
   bool isVisible = false, lastState = false;
   ScrollController _scrollController;
 
-  Widget _header() {
+  Widget _header(EditSBController vm) {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -47,21 +47,19 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                   CupertinoButton(
                     minSize: 0,
                     onPressed: () async {
+                      var date = vm.cSales?.date?.toDateTime();
                       DateTime newDateTime = await showRoundedDatePicker(
                         context: context,
-//                        initialDate: vm.currentDate,
-//                        initialDate: vm.currentDate,
+                        initialDate: date,
                         locale: Locale('in', 'ID'),
                         borderRadius: 16,
                       );
-//                      vm.setDate(newDateTime);
-//                      setState(() {
-//                        currentDate = newDateTime ?? currentDate;
-//                      });
+                      setState(() {
+                        vm.cSales?.date = newDateTime?.toStr() ?? date?.toStr();
+                      });
                     },
                     padding: EdgeInsets.symmetric(vertical: 8),
-//                    child: Text("${strToDate(vm.currentDate.toString())}"),
-                    child: Text('Tanggal'),
+                    child: Text("${strToDate(vm.cSales?.date)}"),
                   ),
                 ],
               ),
@@ -92,21 +90,15 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Column(
                 children: <Widget>[
-                  CupertinoButton(
-                    minSize: 0,
+                  LoadingButton(
+                    title: vm.cWarehouse?.name ?? 'Pilih Gudang',
+                    noMargin: true,
+                    noPadding: true,
+                    isActionNavigation: true,
                     onPressed: () async {
-////                      await actionGetWarehouse(vm);
-//                      await vm.actionGetWarehouse();
-//                      vm.showWarehousePicker(context);
-////                      showWarehousePicker();
+                      await vm.actionGetWarehouse();
+                      vm.showWarehousePicker(context);
                     },
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      "vm.currentWarehouse?.name ?? 'Pilih Gudang'",
-//                      style: TextStyle(
-//                        color: currentWarehouse == null ? null : Colors.black,
-//                      ),
-                    ),
                   ),
                 ],
               ),
@@ -137,21 +129,15 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Column(
                 children: <Widget>[
-                  CupertinoButton(
-                    minSize: 0,
+                  LoadingButton(
+                    title: vm.cCustomer?.name ?? 'Pilih Pelanggan',
+                    noMargin: true,
+                    noPadding: true,
+                    isActionNavigation: true,
                     onPressed: () async {
-////                      await actionGetCustomer(vm);
-//                      await vm.actionGetCustomer();
-//                      vm.showCustomerPicker(context);
-////                      showCustomerPicker();
+                      await vm.actionGetCustomer();
+                      vm.showCustomerPicker(context);
                     },
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      "vm.currentCustomer?.name ?? 'Pilih Pelanggan'",
-//                      style: TextStyle(
-//                        color: currentWarehouse == null ? null : Colors.black,
-//                      ),
-                    ),
                   ),
                 ],
               ),
@@ -196,7 +182,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               Expanded(
                 child: TextFormField(
                   //controller: deliveredController,
-                  initialValue: vm.sales?.orderDiscount?.toNumId() ?? '0',
+                  initialValue: vm.cSales?.orderDiscount?.toNumId() ?? '0',
                   onChanged: (val) {
 //                    var sale = val.toDoubleID().toString();
 //                    vm.sales?.orderDiscount = sale;
@@ -236,7 +222,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               Expanded(
                 child: TextFormField(
                   //controller: deliveredController,
-                  initialValue: vm.sales?.shipping?.toNumId() ?? '0',
+                  initialValue: vm.cSales?.shipping?.toNumId() ?? '0',
                   onChanged: (val) {
 //                    var pay = val.toDoubleID().toString();
 //                    vm.sales?.shipping = pay;
@@ -280,16 +266,16 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                   ),
                   onPressed: () {
                     setState(() {
-//                      vm.sales?.saleStatus = data[1];
+                      vm.sales?.saleStatus = data[1];
                     });
                   },
-                  color: vm.sales?.saleStatus == data[1]
+                  color: vm.cSales?.saleStatus == data[1]
                       ? MyColor.mainRed
                       : Colors.white,
                   child: Text(
                     data[0],
                     style: TextStyle(
-                      color: vm.sales?.saleStatus == data[1]
+                      color: vm.cSales?.saleStatus == data[1]
                           ? Colors.white
                           : MyColor.txtField,
                     ),
@@ -319,7 +305,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               Expanded(
                 child: TextFormField(
                   //controller: deliveredController,
-                  initialValue: vm.sales?.paymentTerm?.toNumId() ?? '0',
+                  initialValue: vm.cSales?.paymentTerm?.toNumId() ?? '0',
                   onSaved: (newValue) {
                     //p.code = newValue;
                   },
@@ -355,7 +341,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               Expanded(
                 child: TextFormField(
                   //controller: deliveredController,
-                  initialValue: vm.sales?.staffNote,
+                  initialValue: vm.cSales?.staffNote,
                   onSaved: (newValue) {
                     //p.code = newValue;
                   },
@@ -391,7 +377,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               Expanded(
                 child: TextFormField(
                   //controller: deliveredController,
-                  initialValue: vm.sales?.note,
+                  initialValue: vm.cSales?.note,
                   onSaved: (newValue) {
                     //p.code = newValue;
                   },
@@ -422,7 +408,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
         padding: EdgeInsets.only(top: 10),
         child: Column(
           children: <Widget>[
-            _header(),
+            _header(vm),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
@@ -438,12 +424,13 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (bctx, index) {
-                return _listItem(vm, Product());
+                var sbi = vm.cSalesItem[index];
+                return _listItem(vm, sbi);
               },
               separatorBuilder: (bctx, index) {
                 return MyDivider.lineDivider(thickness: 2);
               },
-              itemCount: 2,
+              itemCount: vm.cSalesItem?.length ?? 0,
             ),
             Container(
               color: Colors.white,
@@ -457,16 +444,21 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                   Text(
-                    0.0.toString().toRp(),
+                    vm.grandTotal().toRp(),
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ],
               ),
             ),
             Center(
-              child: CupertinoButton(
-                onPressed: () {},
-                child: Text('TAMBAH PRODUK'),
+              child: LoadingButton(
+                title: 'TAMBAH (PRODUK) ITEM',
+                noMargin: true,
+                isActionNavigation: true,
+                onPressed: () async {
+                  await vm.actionGetProduct();
+                  //vm.showWarehousePicker(context);
+                },
               ),
             ),
             _footer(vm),
@@ -493,9 +485,9 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
     );
   }
 
-  Widget _listItem(EditSBController vm, Product p) {
+  Widget _listItem(EditSBController vm, SalesBookingItem sbi) {
     final qtyController = TextEditingController();
-    lastCursorEditText(qtyController, p.minOrder.toDouble());
+    lastCursorEditText(qtyController, sbi.quantity.toDouble());
     return Container(
       child: Card(
         margin: EdgeInsets.all(0),
@@ -536,15 +528,15 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              p?.name ?? '',
+                              sbi?.productName ?? '',
                               style: Theme.of(Get.context).textTheme.headline6,
                             ),
-                            Text(p?.code ?? ''),
+                            Text(sbi?.productCode ?? ''),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(
-                                  p?.price?.toRp() ?? '',
+                                  sbi?.netUnitPrice?.toRp() ?? '',
                                   style:
                                       Theme.of(Get.context).textTheme.subtitle2,
                                 ),
@@ -555,7 +547,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                                       //btnMinus
                                       CupertinoButton(
                                         onPressed: () {
-//                                          vm.qtyMinus(p);
+                                          vm.qtyMinus(sbi);
                                         },
                                         child: Icon(
                                           Icons.remove_circle,
@@ -580,11 +572,11 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
 //                                            }
                                           },
                                           onChanged: (newValue) {
-//                                            vm.qtyEdit(
-//                                                newValue, qtyController);
+                                            vm.qtyEdit(qtyController,
+                                                qtyStr: newValue);
                                           },
                                           onFieldSubmitted: (newValue) {
-//                                            vm.qtyCustom(p, newValue);
+                                            vm.qtyCustom(sbi, qtyStr: newValue);
                                           },
                                           textAlign: TextAlign.center,
                                           style: Theme.of(Get.context)
@@ -612,7 +604,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                                       //btnPlus
                                       CupertinoButton(
                                         onPressed: () {
-//                                          vm.qtyPlus(p);
+                                          vm.qtyPlus(sbi);
                                         },
                                         child: Icon(
                                           Icons.add_circle,
@@ -635,10 +627,9 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                         CupertinoButton(
                           minSize: 0,
                           padding: EdgeInsets.all(0),
-//                          onPressed: () => _showMenu(p, () {
-//                            vm.deleteFromCart(p);
-//                          }),
-                          onPressed: () {},
+                          onPressed: () => _showMenu(sbi, () {
+                            vm.deleteFromCart(sbi);
+                          }),
                           child: Icon(Icons.delete_forever),
                         ),
                       ],
@@ -672,7 +663,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                               'Sub Total',
                             ),
                             Text(
-                              '0.0'.toRp(),
+                              vm.totalSaleBookingItem(sbi).toRp(),
                               style: Theme.of(Get.context).textTheme.subtitle2,
                             ),
                           ],
@@ -710,6 +701,42 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  _showMenu(SalesBookingItem sbi, VoidCallback callback) {
+    final action = CupertinoActionSheet(
+      title: Column(
+        children: <Widget>[
+          Text(
+            'Hapus Dari Keranjang',
+            style: Theme.of(Get.context).textTheme.subtitle2,
+          ),
+          Text('${sbi.productName} ( ${sbi.productCode} )'),
+        ],
+      ),
+      actions: <Widget>[
+        CupertinoActionSheetAction(
+          child: Text("Ya, Hapus!"),
+          onPressed: () {
+            if (callback != null)
+              callback();
+            else
+              Get.back();
+          },
+        ),
+      ],
+      cancelButton: CupertinoActionSheetAction(
+        child: Text("Batal"),
+        onPressed: () {
+          Get.back();
+        },
+      ),
+    );
+
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => action,
     );
   }
 
