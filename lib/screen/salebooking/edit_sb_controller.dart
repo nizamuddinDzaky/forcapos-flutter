@@ -10,6 +10,7 @@ import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/model/warehouse.dart';
 import 'package:posku/util/my_util.dart';
+import 'package:posku/app/my_router.dart';
 
 class EditSBController extends GetController {
   static EditSBController get to => Get.find();
@@ -33,6 +34,46 @@ class EditSBController extends GetController {
 
   void refresh() {
     update(this);
+  }
+
+  List<Product> getListProducts() {
+    return listSearch ?? listProducts;
+  }
+
+  bool checkItemIsExist(Product p) {
+    return salesItem.where((sbi) => sbi.productId == p.id).toList().isNotEmpty;
+  }
+
+  addProduct(Product p) {
+    if (checkItemIsExist(p)) return;
+    if (cSalesItem == null) cSalesItem = [];
+    cSalesItem.add(SalesBookingItem(
+      productName: p.name,
+      productId: p.id,
+      productCode: p.code,
+      quantity: '1.0',
+      discount: '0.0',
+      netUnitPrice: p.price,
+    ));
+    refresh();
+  }
+
+  actionSearch(String txtSearch) async {
+    if (txtSearch == null || txtSearch.length < 3) {
+      listSearch?.clear();
+      listSearch = null;
+    } else {
+      listSearch = [];
+      listSearch.addAll(listProducts?.where((element) =>
+          element.name.toLowerCase().contains(txtSearch.toLowerCase())));
+    }
+    refresh();
+  }
+
+  cancelSearch() {
+    listSearch?.clear();
+    listSearch = null;
+    refresh();
   }
 
   double totalSaleBookingItem(SalesBookingItem sbi) {
@@ -81,6 +122,7 @@ class EditSBController extends GetController {
   deleteFromCart(SalesBookingItem sbi) {
     sbi.quantity = null;
     salesItem?.remove(sbi);
+    Get.back();
     refresh();
   }
 
@@ -111,7 +153,11 @@ class EditSBController extends GetController {
   }
 
   actionGetProduct() async {
-    if (listProducts?.isNotEmpty ?? false) return;
+    if (listProducts?.isNotEmpty ?? false) {
+      cancelSearch();
+      Get.toNamed(editSBProductScreen);
+      return;
+    }
 
     var status = await ApiClient.methodGet(
       ApiConfig.urlListProduct,
@@ -158,6 +204,7 @@ class EditSBController extends GetController {
         cSalesItem.add(SalesBookingItem(
           id: sbi.id,
           productName: sbi.productName,
+          productId: sbi.productId,
           productCode: sbi.productCode,
           quantity: sbi.quantity,
           discount: sbi.discount,

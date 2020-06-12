@@ -457,7 +457,6 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                 isActionNavigation: true,
                 onPressed: () async {
                   await vm.actionGetProduct();
-                  //vm.showWarehousePicker(context);
                 },
               ),
             ),
