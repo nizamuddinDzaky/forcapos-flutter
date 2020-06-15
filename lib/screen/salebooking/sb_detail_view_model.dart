@@ -259,9 +259,22 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
   }
 
   goToDetailDelivery(Delivery delivery) async {
+    var result =
+        await Get.toNamed(detailDeliveryScreen, arguments: delivery.toJson());
+    if (result != null) {
+      setState(() {});
+    }
+  }
+
+  goToReturnDelivery(Delivery delivery) async {
     var result = await Get.toNamed(
-        detailDeliveryScreen,
-        arguments: delivery.toJson());
+      returnDeliveryScreen,
+      arguments: {
+        'sale': sb,
+        'customer': customer,
+        'delivery': delivery,
+      },
+    );
     if (result != null) {
       setState(() {});
     }

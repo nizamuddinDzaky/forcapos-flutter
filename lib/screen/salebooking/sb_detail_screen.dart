@@ -375,13 +375,17 @@ class _SBDetailScreenState extends SBDetailViewModel {
           child: const Text('Lihat Rincian'),
           value: 0,
         ),
+        //if (delivery.status == 'packing' || delivery.status == 'delivering')
         PopupMenuItem<int>(
+          enabled:
+              (delivery.status == 'packing' || delivery.status == 'delivering'),
           height: 30,
           child: const Text('Ubah Pengiriman'),
           value: 1,
         ),
+        //if (delivery.status == 'delivered')
         PopupMenuItem<int>(
-          enabled: false,
+          enabled: (delivery.status == 'delivered'),
           height: 30,
           child: const Text('Retur Pengiriman'),
           value: 2,
@@ -391,6 +395,10 @@ class _SBDetailScreenState extends SBDetailViewModel {
     );
     if (result == 1) {
       goToEditDelivery(delivery);
+    } else if (result == 0) {
+      goToDetailDelivery(delivery);
+    } else if (result == 2) {
+      goToReturnDelivery(delivery);
     }
   }
 
