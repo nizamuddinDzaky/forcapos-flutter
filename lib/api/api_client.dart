@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:posku/api/api_config.dart';
 import 'package:posku/util/my_pref.dart';
+import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_string.dart';
 
 var dio = Dio();
@@ -48,8 +47,10 @@ class ApiClient {
         return null;
       } else if (statusCode == 200 &&
           response.request.uri.toString().contains('auth/login') == true) {
-        var jsonResponse = jsonDecode(response.data);
-        if (jsonResponse.containsKey('data') &&
+        var jsonResponse = tryJsonDecode(response.data);
+        if (jsonResponse == null) {
+
+        } else if (jsonResponse.containsKey('data') &&
             jsonResponse['data'].containsKey('token')) {
 //          MyPref.setForcaToken(jsonResponse['data']['token']);
           dio.lock();
@@ -57,9 +58,11 @@ class ApiClient {
               {MyString.KEY_FORCA_TOKEN: jsonResponse['data']['token']}
           );
           return profileDio.get<String>(ApiConfig.urlProfile).then((profileData) {
-            var jsonProfile = jsonDecode(profileData.data);
-            jsonProfile['data']['token'] = jsonResponse['data']['token'];
-            profileData.data = jsonEncode(jsonProfile);
+            var jsonProfile = tryJsonDecode(profileData.data);
+            if (jsonProfile != null) {
+              jsonProfile['data']['token'] = jsonResponse['data']['token'];
+              profileData.data = tryJsonEncode(jsonProfile);
+            }
             return profileData;
           }).whenComplete(() => dio.unlock());
         }
@@ -105,8 +108,12 @@ class ApiClient {
           .then((response) {
         var statusCode = response.statusCode;
         if (onSuccess != null && statusCode == 200) {
-          var data = jsonDecode(response.data);
-          responseApi._setSuccess(data);
+          var data = tryJsonDecode(response.data);
+          if (data == null) {
+            responseApi._setFailed('', "Respon ditolak");
+          } else {
+            responseApi._setSuccess(data);
+          }
         } else if (onFailed != null) {
           responseApi._setFailed('', response.statusMessage);
         }
@@ -165,8 +172,12 @@ class ApiClient {
           .then((response) {
         var statusCode = response.statusCode;
         if (onSuccess != null && statusCode == 200) {
-          var data = jsonDecode(response.data);
-          responseApi._setSuccess(data);
+          var data = tryJsonDecode(response.data);
+          if (data == null) {
+            responseApi._setFailed('', "Respon ditolak");
+          } else {
+            responseApi._setSuccess(data);
+          }
         } else if (onFailed != null) {
           responseApi._setFailed('', response.statusMessage);
         }
@@ -224,8 +235,12 @@ class ApiClient {
           .then((response) {
         var statusCode = response.statusCode;
         if (onSuccess != null && statusCode == 200) {
-          var data = jsonDecode(response.data);
-          responseApi._setSuccess(data);
+          var data = tryJsonDecode(response.data);
+          if (data == null) {
+            responseApi._setFailed('', "Respon ditolak");
+          } else {
+            responseApi._setSuccess(data);
+          }
         } else if (onFailed != null) {
           responseApi._setFailed('', response.statusMessage);
         }

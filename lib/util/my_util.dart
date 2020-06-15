@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -291,4 +292,20 @@ putArg(arg, index, result) {
   if (arg is Map) {
     arg[index] = result;
   }
+}
+
+tryJsonDecode(String jsonString) {
+  try {
+    return jsonDecode(jsonString);
+  } catch (_) {
+  }
+  return null;
+}
+
+tryJsonEncode(Object value) {
+  try {
+    return jsonEncode(value);
+  } catch (_) {
+  }
+  return null;
 }
