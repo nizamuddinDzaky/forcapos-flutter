@@ -244,7 +244,8 @@ class _DetailDeliveryScreenState extends DetailDeliveryViewModel {
                             height: 8,
                           ),
                           Text(
-                              '${MyNumber.toNumberIdStr(data.quantitySent)} ${data.productUnitCode}',
+//                              '${MyNumber.toNumberIdStr(data.quantitySent)} ${data.productUnitCode}',
+                              '${MyNumber.toNumberIdStr(data.allSentQty)} ${data.productUnitCode}',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2

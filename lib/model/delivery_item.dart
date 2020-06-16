@@ -23,6 +23,7 @@ class DeliveryItem {
   String deliveryItemsId;
   String allSentQty;
   String warehouseId;
+  String tempQty;
 
   DeliveryItem(
       {this.id,

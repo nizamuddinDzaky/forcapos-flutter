@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -185,8 +186,9 @@ saleDeliveryStatus(String status) {
     case 'partial':
       return ['Diterima sebagian', MyColor.blueDio];
     case 'delivered':
-    case 'done':
       return ['Sudah diterima', MyColor.mainGreen];
+    case 'done':
+      return ['Selesai', MyColor.mainGreen];
     case 'returned':
       return ['Dikembalikan', MyColor.mainOrange];
     case 'pending':
@@ -291,4 +293,20 @@ putArg(arg, index, result) {
   if (arg is Map) {
     arg[index] = result;
   }
+}
+
+tryJsonDecode(String jsonString) {
+  try {
+    return jsonDecode(jsonString);
+  } catch (_) {
+  }
+  return null;
+}
+
+tryJsonEncode(Object value) {
+  try {
+    return jsonEncode(value);
+  } catch (_) {
+  }
+  return null;
 }

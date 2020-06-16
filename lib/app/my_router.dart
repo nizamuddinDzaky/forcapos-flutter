@@ -5,6 +5,7 @@ import 'package:posku/screen/customer/detail_customer_screen.dart';
 import 'package:posku/screen/delivery/add_delivery_screen.dart';
 import 'package:posku/screen/delivery/detail_delivery_screen.dart';
 import 'package:posku/screen/delivery/edit_delivery_screen.dart';
+import 'package:posku/screen/delivery/return_delivery_screen.dart';
 import 'package:posku/screen/filter/filter_screen.dart';
 import 'package:posku/screen/goodreceived/gr_confirmation_screen.dart';
 import 'package:posku/screen/goodreceived/gr_detail_screen.dart';
@@ -50,6 +51,7 @@ const salesBookingItemScreen = "/SalesBookingItemScreen";
 const editSalesBookingScreen = "/EditSalesBookingScreen";
 const editSBProductScreen = "/EditSBProductScreen";
 const editSBItemScreen = "/EditSBItemScreen";
+const returnDeliveryScreen = "/ReturnDeliveryScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -193,6 +195,12 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: EditSBItemScreen(),
+        );
+      case returnDeliveryScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: ReturnDeliveryScreen(),
         );
       default:
         return GetRouteBase(

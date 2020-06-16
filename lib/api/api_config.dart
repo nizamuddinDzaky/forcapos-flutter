@@ -1,6 +1,7 @@
 class ApiConfig {
-  static String host = 'https://qp.forca.id/';
-//  static String host = 'http://10.15.4.102:9090/';
+  static const String host = 'https://qp.forca.id/';
+//  static const String host = 'http://10.15.4.102/'; //ip qp
+//  static String host = 'http://10.15.4.102:9090/'; //dirty
   static String path = '${host}api/v1/distributor/';
   static String local = '${host}api/Local/';
 
@@ -23,6 +24,7 @@ class ApiConfig {
   static String urlSalesBookingUpdate = '${path}sales_booking/edit_sales_booking';
   static String urlDetailDeliveries = '${path}sales_booking/detail_deliveries';
   static String urlEditDeliveriesBooking = '${path}sales_booking/edit_deliveries_booking';
+  static String urlReturnDeliveriesBooking = '${path}sales_booking/add_return_deliveries';
 
   //purchase
   static String urlAddGRtoPO = '${path}purchases/add_gr_to_po';
