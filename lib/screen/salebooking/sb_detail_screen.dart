@@ -985,7 +985,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                           ),
                                                           Text(
                                                             listDelivery[index]
-                                                                .doReferenceNo,
+                                                                .doReferenceNo ?? '',
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -1018,7 +1018,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                           ),
                                                           Text(
                                                             listDelivery[index]
-                                                                .saleReferenceNo,
+                                                                .saleReferenceNo ?? '',
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -1096,7 +1096,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                           ),
                                                           Text(
                                                             listDelivery[index]
-                                                                .deliveredBy,
+                                                                .deliveredBy ?? '',
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(

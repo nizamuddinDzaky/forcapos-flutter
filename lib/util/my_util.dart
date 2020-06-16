@@ -186,8 +186,9 @@ saleDeliveryStatus(String status) {
     case 'partial':
       return ['Diterima sebagian', MyColor.blueDio];
     case 'delivered':
-    case 'done':
       return ['Sudah diterima', MyColor.mainGreen];
+    case 'done':
+      return ['Selesai', MyColor.mainGreen];
     case 'returned':
       return ['Dikembalikan', MyColor.mainOrange];
     case 'pending':

@@ -203,9 +203,10 @@ class _ReturnDeliveryScreenState extends ReturnDeliveryViewModel {
       child: Column(
         children: <Widget>[
           ...deliveryItems.map((di) {
-            var qtyUnsent =
-                di.quantityOrdered.tryToDouble() - di.allSentQty.tryToDouble();
-            var maxQty = qtyUnsent + di.tempQty.tryToDouble();
+//            var qtyUnsent =
+//                di.quantityOrdered.tryToDouble() - di.allSentQty.tryToDouble();
+//            var maxQty = qtyUnsent + di.tempQty.tryToDouble();
+            var maxQty = di.tempQty.tryToDouble();
             final qtyController = TextEditingController(
               text: di.quantitySent.toNumId(),
             );
@@ -272,14 +273,14 @@ class _ReturnDeliveryScreenState extends ReturnDeliveryViewModel {
                     children: <Widget>[
                       Column(
                         children: <Widget>[
-                          Text('Belum Terkirim',
+                          Text('Qty Terkirim',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2
                                   .copyWith(color: MyColor.txtField)),
                           Row(
                             children: <Widget>[
-                              Text('${MyNumber.toNumberId(qtyUnsent)}',
+                              Text('${di.tempQty.toNumId()}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline6
@@ -298,7 +299,7 @@ class _ReturnDeliveryScreenState extends ReturnDeliveryViewModel {
                       ),
                       Column(
                         children: <Widget>[
-                          Text('Jumlah Kirim',
+                          Text('Dikembalikan',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2
