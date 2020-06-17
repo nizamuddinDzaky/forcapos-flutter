@@ -199,6 +199,13 @@ saleDeliveryStatus(String status) {
 }
 
 extension StringExtension on String {
+  String toAlias() {
+    var txt = this?.trim()?.toUpperCase();
+    if (txt == null || txt.isEmpty) return '#';
+    if (txt.length == 1) return txt;
+    return txt.substring(0, 2);
+  }
+
   String capitalize() {
     return "${this[0].toUpperCase()}${this.substring(1)}";
   }

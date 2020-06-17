@@ -6,6 +6,7 @@ import 'package:posku/model/customer_group.dart';
 import 'package:posku/screen/customergroup/customer_group_controller.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
+import 'package:posku/util/my_util.dart';
 
 class AddCustomerToCGScreen extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class AddCustomerToCGScreen extends StatefulWidget {
 class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
   bool isFirst = true;
   CustomerGroup cg;
+  final searchController = TextEditingController();
 
   Widget _selectedCustomer(CustomerGroupController vm) {
     return Container(
@@ -46,6 +48,7 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
                       child: InkWell(
                         onTap: () {
                           vm.removeCustomer(vm.selectedCustomer[idx]);
+                          vm.refresh();
                         },
                         child: Column(
                           children: <Widget>[
@@ -62,7 +65,10 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
                                         BorderRadius.all(Radius.circular(8)),
                                   ),
                                   child: Center(
-                                    child: Text('PoS',
+                                    child: Text(
+                                        vm.selectedCustomer[idx].company
+                                                ?.toAlias() ??
+                                            '#',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6
@@ -151,6 +157,33 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
               ],
             ),
           ),
+          Container(
+            color: Colors.white,
+            child: TextFormField(
+              controller: searchController,
+              onChanged: (txtSearch) async {
+                await vm.actionSearch(txtSearch?.toLowerCase());
+              },
+              decoration: new InputDecoration(
+                prefixIcon: Icon(
+                  Icons.search,
+                  size: 24,
+                ),
+                hintText: 'Cari atas produk/kode',
+                suffixIcon: searchController.text.isEmpty
+                    ? null
+                    : IconButton(
+                        onPressed: () {
+                          searchController.clear();
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                          vm.cancelSearch();
+                        },
+                        icon: Icon(Icons.clear),
+                      ),
+              ),
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
           Expanded(
             child: ListView.separated(
               shrinkWrap: true,
@@ -183,7 +216,10 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
                                       BorderRadius.all(Radius.circular(8)),
                                 ),
                                 child: Center(
-                                  child: Text('PoS',
+                                  child: Text(
+                                      vm.listCustomers[idx].company
+                                              ?.toAlias() ??
+                                          '#',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6
@@ -289,6 +325,7 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
       var arg = Get.arguments as Map<String, dynamic>;
       if (arg == null) return;
       cg = CustomerGroup.fromJson(arg['customer_group']);
+      isFirst = false;
     }
   }
 }

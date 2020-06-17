@@ -10,11 +10,18 @@ class CustomerGroupController extends GetController {
   static CustomerGroupController get to => Get.find();
 
   List<Customer> selectedCustomer;
-  List<Customer> listCustomer;
+
+  List<Customer> get listCustomer => listSearch ?? listCustomers;
+  List<Customer> listCustomers;
+  List<Customer> listSearch;
   CustomerGroup cg;
 
   CustomerGroupController(this.cg) {
     apiGetCustomer();
+  }
+
+  refresh() {
+    update();
   }
 
   apiGetCustomer() async {
@@ -26,29 +33,50 @@ class CustomerGroupController extends GetController {
       params: params,
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
-        listCustomer = baseResponse?.data?.listCustomers;
+        listCustomers = baseResponse?.data?.listCustomers;
         var selected =
             baseResponse?.data?.customerSelected?.map((e) => e.id)?.toList();
         if (selected != null) {
-          listCustomer.forEach((customer) {
+          listCustomers.forEach((customer) {
             if (selected.contains(customer.id)) {
               selectCustomer(customer);
             }
           });
         }
-        print('cek data ${data['data']['list_customer'][0].keys}');
       },
-//      onFailed: (title, message) {
-//        Get.defaultDialog(title: title, content: Text(message));
-//      },
-//      onError: (title, message) {
-//        Get.defaultDialog(title: title, content: Text(message));
-//      },
       onAfter: (status) {
         update();
       },
     );
     status.execute();
+  }
+
+  actionSearch(String txtSearch) async {
+    if (txtSearch == null || txtSearch.length < 3) {
+      listSearch?.clear();
+      listSearch = null;
+    } else {
+      listSearch = [];
+      listSearch.addAll(listCustomers?.where((customer) =>
+          cekEquals(customer.address, txtSearch) ||
+          cekEquals(customer.region, txtSearch) ||
+          cekEquals(customer.state, txtSearch) ||
+          cekEquals(customer.country, txtSearch) ||
+          cekEquals(customer.postalCode, txtSearch) ||
+          cekEquals(customer.company, txtSearch) ||
+          cekEquals(customer.name, txtSearch)));
+    }
+    update();
+  }
+
+  bool cekEquals(String ref, String key) {
+    return ref?.toLowerCase()?.contains(key) ?? false;
+  }
+
+  cancelSearch() {
+    listSearch?.clear();
+    listSearch = null;
+    update();
   }
 
   bool selectCustomer(Customer customer) {
@@ -74,7 +102,7 @@ class CustomerGroupController extends GetController {
   }
 
   removeAll() {
-    listCustomer.forEach((customer) {
+    listCustomers.forEach((customer) {
       removeCustomer(customer);
     });
     selectedCustomer.clear();
@@ -82,7 +110,7 @@ class CustomerGroupController extends GetController {
   }
 
   addAll() {
-    listCustomer.forEach((customer) {
+    listCustomers.forEach((customer) {
       selectCustomer(customer);
     });
     update();
