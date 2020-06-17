@@ -37,80 +37,91 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
               padding: EdgeInsets.symmetric(horizontal: 16),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: vm.selectedCustomer?.length ?? 0,
-              itemBuilder: (BuildContext context, int idx) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Expanded(
-                    child: Card(
-                      margin: EdgeInsets.all(0),
-                      elevation: 0,
-                      child: InkWell(
-                        onTap: () {
-                          vm.removeCustomer(vm.selectedCustomer[idx]);
-                          vm.refresh();
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            Stack(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.all(8),
-                                  width: 64,
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: MyColor.blueDio,
-                                    shape: BoxShape.rectangle,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8)),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                        vm.selectedCustomer[idx].company
-                                                ?.toAlias() ??
-                                            '#',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(color: Colors.white)),
-                                  ),
-                                ),
-                                Positioned(
-                                  right: 4,
-                                  top: 4,
-                                  child: Container(
-                                    width: 16,
-                                    height: 16,
+              itemCount: vm.selectedCustomers?.length ?? 0,
+              itemBuilder: (BuildContext context, int idx) => Container(
+                foregroundDecoration: vm.selectedCustomers[idx] == null
+                    ? BoxDecoration(color: Colors.white.withOpacity(0.85))
+                    : null,
+                width: 80,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Expanded(
+                      child: Card(
+                        margin: EdgeInsets.all(0),
+                        elevation: 0,
+                        color: vm.selectedCustomers[idx] == null
+                            ? Colors.transparent
+                            : Colors.white,
+                        child: InkWell(
+                          onTap: vm.selectedCustomers[idx] == null
+                              ? null
+                              : () {
+                                  vm.removeCustomer(vm.selectedCustomers[idx]);
+                                  vm.refresh();
+                                },
+                          child: Column(
+                            children: <Widget>[
+                              Stack(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.all(8),
+                                    width: 64,
+                                    height: 64,
                                     decoration: BoxDecoration(
-                                      color: MyColor.mainRed,
+                                      color: MyColor.blueDio,
                                       shape: BoxShape.rectangle,
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8)),
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 2,
-                                      ),
                                     ),
-                                    child: Container(),
+                                    child: Center(
+                                      child: Text(
+                                          vm.selectedCustomers[idx]?.company
+                                                  ?.toAlias() ??
+                                              '##',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(color: Colors.white)),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 4),
-                              child: Text(
-                                vm.selectedCustomer[idx].company ?? '',
-                                maxLines: 1,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
+                                  Positioned(
+                                    right: 4,
+                                    top: 4,
+                                    child: Container(
+                                      width: 16,
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        color: MyColor.mainRed,
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8)),
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Container(),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 4),
+                                child: Text(
+                                  vm.selectedCustomers[idx]?.company ?? '###',
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -129,12 +140,13 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Daftar Pelanggan',
+                  'Daftar Pelanggan : ${vm.listCustomers?.length ?? 0}',
                 ),
                 Row(
                   children: <Widget>[
+                    Text('( '),
                     LoadingButton(
-                      title: 'Tandai Semua',
+                      title: 'Tandai',
                       isActionNavigation: true,
                       noPadding: true,
                       noMargin: true,
@@ -144,13 +156,17 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
                     ),
                     Text(' | '),
                     LoadingButton(
-                      title: 'Hapus Semua',
+                      title: 'Hapus',
                       isActionNavigation: true,
                       noPadding: true,
                       noMargin: true,
                       onPressed: () {
                         vm.removeAll();
                       },
+                    ),
+                    Text(
+                      ' ) Semua',
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],
                 ),
@@ -184,6 +200,15 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
               style: Theme.of(context).textTheme.subtitle1,
             ),
           ),
+          if (vm.listCustomer == null)
+            Expanded(
+              child: Center(child: CupertinoActivityIndicator()),
+            ),
+          if (vm.listCustomer != null && vm.listCustomer.length == 0)
+            Expanded(
+              child: Center(child: Text('Tidak Ada Data.')),
+            ),
+          if (vm.listCustomer != null && vm.listCustomer.length > 0)
           Expanded(
             child: ListView.separated(
               shrinkWrap: true,
@@ -305,6 +330,15 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
         previousPageTitle: 'Balik',
         middle: Text(
           'Tambah Ke Kel. Pelanggan',
+        ),
+        trailing: LoadingButton(
+          title: 'Simpan',
+          isActionNavigation: true,
+          noMargin: true,
+          noPadding: true,
+          onPressed: () async {
+            await CustomerGroupController.to.actionSubmit();
+          },
         ),
       ),
       child: Scaffold(
