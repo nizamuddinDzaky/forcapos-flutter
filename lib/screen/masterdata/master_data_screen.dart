@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/screen/customer/customer_screen.dart';
 import 'package:posku/screen/customergroup/customer_group_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
+import 'package:posku/screen/masterdata/master_data_controller.dart';
 import 'package:posku/screen/pricegroup/price_group_screen.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:provider/provider.dart';
@@ -170,7 +172,7 @@ class _MasterDataScreenState extends State<MasterDataScreen>
                           });
                         },
                       ),
-                      trailing: sliding == 0
+                      trailing: sliding != 1
                           ? CupertinoButton(
                               padding: EdgeInsets.all(0.0),
                               onPressed: _showMenu,
@@ -242,12 +244,28 @@ class _MasterDataScreenState extends State<MasterDataScreen>
     final action = CupertinoActionSheet(
       actions: <Widget>[
         CupertinoActionSheetAction(
-          child: Text("Filter Data Pelanggan"),
+          child: Text("Filter Data"),
           onPressed: () {
             print("Action 1 is been clicked");
             Get.back();
           },
         ),
+        if (sliding == 2)
+          CupertinoActionSheetAction(
+            child: Text("Tambah Kelompok Harga"),
+            onPressed: () {
+              print("Action 2 is been clicked");
+              Get.back();
+              Get.toNamed(addEditPGScreen).then((value) {
+                print('cek value $value');
+                if (value != null) {
+                  MasterDataController.to?.isRefresh = true;
+                  MasterDataController.to?.update();
+                }
+              });
+            },
+          ),
+        if (sliding == 0)
         CupertinoActionSheetAction(
           child: Text("Sinkronisasi Data Pelanggan & BK"),
           onPressed: () {
@@ -255,7 +273,7 @@ class _MasterDataScreenState extends State<MasterDataScreen>
             Get.back();
             actionRefresh();
           },
-        )
+        ),
       ],
       cancelButton: CupertinoActionSheetAction(
         child: Text("Batal"),
@@ -266,5 +284,11 @@ class _MasterDataScreenState extends State<MasterDataScreen>
     );
 
     showCupertinoModalPopup(context: context, builder: (context) => action);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Get.put(MasterDataScreen());
   }
 }

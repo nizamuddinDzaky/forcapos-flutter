@@ -16,6 +16,7 @@ import 'package:posku/screen/login/login_screen.dart';
 import 'package:posku/screen/payment/add_payment_screen.dart';
 import 'package:posku/screen/payment/detail_payment_screen.dart';
 import 'package:posku/screen/payment/edit_payment_screen.dart';
+import 'package:posku/screen/pricegroup/add_edit_pg_screen.dart';
 import 'package:posku/screen/pricegroup/pg_detail_screen.dart';
 import 'package:posku/screen/profile/profile_screen.dart';
 import 'package:posku/screen/salebooking/add_sales_booking_screen.dart';
@@ -54,6 +55,7 @@ const editSBProductScreen = "/EditSBProductScreen";
 const editSBItemScreen = "/EditSBItemScreen";
 const returnDeliveryScreen = "/ReturnDeliveryScreen";
 const addCustomerToCGScreen = "/AddCustomerToCGScreen";
+const addEditPGScreen = "/AddEditPGScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -209,6 +211,12 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: AddCustomerToCGScreen(),
+        );
+      case addEditPGScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: AddEditPGScreen(),
         );
       default:
         return GetRouteBase(
