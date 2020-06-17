@@ -100,19 +100,35 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                           PopupMenuButton<int>(
                             key: _keyMore,
                             onSelected: (int idx) {
-                              switch (idx) {
-                                case 0:
-                                  Get.toNamed(
-                                    pgDetailScreen,
-                                    arguments: pg.toJson(),
-                                  );
-                                  break;
-                              }
+                              Future.delayed(Duration(milliseconds: 300))
+                                  .then((value) async {
+                                switch (idx) {
+                                  case 0:
+                                    Get.toNamed(
+                                      pgDetailScreen,
+                                      arguments: pg.toJson(),
+                                    );
+                                    break;
+                                  case 1:
+                                    Get.toNamed(
+                                      addEditPGScreen,
+                                      arguments: {
+                                        'price_group': pg.toJson(),
+                                      },
+                                    ).then((value) {
+                                      if (value != null) {
+                                        actionRefresh();
+                                      }
+                                    });
+                                    break;
+                                }
+                              });
                             },
                             child: Icon(Icons.more_vert),
                             itemBuilder: (BuildContext context) =>
                                 <PopupMenuEntry<int>>[
                               PopupMenuItem<int>(
+                                enabled: false,
                                 height: 30,
                                 child: const Text(
                                     'Tambah Pelanggan ke Kel. Harga'),
