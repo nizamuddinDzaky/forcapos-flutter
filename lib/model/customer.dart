@@ -98,24 +98,34 @@ class Customer {
 
   Customer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    id = json['customer_id'] ?? id;
     groupId = json['group_id'];
+    groupId = json['customer_group_id'] ?? groupId;
     groupName = json['group_name'];
+    groupName = json['customer_group_name'] ?? groupName;
     companyId = json['company_id'];
     customerGroupId = json['customer_group_id'];
     customerGroupName = json['customer_group_name'];
     name = json['name'];
+    name = json['customer_name'] ?? name;
     company = json['company'];
+    company = json['customer_company'] ?? company;
     vatNo = json['vat_no'];
     region = json['region'];
+    region = json['customer_province'] ?? region;
     address = json['address'];
     city = json['city'];
+    city = json['customer_city'] ?? city;
     state = json['state'];
+    state = json['customer_state'] ?? state;
     village = json['village'];
     postalCode = json['postal_code'];
     country = json['country'];
     phone = json['phone'];
+    phone = json['customer_phone'] ?? phone;
     email = json['email'];
     cf1 = json['cf1'];
+    cf1 = json['customer_cf1'] ?? cf1;
     cf2 = json['cf2'];
     cf3 = json['cf3'];
     cf4 = json['cf4'];
