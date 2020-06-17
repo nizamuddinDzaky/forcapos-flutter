@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/model/price_group.dart';
+import 'package:posku/screen/masterdata/master_data_controller.dart';
 import 'package:posku/screen/pricegroup/price_group_view_model.dart';
 import 'package:posku/util/resource/my_color.dart';
 
@@ -14,6 +15,11 @@ class PriceGroupScreen extends StatefulWidget {
 class _CustomerGroupScreenState extends PriceGroupViewModel {
   @override
   Widget build(BuildContext context) {
+    if (MasterDataController.to.isRefresh) {
+      MasterDataController.to.refresh(callback: () {
+        actionRefresh();
+      });
+    }
     return isFirst
         ? Center(
             child: CupertinoActivityIndicator(),
