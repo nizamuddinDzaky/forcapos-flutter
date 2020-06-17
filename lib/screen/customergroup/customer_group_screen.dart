@@ -53,7 +53,7 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
       child: InkWell(
         onTap: () {
           dynamic moreState = _keyMore.currentState;
-          moreState.showButtonMenu();
+          moreState?.showButtonMenu();
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -96,24 +96,33 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                               style: Theme.of(context).textTheme.headline6,
                             ),
                           ),
+                          if (cg?.id != '1')
                           PopupMenuButton<int>(
                             key: _keyMore,
                             onSelected: (int idx) {
-                              print('cek $idx ${cg.name}');
+                              print('cek $idx ${cg.name} ${cg.id}');
+                              Future.delayed(Duration(milliseconds: 300)).then((value) {
+                                if (idx == 2) {
+                                  goToAddCustomerToCG(cg);
+                                }
+                              });
                             },
                             child: Icon(Icons.more_vert),
                             itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                               PopupMenuItem<int>(
+                                //enabled: cg?.id != '1',
                                 height: 50,
                                 child: const Text('Tambah Pelanggan ke Kel. Pelanggan'),
                                 value: 2,
                               ),
                               PopupMenuItem<int>(
+                                enabled: false,
                                 height: 30,
                                 child: const Text('Ubah Rincian Kel. Pelanggan'),
                                 value: 1,
                               ),
                               PopupMenuItem<int>(
+                                enabled: false,
                                 height: 30,
                                 child: const Text('Lihat Rincian'),
                                 value: 0,

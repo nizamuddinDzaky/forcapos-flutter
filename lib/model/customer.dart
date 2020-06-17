@@ -98,13 +98,18 @@ class Customer {
 
   Customer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    id = json['customer_id'] ?? id;
     groupId = json['group_id'];
+    groupId = json['customer_group_id'] ?? groupId;
     groupName = json['group_name'];
+    groupName = json['customer_group_name'] ?? groupName;
     companyId = json['company_id'];
     customerGroupId = json['customer_group_id'];
     customerGroupName = json['customer_group_name'];
     name = json['name'];
+    name = json['customer_name'] ?? name;
     company = json['company'];
+    company = json['customer_company'] ?? company;
     vatNo = json['vat_no'];
     region = json['region'];
     address = json['address'];

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/app/my_router.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer_group.dart';
 import 'package:posku/screen/customergroup/customer_group_screen.dart';
@@ -15,8 +16,7 @@ abstract class CustomerGroupViewModel extends State<CustomerGroupScreen> {
 
   Future<Null> actionRefresh() async {
     var status = await ApiClient.methodGet(ApiConfig.urlListCustomerGroup,
-        onBefore: (status) {
-    }, onSuccess: (data, flag) {
+        onBefore: (status) {}, onSuccess: (data, flag) {
       isFirst = false;
       var baseResponse = BaseResponse.fromJson(data);
       listCustomerGroup.clear();
@@ -25,12 +25,20 @@ abstract class CustomerGroupViewModel extends State<CustomerGroupScreen> {
       Get.defaultDialog(title: title, content: Text(message));
     }, onError: (title, message) {
       Get.defaultDialog(title: title, content: Text(message));
-    }, onAfter: (status) {
-    });
+    }, onAfter: (status) {});
     setState(() {
       status.execute();
     });
     return null;
+  }
+
+  goToAddCustomerToCG(CustomerGroup cg) async {
+    await Get.toNamed(
+      addCustomerToCGScreen,
+      arguments: {
+        'customer_group': cg.toJson(),
+      },
+    );
   }
 
   @override
