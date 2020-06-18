@@ -1197,7 +1197,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
 
   Widget _actionButton() {
     var isEdit =
-        oldSB?.deliveryStatus == 'done' || (listDelivery?.length ?? 0) > 0;
+        oldSB?.deliveryStatus != 'pending' || (listDelivery?.length ?? 0) > 0;
     if (sliding == 0)
       return CupertinoButton(
         minSize: 0,
