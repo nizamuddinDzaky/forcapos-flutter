@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/app/my_router.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/screen/customer/detail_customer_screen.dart';
@@ -32,6 +33,16 @@ abstract class DetailCustomerViewModel extends State<DetailCustomerScreen> {
       status.execute();
     });
     return null;
+  }
+
+  goToEditCustomer() {
+    Get.toNamed(editCustomerScreen, arguments: {
+      'customer': customer?.toJson(),
+    }).then((value) {
+      if (value != null) {
+        actionRefresh();
+      }
+    });
   }
 
   @override

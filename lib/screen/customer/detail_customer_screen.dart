@@ -21,7 +21,7 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
           'Rincian Pelanggan',
         ),
         trailing: CupertinoButton(
-          onPressed: () {},
+          onPressed: () => goToEditCustomer(),
           minSize: 0,
           padding: EdgeInsets.all(0),
           child: Text('Ubah'),

@@ -117,7 +117,15 @@ class CustomerController extends GetController {
     ['Non-aktif', false],
   ];
 
-  CustomerController({this.customer});
+  CustomerController({this.customer}){
+    this.isEdit = customer != null;
+    print('terdeteksi ubah $isEdit');
+    if (this.isEdit) {
+      province = Zone()..txt = customer?.country;
+      city = Zone()..txt = customer?.city;
+      state = Zone()..txt = customer?.state;
+    }
+  }
 
   refresh() {
     update();
@@ -173,23 +181,25 @@ class CustomerController extends GetController {
       'isActive': isActive,
     };
     print('action api add customer $body');
-    await actionPostAddCustomer(body);
-//    Get.back(result: 'addCustomer');
+    if (isEdit) {
+      await actionPutEditCustomer(body);
+    } else {
+      await actionPostAddCustomer(body);
+    }
   }
 
-/*
-  apiPutEditPriceGroup(body) async {
+  actionPutEditCustomer(body) async {
     var params = {
-      MyString.KEY_ID_PRICE_GROUP: priceGroup?.id,
+      'id_customer': customer?.id,
     };
     var status = await ApiClient.methodPut(
-      ApiConfig.urlPriceGroupUpdate,
+      ApiConfig.urlUpdateCustomer,
       body,
       params,
       onBefore: (status) {},
       onSuccess: (data, _) {
-        Get.snackbar('Kelompok Harga', 'Ubah Kelompak Harga Berhasil');
-        Get.back(result: 'editPriceGroup');
+        Get.snackbar('Pelanggan', 'Ubah Pelanggan Berhasil');
+        Get.back(result: 'editCustomer');
       },
       onFailed: (title, message) {
         print(message);
@@ -209,7 +219,6 @@ class CustomerController extends GetController {
     );
     status.execute();
   }
-*/
 
   actionPostAddCustomer(body) async {
     var status = await ApiClient.methodPost(

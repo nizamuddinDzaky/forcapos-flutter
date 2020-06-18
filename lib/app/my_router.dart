@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:posku/helper/custom_cupertino_page_route.dart';
 import 'package:posku/screen/customer/add_customer_screen.dart';
 import 'package:posku/screen/customer/detail_customer_screen.dart';
+import 'package:posku/screen/customer/edit_customer_screen.dart';
 import 'package:posku/screen/customergroup/add_customer_to_cg_screen.dart';
 import 'package:posku/screen/customergroup/add_edit_cg_screen.dart';
 import 'package:posku/screen/delivery/add_delivery_screen.dart';
@@ -62,6 +63,7 @@ const addCustomerToPGScreen = "/AddCustomerToPGScreen";
 const addEditPGScreen = "/AddEditPGScreen";
 const addEditCGScreen = "/AddEditCGScreen";
 const addCustomerScreen = "/AddCustomerScreen";
+const editCustomerScreen = "/EditCustomerScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -241,6 +243,12 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: AddCustomerScreen(),
+        );
+      case editCustomerScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: EditCustomerScreen(),
         );
       default:
         return GetRouteBase(
