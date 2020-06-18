@@ -104,6 +104,8 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                               Future.delayed(Duration(milliseconds: 300)).then((value) {
                                 if (idx == 2) {
                                   goToAddCustomerToCG(cg);
+                                } else if (idx == 1) {
+                                  goToEditCustomerGroup(cg);
                                 }
                               });
                             },
@@ -116,16 +118,9 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                                 value: 2,
                               ),
                               PopupMenuItem<int>(
-                                enabled: false,
                                 height: 30,
                                 child: const Text('Ubah Rincian Kel. Pelanggan'),
                                 value: 1,
-                              ),
-                              PopupMenuItem<int>(
-                                enabled: false,
-                                height: 30,
-                                child: const Text('Lihat Rincian'),
-                                value: 0,
                               ),
                             ],
                           ),

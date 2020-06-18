@@ -41,6 +41,18 @@ abstract class CustomerGroupViewModel extends State<CustomerGroupScreen> {
     );
   }
 
+  goToEditCustomerGroup(CustomerGroup cg) async {
+    var result = await Get.toNamed(
+      addEditCGScreen,
+      arguments: {
+        'customer_group': cg.toJson(),
+      },
+    );
+    if (result != null) {
+      actionRefresh();
+    }
+  }
+
   @override
   void initState() {
     actionRefresh();
