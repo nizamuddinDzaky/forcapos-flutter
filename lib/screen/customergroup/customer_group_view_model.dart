@@ -7,6 +7,7 @@ import 'package:posku/app/my_router.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer_group.dart';
 import 'package:posku/screen/customergroup/customer_group_screen.dart';
+import 'package:posku/screen/masterdata/master_data_controller.dart';
 
 abstract class CustomerGroupViewModel extends State<CustomerGroupScreen> {
   List<CustomerGroup> listCustomerGroup = [];
@@ -41,9 +42,27 @@ abstract class CustomerGroupViewModel extends State<CustomerGroupScreen> {
     );
   }
 
+  goToEditCustomerGroup(CustomerGroup cg) async {
+    var result = await Get.toNamed(
+      addEditCGScreen,
+      arguments: {
+        'customer_group': cg.toJson(),
+      },
+    );
+    if (result != null) {
+      actionRefresh();
+    }
+  }
+
   @override
   void initState() {
     actionRefresh();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Get.put(MasterDataController());
   }
 }

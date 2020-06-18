@@ -172,7 +172,7 @@ class _MasterDataScreenState extends State<MasterDataScreen>
                           });
                         },
                       ),
-                      trailing: sliding != 1
+                      trailing: sliding != -1
                           ? CupertinoButton(
                               padding: EdgeInsets.all(0.0),
                               onPressed: _showMenu,
@@ -258,6 +258,19 @@ class _MasterDataScreenState extends State<MasterDataScreen>
               Get.back();
               Get.toNamed(addEditPGScreen).then((value) {
                 print('cek value $value');
+                if (value != null) {
+                  MasterDataController.to?.isRefresh = true;
+                  MasterDataController.to?.update();
+                }
+              });
+            },
+          ),
+        if (sliding == 1)
+          CupertinoActionSheetAction(
+            child: Text("Tambah Kelompok Pelanggan"),
+            onPressed: () {
+              Get.back();
+              Get.toNamed(addEditCGScreen).then((value) {
                 if (value != null) {
                   MasterDataController.to?.isRefresh = true;
                   MasterDataController.to?.update();

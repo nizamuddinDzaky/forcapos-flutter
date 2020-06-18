@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:posku/model/customer_group.dart';
 import 'package:posku/screen/customergroup/customer_group_view_model.dart';
+import 'package:posku/screen/masterdata/master_data_controller.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 
@@ -13,6 +14,11 @@ class CustomerGroupScreen extends StatefulWidget {
 class _CustomerGroupScreenState extends CustomerGroupViewModel {
   @override
   Widget build(BuildContext context) {
+    if (MasterDataController.to.isRefresh) {
+      MasterDataController.to.refresh(callback: () {
+        actionRefresh();
+      });
+    }
     return isFirst
         ? Center(
             child: CupertinoActivityIndicator(),
@@ -104,6 +110,8 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                               Future.delayed(Duration(milliseconds: 300)).then((value) {
                                 if (idx == 2) {
                                   goToAddCustomerToCG(cg);
+                                } else if (idx == 1) {
+                                  goToEditCustomerGroup(cg);
                                 }
                               });
                             },
@@ -116,16 +124,9 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                                 value: 2,
                               ),
                               PopupMenuItem<int>(
-                                enabled: false,
                                 height: 30,
                                 child: const Text('Ubah Rincian Kel. Pelanggan'),
                                 value: 1,
-                              ),
-                              PopupMenuItem<int>(
-                                enabled: false,
-                                height: 30,
-                                child: const Text('Lihat Rincian'),
-                                value: 0,
                               ),
                             ],
                           ),
