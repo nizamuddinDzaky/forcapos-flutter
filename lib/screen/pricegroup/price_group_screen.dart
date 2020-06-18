@@ -115,6 +115,14 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                                       arguments: pg.toJson(),
                                     );
                                     break;
+                                  case 2:
+                                    Get.toNamed(
+                                      addCustomerToPGScreen,
+                                      arguments: {
+                                        'price_group': pg.toJson(),
+                                      },
+                                    );
+                                    break;
                                   case 1:
                                     Get.toNamed(
                                       addEditPGScreen,
@@ -134,7 +142,6 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                             itemBuilder: (BuildContext context) =>
                                 <PopupMenuEntry<int>>[
                               PopupMenuItem<int>(
-                                enabled: false,
                                 height: 30,
                                 child: const Text(
                                     'Tambah Pelanggan ke Kel. Harga'),

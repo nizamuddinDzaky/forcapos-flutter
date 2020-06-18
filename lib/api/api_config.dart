@@ -57,6 +57,7 @@ class ApiConfig {
   static String urlProductPriceGroup = '${path}customers/group_product_in_prices_group';
   static String urlProductPriceGroupUpdate = '${path}customers/update_product_in_price_group';
   static String urlMemberCustomerGroup = '${path}customers/list_customer_member_of_customer_group';
+  static String urlMemberPriceGroup = '${path}customers/list_customer_member_of_price_group';
 
   //product
   static String urlListProduct = '${path}products/list_products';
