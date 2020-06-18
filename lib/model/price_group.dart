@@ -49,4 +49,9 @@ class PriceGroup {
     data['warehouse_id'] = this.warehouseId;
     return data;
   }
+
+  @override
+  String toString() {
+    return name;
+  }
 }

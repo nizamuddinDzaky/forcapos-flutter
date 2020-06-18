@@ -6,6 +6,7 @@ import 'package:posku/api/api_config.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/screen/customer/customer_screen.dart';
+import 'package:posku/screen/masterdata/master_data_controller.dart';
 
 abstract class CustomerViewModel extends State<CustomerScreen> {
   List<Customer> listCustomer = [];
@@ -37,5 +38,11 @@ abstract class CustomerViewModel extends State<CustomerScreen> {
   void initState() {
     actionRefresh();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Get.put(MasterDataController());
   }
 }

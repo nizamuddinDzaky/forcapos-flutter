@@ -53,4 +53,9 @@ class CustomerGroup {
     data['kredit_limit'] = this.kreditLimit;
     return data;
   }
+
+  @override
+  String toString() {
+    return name;
+  }
 }
