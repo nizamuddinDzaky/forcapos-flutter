@@ -312,7 +312,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Expanded(
                 child: TextFormField(
-                  initialValue: vm.cSales?.paymentTerm?.toNumId() ?? '0',
+                  initialValue: vm.cSales?.paymentTerm?.toNumId(),
                   onSaved: (val) {
                     vm.editSales(paymentTerm: val.strDoubleID());
                   },

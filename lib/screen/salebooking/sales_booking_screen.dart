@@ -11,7 +11,6 @@ import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:provider/provider.dart';
-import 'package:timeago/timeago.dart' as timeAGo;
 
 class SalesBookingScreen extends StatefulWidget {
   @override
@@ -283,11 +282,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                             softWrap: true,
                             text: TextSpan(children: <TextSpan>[
                               TextSpan(
-                                  text: timeAGo.format(
-                                      DateTime.tryParse('${sb.createdAt}') ??
-                                          DateTime.now(),
-                                      locale: 'id',
-                                      allowFromNow: true),
+                                  text: strToDate(sb.date),
                                   style: TextStyle(
                                       color: MyColor.txtField,
                                       fontWeight: FontWeight.bold)),
@@ -341,7 +336,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
           InkWell(
             onTap: () async {
               var result = await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
-              if (getArg('result', myArg: result) == 'editSales') {
+              if (getArg('result', myArg: result) != null) {
                 actionRefresh();
               }
             },

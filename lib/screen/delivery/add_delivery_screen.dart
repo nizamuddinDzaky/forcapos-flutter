@@ -5,6 +5,7 @@ import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
 import 'package:posku/screen/delivery/add_delivery_view_model.dart';
+import 'package:posku/util/delivery_cons.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
@@ -17,12 +18,6 @@ class AddDeliveryScreen extends StatefulWidget {
 
 class _AddDeliveryScreenState extends AddDeliveryViewModel {
   Widget _body() {
-    List<List<String>> statusDeliveries = [];
-    statusDeliveries.addAll([
-      ['Sedang Dikemas', 'packing'],
-      ['Dalam Pengiriman', 'delivering'],
-      ['Sudah Diterima', 'done'],
-    ]);
     refNoController.text = sb.referenceNo;
     return Container(
       color: MyColor.mainBg,

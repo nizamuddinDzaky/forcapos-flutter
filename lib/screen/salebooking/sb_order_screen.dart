@@ -696,7 +696,9 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                 physics: NeverScrollableScrollPhysics(),
                                 childAspectRatio: 16 / 3,
                                 children: <Widget>[
-                                  ...statusSales.mapIndexed((data, index) {
+                                  ...statusSales
+                                      .where((element) => element[1] != 'close')
+                                      .mapIndexed((data, index) {
                                     return RaisedButton(
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
