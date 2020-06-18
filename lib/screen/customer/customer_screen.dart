@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/screen/customer/customer_view_model.dart';
+import 'package:posku/screen/masterdata/master_data_controller.dart';
 import 'package:posku/util/resource/my_color.dart';
 
 class CustomerScreen extends StatefulWidget {
@@ -14,6 +15,11 @@ class CustomerScreen extends StatefulWidget {
 class _CustomerScreenState extends CustomerViewModel {
   @override
   Widget build(BuildContext context) {
+    if (MasterDataController.to.isRefresh) {
+      MasterDataController.to.refresh(callback: () {
+        actionRefresh();
+      });
+    }
     return isFirst
         ? Center(
             child: CupertinoActivityIndicator(),

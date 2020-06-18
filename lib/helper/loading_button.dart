@@ -11,6 +11,7 @@ class LoadingButton extends StatefulWidget {
     this.isActionNavigation = false,
     this.noPadding = false,
     this.shrinkWrap = false,
+    this.isSpinner = false,
     this.color,
   });
 
@@ -20,6 +21,7 @@ class LoadingButton extends StatefulWidget {
   final bool isActionNavigation;
   final bool noPadding;
   final bool shrinkWrap;
+  final bool isSpinner;
   final Color color;
 
   @override
@@ -54,8 +56,21 @@ class _LoadingButtonState extends State<LoadingButton> {
                     )
                   : null,
               onPressed: isLoading ? null : actionOnPressed,
-              child:
-                  isLoading ? CupertinoActivityIndicator() : Text(widget.title),
+              child: isLoading
+                  ? CupertinoActivityIndicator()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        widget.isSpinner
+                            ? Flexible(child: Text(widget.title))
+                            : Text(widget.title),
+                        if (widget.isSpinner)
+                          Icon(
+                            Icons.arrow_drop_down,
+                            size: 20,
+                          ),
+                      ],
+                    ),
             )
           : FlatButton(
               materialTapTargetSize:

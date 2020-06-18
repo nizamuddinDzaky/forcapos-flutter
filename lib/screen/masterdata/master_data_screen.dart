@@ -279,6 +279,19 @@ class _MasterDataScreenState extends State<MasterDataScreen>
             },
           ),
         if (sliding == 0)
+          CupertinoActionSheetAction(
+            child: Text("Tambah Pelanggan"),
+            onPressed: () {
+              Get.back();
+              Get.toNamed(addCustomerScreen).then((value) {
+                if (value != null) {
+                  MasterDataController.to?.isRefresh = true;
+                  MasterDataController.to?.update();
+                }
+              });
+            },
+          ),
+        if (sliding == 0)
         CupertinoActionSheetAction(
           child: Text("Sinkronisasi Data Pelanggan & BK"),
           onPressed: () {
