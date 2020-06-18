@@ -235,8 +235,7 @@ class EditSBController extends GetController {
       'order_discount': sales?.orderDiscount,
       'shipping': sales?.shipping,
       'sale_status': sales?.saleStatus,
-      if (sales?.paymentTerm != null)
-        'payment_term': sales?.paymentTerm,
+      'payment_term': sales?.paymentTerm,
       'staff_note': sales?.staffNote,
       'note': sales?.note,
       'products': salesItem?.map((sbi) => {
