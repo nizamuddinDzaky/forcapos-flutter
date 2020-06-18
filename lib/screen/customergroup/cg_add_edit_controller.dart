@@ -17,8 +17,6 @@ class CGAddEditController extends GetController {
 
   CGAddEditController(this.customerGroup) {
     this.isEdit = customerGroup != null;
-//    if (customerGroup?.warehouseId != null)
-//      actionGetWarehouse();
   }
 
   refresh() {
@@ -90,13 +88,14 @@ class CGAddEditController extends GetController {
 
   apiPostAddCustomerGroup(body) async {
     var status = await ApiClient.methodPost(
-      ApiConfig.urlAddPriceGroupCustomer,
+      ApiConfig.urlAddCustomerGroup,
       body,
       {},
       onBefore: (status) {},
       onSuccess: (data, _) {
-        Get.snackbar('Kelompok Harga', 'Tambah Kelompak Harga Berhasil');
-        Get.back(result: 'addPriceGroup');
+        Get.snackbar(
+            'Kelompok Pelanggan', 'Tambah Kelompak Pelanggan Berhasil');
+        Get.back(result: 'addCustomerGroup');
       },
       onFailed: (title, message) {
         print(message);

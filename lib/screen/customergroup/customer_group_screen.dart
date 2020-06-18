@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:posku/model/customer_group.dart';
 import 'package:posku/screen/customergroup/customer_group_view_model.dart';
+import 'package:posku/screen/masterdata/master_data_controller.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_color.dart';
 
@@ -13,6 +14,11 @@ class CustomerGroupScreen extends StatefulWidget {
 class _CustomerGroupScreenState extends CustomerGroupViewModel {
   @override
   Widget build(BuildContext context) {
+    if (MasterDataController.to.isRefresh) {
+      MasterDataController.to.refresh(callback: () {
+        actionRefresh();
+      });
+    }
     return isFirst
         ? Center(
             child: CupertinoActivityIndicator(),
