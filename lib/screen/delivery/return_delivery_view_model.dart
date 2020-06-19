@@ -80,7 +80,7 @@ abstract class ReturnDeliveryViewModel extends State<ReturnDeliveryScreen> {
         var errorData = BaseResponse.fromJson(jsonDecode(message));
         CustomDialog.showAlertDialog(context,
             title: title,
-            message: 'Kode error: ${errorData?.code}',
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
             leftAction: CustomDialog.customAction());
       },
       onError: (title, message) {

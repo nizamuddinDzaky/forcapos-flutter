@@ -460,6 +460,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           SizedBox(
             height: 8,
           ),
+/*
           //
           Text(
             'ID Bisnis Kokoh',
@@ -497,6 +498,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           SizedBox(
             height: 8,
           ),
+*/
           //
           Text(
             'Status',
@@ -519,16 +521,16 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                   ),
                   onPressed: () {
                     setState(() {
-                      vm.isActive = data[1];
+                      vm.checkCustomer?.isActive = data[1];
                     });
                   },
-                  color: vm.isActive == data[1]
+                  color: vm.customer?.isActive == data[1]
                       ? MyColor.mainRed
                       : Colors.white,
                   child: Text(
                     data[0],
                     style: TextStyle(
-                      color: vm.isActive == data[1]
+                      color: vm.customer?.isActive == data[1]
                           ? Colors.white
                           : MyColor.txtField,
                     ),

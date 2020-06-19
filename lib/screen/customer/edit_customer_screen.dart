@@ -523,16 +523,16 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                   ),
                   onPressed: () {
                     setState(() {
-                      vm.isActive = data[1];
+                      vm.customer?.isActive = data[1];
                     });
                   },
-                  color: vm.isActive == data[1]
+                  color: vm.customer.isActive == data[1]
                       ? MyColor.mainRed
                       : Colors.white,
                   child: Text(
                     data[0],
                     style: TextStyle(
-                      color: vm.isActive == data[1]
+                      color: vm.customer.isActive == data[1]
                           ? Colors.white
                           : MyColor.txtField,
                     ),

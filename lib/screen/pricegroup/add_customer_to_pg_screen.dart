@@ -329,7 +329,7 @@ class _AddCustomerToPGScreenState extends State<AddCustomerToPGScreen> {
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: 'Balik',
         middle: Text(
-          'Tambah Ke Kel. Pelanggan',
+          'Tambah Ke Kel. Harga',
         ),
         trailing: LoadingButton(
           title: 'Simpan',
