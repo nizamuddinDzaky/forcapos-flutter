@@ -1,7 +1,7 @@
 name: posku
 description: New ForcaPoS
 
-version: 2.0.20200612+3
+version: 2.0.20200612+4
 
 environment:
   sdk: ">=2.6.0 <3.0.0"

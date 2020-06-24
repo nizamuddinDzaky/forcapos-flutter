@@ -183,7 +183,7 @@ class CustomerController extends GetController {
       //'cf1': customer?.cf1,
       'is_active': customer?.isActive,
     };
-    print('action api add customer $body');
+    print('action api ${isEdit ? 'edit' : 'add'} customer $body');
     if (isEdit) {
       await actionPutEditCustomer(body);
     } else {

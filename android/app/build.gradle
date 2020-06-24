@@ -64,6 +64,12 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            applicationIdSuffix ".ios"
+            versionNameSuffix '_ios'
+        }
+        debug {
+            applicationIdSuffix ".ios"
+            versionNameSuffix '_ios'
         }
     }
 }

@@ -105,6 +105,7 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                           ),
                           PopupMenuButton<int>(
                             key: _keyMore,
+                            offset: Offset(0, -24),
                             onSelected: (int idx) {
                               Future.delayed(Duration(milliseconds: 300))
                                   .then((value) async {
