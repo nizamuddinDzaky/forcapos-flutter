@@ -21,7 +21,7 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
   List<bool> isFirst = [true, true, true];
   List<List<SalesBooking>> listSalesBooking = [[], [], []];
   List<SalesBooking> listSearch;
-  Map<String, String> filterData = {'date': 'desc'};
+  Map<String, String> filterData = {'sortBy': 'date', 'sortType': 'desc'};
   bool isSearch = false;
   Map<String, String> searchData;
 
