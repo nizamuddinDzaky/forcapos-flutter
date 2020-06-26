@@ -210,54 +210,158 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
       elevation: 8,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: MyColor.blueDio,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
+      child: InkWell(
+        onTap: () async {
+          var result =
+              await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
+          if (getArg('result', myArg: result) != null) {
+            actionRefresh();
+          }
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: MyColor.blueDio,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      child: Center(
+                        child: Text('PoS',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(color: Colors.white)),
+                      ),
                     ),
-                    child: Center(
-                      child: Text('PoS',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              .copyWith(color: Colors.white)),
+                    SizedBox(
+                      width: 8,
                     ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 2),
-                      child: Column(
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 2),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              '${sb.referenceNo}',
+                              style: TextStyle(
+                                color: MyColor.blueDio,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '${sb.customerId == '1' ? 'Eceran' : sb.customer}',
+                              style: TextStyle(
+                                color: MyColor.txtField,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            '${sb.referenceNo}',
-                            style: TextStyle(
-                              color: MyColor.blueDio,
-                              fontWeight: FontWeight.bold,
+                          Icon(
+                            Icons.av_timer,
+                            size: 14,
+                          ),
+                          Expanded(
+                            child: RichText(
+                              textAlign: TextAlign.left,
+                              softWrap: true,
+                              text: TextSpan(children: <TextSpan>[
+                                TextSpan(
+                                    text: strToDate(sb.date),
+                                    style: TextStyle(
+                                        color: MyColor.txtField,
+                                        fontWeight: FontWeight.bold)),
+                              ]),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text('Status Pembayaran'),
+                      Text(
+                        '${paymentStyle[0]}',
+                        style: TextStyle(
+                          color: paymentStyle[1],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Text('Status Pengiriman'),
+                      Text(
+                        '${deliveryStyle[0]}',
+                        style: TextStyle(
+                          color: deliveryStyle[1],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Divider(
+              height: 1,
+//            color: MyColor.txtField,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      child: Row(
+                        children: <Widget>[
                           Text(
-                            '${sb.customerId == '1' ? 'Eceran' : sb.customer}',
-                            style: TextStyle(
-                              color: MyColor.txtField,
-                              fontWeight: FontWeight.bold,
+                            'Dibuat oleh: ',
+                            style: TextStyle(color: MyColor.txtField),
+                          ),
+                          Flexible(
+                            child: Text(
+                              '${sb.createdBy}',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: MyColor.txtField),
                             ),
                           ),
                         ],
@@ -268,111 +372,20 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                     width: 8,
                   ),
                   Expanded(
-                    flex: 2,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(
-                          Icons.av_timer,
-                          size: 14,
-                        ),
-                        Expanded(
-                          child: RichText(
-                            textAlign: TextAlign.left,
-                            softWrap: true,
-                            text: TextSpan(children: <TextSpan>[
-                              TextSpan(
-                                  text: strToDate(sb.date),
-                                  style: TextStyle(
-                                      color: MyColor.txtField,
-                                      fontWeight: FontWeight.bold)),
-                            ]),
-                          ),
-                        ),
-                      ],
+                    flex: 0,
+                    child: Text(
+                      '${MyNumber.toNumberRpStr(sb.grandTotal)}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: MyColor.txtField),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text('Status Pembayaran'),
-                    Text(
-                      '${paymentStyle[0]}',
-                      style: TextStyle(
-                        color: paymentStyle[1],
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Text('Status Pengiriman'),
-                    Text(
-                      '${deliveryStyle[0]}',
-                      style: TextStyle(
-                        color: deliveryStyle[1],
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Divider(
-            height: 1,
-//            color: MyColor.txtField,
-          ),
-          InkWell(
-            onTap: () async {
-              var result = await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
-              if (getArg('result', myArg: result) != null) {
-                actionRefresh();
-              }
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Dibuat oleh: ',
-                        style: TextStyle(color: MyColor.txtField),
-                      ),
-                      Text(
-                        '${sb.createdBy}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: MyColor.txtField),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    '${MyNumber.toNumberRpStr(sb.grandTotal)}',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: MyColor.txtField),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
