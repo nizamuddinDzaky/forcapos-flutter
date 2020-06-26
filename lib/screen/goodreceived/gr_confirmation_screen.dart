@@ -25,6 +25,7 @@ class _GRConfirmationScreenState extends GRConfirmationViewModel {
         ),
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
                 color: Color(0xFFBEBEBE),
@@ -75,9 +76,48 @@ class _GRConfirmationScreenState extends GRConfirmationViewModel {
                 ),
               ),
               Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    //warehouse
+                    Text(
+                      'Gudang',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.store,
+                          size: 16,
+                          color: MyColor.blueDio,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Column(
+                          children: <Widget>[
+                            LoadingButton(
+                              title: currentWarehouse?.name ?? 'Pilih Gudang',
+                              noMargin: true,
+                              noPadding: true,
+                              isActionNavigation: true,
+                              onPressed: () async {
+                                await actionGetWarehouse();
+                                showWarehousePicker(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
                 padding: EdgeInsets.symmetric(vertical: 8),
               ),
-             LoadingButton(onPressed: actionBtnReceive, title: 'Terima'),
+              LoadingButton(onPressed: actionBtnReceive, title: 'Terima'),
             ],
           ),
         ),
@@ -102,9 +142,7 @@ class _GRConfirmationScreenState extends GRConfirmationViewModel {
                     Text('Harga'),
                     TextFormField(
                       controller: priceController,
-                      inputFormatters: [
-                        NumericTextFormatter()
-                      ],
+                      inputFormatters: [NumericTextFormatter()],
                       keyboardType:
                           TextInputType.numberWithOptions(signed: false),
                       decoration: new InputDecoration(
@@ -124,9 +162,8 @@ class _GRConfirmationScreenState extends GRConfirmationViewModel {
                     Text('Quantity'),
                     TextFormField(
                       controller: qtyController,
-                      inputFormatters: [
-                        NumericTextFormatter()
-                      ],
+                      enabled: false,
+                      inputFormatters: [NumericTextFormatter()],
                       keyboardType:
                           TextInputType.numberWithOptions(signed: true),
                       decoration: new InputDecoration(
