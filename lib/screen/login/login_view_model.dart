@@ -27,9 +27,25 @@ abstract class LoginViewModel extends State<LoginScreen> {
     currentData.password = MyPref.getPassword();
   }
 
-  void _actionLogin() async {
+  void forceLogin(force) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (c) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[CupertinoActivityIndicator()],
+            ),
+          );
+        });
+    _actionLogin(force: force);
+  }
+
+  void _actionLogin({force}) async {
     var status = await ApiClient.methodPost(
-        ApiConfig.urlLogin, currentData.toJson(), {}, onBefore: (status) {
+        ApiConfig.urlLogin, force ?? currentData.toJson(), {},
+        onBefore: (status) {
       Get.back();
     }, onSuccess: (data, _) {
       var baseResponse = BaseResponse.fromJson(data);
