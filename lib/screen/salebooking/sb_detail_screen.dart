@@ -204,7 +204,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                             style: TextStyle(color: MyColor.txtField),
                           ),
                           Text(
-                            '${strToDateTimeFormat(sb.createdAt)}',
+                            '${strToDateTimeFormat(sb.date)}',
                             style: TextStyle(
                                 color: MyColor.txtField,
                                 fontWeight: FontWeight.bold),
@@ -985,7 +985,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                           ),
                                                           Text(
                                                             listDelivery[index]
-                                                                .doReferenceNo ?? '',
+                                                                    .doReferenceNo ??
+                                                                '',
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -1018,7 +1019,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                           ),
                                                           Text(
                                                             listDelivery[index]
-                                                                .saleReferenceNo ?? '',
+                                                                    .saleReferenceNo ??
+                                                                '',
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -1096,7 +1098,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                                           ),
                                                           Text(
                                                             listDelivery[index]
-                                                                .deliveredBy ?? '',
+                                                                    .deliveredBy ??
+                                                                '',
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -1193,11 +1196,13 @@ class _SBDetailScreenState extends SBDetailViewModel {
   }
 
   Widget _actionButton() {
+    var isEdit =
+        oldSB?.deliveryStatus != 'pending' || (listDelivery?.length ?? 0) > 0;
     if (sliding == 0)
       return CupertinoButton(
         minSize: 0,
         padding: EdgeInsets.all(0.0),
-        onPressed: () => goToEditSales(),
+        onPressed: isEdit ? null : () => goToEditSales(),
         child: Text('Ubah'),
       );
     if (sliding == 1 && sb.saleStatus == 'pending') return null;

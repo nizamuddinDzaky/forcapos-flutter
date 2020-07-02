@@ -58,19 +58,18 @@ class _LoadingButtonState extends State<LoadingButton> {
               onPressed: isLoading ? null : actionOnPressed,
               child: isLoading
                   ? CupertinoActivityIndicator()
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        widget.isSpinner
-                            ? Flexible(child: Text(widget.title))
-                            : Text(widget.title),
-                        if (widget.isSpinner)
-                          Icon(
-                            Icons.arrow_drop_down,
-                            size: 20,
-                          ),
-                      ],
-                    ),
+                  : (widget.isSpinner
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(child: Text(widget.title)),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              size: 20,
+                            ),
+                          ],
+                        )
+                      : Text(widget.title)),
             )
           : FlatButton(
               materialTapTargetSize:

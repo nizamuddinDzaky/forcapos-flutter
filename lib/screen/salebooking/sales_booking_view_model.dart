@@ -21,7 +21,7 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
   List<bool> isFirst = [true, true, true];
   List<List<SalesBooking>> listSalesBooking = [[], [], []];
   List<SalesBooking> listSearch;
-  Map<String, String> filterData = {'date': 'desc'};
+  Map<String, String> filterData = {'sortBy': 'date', 'sortType': 'desc'};
   bool isSearch = false;
   Map<String, String> searchData;
 
@@ -141,8 +141,7 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
             if (isFirst[flag]) isFirst[flag] = false;
             listSalesBooking[flag].clear();
             listSalesBooking[flag].addAll(newListSB);
-            listSalesBooking[flag]
-                .sort((a, b) => b.createdAt.compareTo(a.createdAt));
+            listSalesBooking[flag].sort((a, b) => b.date.compareTo(a.date));
           }
         }, onFailed: (title, message) {
           Get.defaultDialog(title: title, content: Text(message));
@@ -159,4 +158,3 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
     return null;
   }
 }
-

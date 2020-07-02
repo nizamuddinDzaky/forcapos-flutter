@@ -102,7 +102,6 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                               style: Theme.of(context).textTheme.headline6,
                             ),
                           ),
-                          if (cg?.id != '1')
                           PopupMenuButton<int>(
                             key: _keyMore,
                             onSelected: (int idx) {
@@ -118,12 +117,12 @@ class _CustomerGroupScreenState extends CustomerGroupViewModel {
                             child: Icon(Icons.more_vert),
                             itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                               PopupMenuItem<int>(
-                                //enabled: cg?.id != '1',
                                 height: 50,
                                 child: const Text('Tambah Pelanggan ke Kel. Pelanggan'),
                                 value: 2,
                               ),
                               PopupMenuItem<int>(
+                                enabled: cg?.id != '1',
                                 height: 30,
                                 child: const Text('Ubah Rincian Kel. Pelanggan'),
                                 value: 1,

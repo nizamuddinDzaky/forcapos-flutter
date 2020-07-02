@@ -185,7 +185,7 @@ class _AddCustomerToPGScreenState extends State<AddCustomerToPGScreen> {
                   Icons.search,
                   size: 24,
                 ),
-                hintText: 'Cari atas produk/kode',
+                hintText: 'Cari Pelanggan',
                 suffixIcon: searchController.text.isEmpty
                     ? null
                     : IconButton(
@@ -329,7 +329,7 @@ class _AddCustomerToPGScreenState extends State<AddCustomerToPGScreen> {
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: 'Balik',
         middle: Text(
-          'Tambah Ke Kel. Pelanggan',
+          'Tambah Ke Kel. Harga',
         ),
         trailing: LoadingButton(
           title: 'Simpan',

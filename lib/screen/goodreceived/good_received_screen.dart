@@ -8,9 +8,9 @@ import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/screen/goodreceived/good_received_view_model.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/util/my_number.dart';
+import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:provider/provider.dart';
-import 'package:timeago/timeago.dart' as timeAGo;
 
 class GoodReceiveScreen extends StatefulWidget {
   @override
@@ -210,8 +210,7 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                       size: 14,
                     ),
                     Text(
-                      timeAGo.format(DateTime.tryParse('${gr.createdAt}'),
-                          locale: 'id', allowFromNow: true),
+                      strToDate(gr.createdAt),
                       style: TextStyle(
                         color: MyColor.mainRed,
                         fontWeight: FontWeight.bold,

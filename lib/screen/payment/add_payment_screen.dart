@@ -140,7 +140,7 @@ class _AddPaymentScreenState extends AddPaymentViewModel {
                     'amount_paid': amount.toString(),
                     'note': noteController.text,
                     'date': date.toStr(),
-                    'paid_by': paymentType[1],
+                    'payment_method': paymentType[1],
                   };
                   //print('cek data $body');
                   await actionPostPayment(body);

@@ -50,16 +50,18 @@ class CustomerGroupController extends GetController {
       params: params,
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
-        listCustomers = baseResponse?.data?.listCustomers;
-        var selected =
-            baseResponse?.data?.customerSelected?.map((e) => e.id)?.toList();
-        if (selected != null) {
-          listCustomers.forEach((customer) {
-            if (selected.contains(customer.id)) {
-              selectCustomer(customer);
-            }
-          });
-        }
+        listCustomers = baseResponse?.data?.listCustomers ?? [];
+        listCustomers.forEach((customer) {
+          if (customer.customerGroupId == cg.id) {
+            selectCustomer(customer);
+          }
+        });
+      },
+      onFailed: (title, message) {
+        listCustomers = [];
+      },
+      onError: (title, message) {
+        listCustomers = [];
       },
       onAfter: (status) {
         update();
@@ -93,7 +95,7 @@ class CustomerGroupController extends GetController {
         var errorData = BaseResponse.fromJson(tryJsonDecode(message) ?? {});
         CustomDialog.showAlertDialog(Get.overlayContext,
             title: title,
-            message: 'Kode error: ${errorData?.code}',
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
             leftAction: CustomDialog.customAction());
       },
       onError: (title, message) {

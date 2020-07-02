@@ -312,9 +312,12 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               ),
               Expanded(
                 child: TextFormField(
-                  initialValue: vm.cSales?.paymentTerm?.toNumId() ?? '0',
-                  onSaved: (val) {
-                    vm.editSales(paymentTerm: val.strDoubleID());
+                  initialValue: vm.cSales?.paymentTerm?.toNumId(),
+                  onSaved: (value) {
+                    vm.editSales(
+                        paymentTerm: value.isEmpty
+                            ? ''
+                            : value?.tryIDtoDouble()?.toString());
                   },
                   decoration: new InputDecoration(
                     suffixText: 'hari',
@@ -570,6 +573,8 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                                           onChanged: (newValue) {
                                             vm.qtyEdit(qtyController,
                                                 qtyStr: newValue);
+                                            if (newValue.isEmpty) return;
+                                            vm.qtyCustom(sbi, qtyStr: newValue);
                                           },
                                           onFieldSubmitted: (newValue) {
                                             vm.qtyCustom(sbi, qtyStr: newValue);

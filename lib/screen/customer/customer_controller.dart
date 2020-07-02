@@ -16,8 +16,11 @@ class CustomerController extends GetController {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isEdit = false;
-  bool isActive = false;
   Customer customer;
+  Customer get checkCustomer {
+    customer = customer ?? Customer();
+    return customer;
+  }
   List<PriceGroup> listPriceGroup = [];
   List<CustomerGroup> listCustomerGroup = [];
   List<Zone> listProvince, listCity, listState;
@@ -113,8 +116,8 @@ class CustomerController extends GetController {
 
 
   var statusCustomer = [
-    ['Aktif', true],
-    ['Non-aktif', false],
+    ['Aktif', '1'],
+    ['Non-aktif', '0'],
   ];
 
   CustomerController({this.customer}){
@@ -177,10 +180,10 @@ class CustomerController extends GetController {
       'state': state?.txt,
       'postal_code': customer?.postalCode,
       'vat_no': customer?.vatNo,
-      'cf1': customer?.cf1,
-      'isActive': isActive,
+      //'cf1': customer?.cf1,
+      'is_active': customer?.isActive,
     };
-    print('action api add customer $body');
+    print('action api ${isEdit ? 'edit' : 'add'} customer $body');
     if (isEdit) {
       await actionPutEditCustomer(body);
     } else {
@@ -206,7 +209,7 @@ class CustomerController extends GetController {
         var errorData = BaseResponse.fromJson(tryJsonDecode(message) ?? {});
         CustomDialog.showAlertDialog(Get.overlayContext,
             title: title,
-            message: 'Kode error: ${errorData?.code}',
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
             leftAction: CustomDialog.customAction());
       },
       onError: (title, message) {
@@ -235,7 +238,7 @@ class CustomerController extends GetController {
         var errorData = BaseResponse.fromJson(tryJsonDecode(message) ?? {});
         CustomDialog.showAlertDialog(Get.overlayContext,
             title: title,
-            message: 'Kode error: ${errorData?.code}',
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
             leftAction: CustomDialog.customAction());
       },
       onError: (title, message) {

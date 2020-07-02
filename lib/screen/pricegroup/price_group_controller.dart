@@ -109,7 +109,7 @@ class PriceGroupController extends GetController {
         var errorData = BaseResponse.fromJson(tryJsonDecode(message) ?? {});
         CustomDialog.showAlertDialog(Get.overlayContext,
             title: title,
-            message: 'Kode error: ${errorData?.code}',
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
             leftAction: CustomDialog.customAction());
       },
       onError: (title, message) {
@@ -138,7 +138,7 @@ class PriceGroupController extends GetController {
         var errorData = BaseResponse.fromJson(tryJsonDecode(message) ?? {});
         CustomDialog.showAlertDialog(Get.overlayContext,
             title: title,
-            message: 'Kode error: ${errorData?.code}',
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
             leftAction: CustomDialog.customAction());
       },
       onError: (title, message) {

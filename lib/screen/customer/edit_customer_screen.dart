@@ -466,43 +466,6 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
           ),
           //
           Text(
-            'ID Bisnis Kokoh',
-            style: Theme.of(Get.context).textTheme.subtitle2,
-          ),
-          Row(
-            children: <Widget>[
-              Container(
-                child: Icon(
-                  Icons.description,
-                  size: 16,
-                  color: MyColor.blueDio,
-                ),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Expanded(
-                child: TextFormField(
-                  initialValue: vm.customer?.cf1,
-                  onSaved: (val) {
-                    vm.saveForm(cf1: val);
-                  },
-                  decoration: new InputDecoration(
-                    hintText: 'IDC-',
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 8,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          //
-          Text(
             'Status',
             style: Theme.of(Get.context).textTheme.subtitle2,
           ),
@@ -523,16 +486,16 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                   ),
                   onPressed: () {
                     setState(() {
-                      vm.isActive = data[1];
+                      vm.customer?.isActive = data[1];
                     });
                   },
-                  color: vm.isActive == data[1]
+                  color: vm.customer?.isActive == data[1]
                       ? MyColor.mainRed
                       : Colors.white,
                   child: Text(
                     data[0],
                     style: TextStyle(
-                      color: vm.isActive == data[1]
+                      color: vm.customer?.isActive == data[1]
                           ? Colors.white
                           : MyColor.txtField,
                     ),

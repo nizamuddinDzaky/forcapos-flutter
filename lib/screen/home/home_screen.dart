@@ -94,7 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     case 1:
                       returnValue = CupertinoTabView(builder: (context) {
                         return CupertinoPageScaffold(
-                          child: GoodReceiveScreen(),
+                          child: homeState.roleId != MyString.ROLE_CASHIER
+                              ? GoodReceiveScreen()
+                              : SalesBookingScreen(),
                         );
                       });
                       break;

@@ -303,6 +303,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
     if (Get.arguments != null && isFirst) {
       var arg = Get.arguments as Map<String, dynamic>;
       oldSB = SalesBooking.fromJson(arg ?? {});
+      getListDelivery(oldSB.id);
       isFirst = false;
     }
     (ModalRoute.of(context) as CustomCupertinoPageRoute)?.resultPop =

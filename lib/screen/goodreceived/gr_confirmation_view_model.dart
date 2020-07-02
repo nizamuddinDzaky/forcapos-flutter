@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
 import 'package:posku/helper/custom_dialog.dart';
+import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/GoodReceived.dart';
+import 'package:posku/model/warehouse.dart';
 import 'package:posku/screen/goodreceived/gr_confirmation_screen.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/resource/my_string.dart';
@@ -14,14 +17,36 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
   var total = 0.0;
   GoodReceived gr;
   bool isFirst = true;
+  List<Warehouse> listWarehouse = [];
+  Warehouse currentWarehouse;
 
-  actionGRtoPO(String id, double price) async {
-    var body = {
-      MyString.KEY_GR_PRICE: price.toString(),
-    };
-    var params = {
-      MyString.KEY_ID_GOODS_RECEIVED: id,
-    };
+  actionGetWarehouse() async {
+    if (listWarehouse.isNotEmpty) return;
+
+    var status = await ApiClient.methodGet(
+      ApiConfig.urlListWarehouse,
+      onSuccess: (data, flag) {
+        var baseResponse = BaseResponse.fromJson(data);
+        listWarehouse.addAll(baseResponse?.data?.listWarehouses ?? []);
+      },
+    );
+    status.execute();
+  }
+
+  void showWarehousePicker(buildContext) {
+    DataPicker.showDatePicker(
+      buildContext,
+      locale: 'id',
+      datas: listWarehouse,
+      title: 'Pilih Gudang',
+      onConfirm: (data) {
+        currentWarehouse = data;
+        setState(() {});
+      },
+    );
+  }
+
+  actionGRtoPO(body, params) async {
     var status = await ApiClient.methodPost(
         ApiConfig.urlAddGRtoPO, body, params, onBefore: (status) {
       print('onbefore');
@@ -45,13 +70,24 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
   }
 
   actionBtnReceive() async {
-//    await Future.delayed(Duration(seconds: 3));
-//    Get.snackBar('GR No SPJ ${gr.noSpj}', 'Status: received success');
-//    Get.back(result: {"isSuccess": true});
+    if (null == currentWarehouse?.id) {
+      CustomDialog.showAlertDialog(
+        context,
+        message: 'Wajib Pilih Gudang',
+        leftAction: CustomDialog.customAction(),
+      );
+      return;
+    }
     var price = MyNumber.strIDToDouble(priceController.text);
-    print('price $price');
-//    await actionGRtoPO("abc", 45000.0);
-    actionGRtoPO(gr.id, price);
+    var body = {
+      MyString.KEY_GR_PRICE: price.toString(),
+      'warehouse_id': currentWarehouse?.id,
+    };
+    var params = {
+      MyString.KEY_ID_GOODS_RECEIVED: gr.id,
+    };
+    print('add GR $price $body $params');
+    await actionGRtoPO(body, params);
   }
 
   void totalPrice() {
@@ -83,6 +119,7 @@ abstract class GRConfirmationViewModel extends State<GRConfirmationScreen> {
       priceController.text = MyNumber.toNumberId(price);
       qtyController.text = MyNumber.toNumberId(double.tryParse(gr.qtyDo));
       isFirst = false;
+      actionGetWarehouse();
 //      print('cek gr $price ${gr.total} ${Get.arguments}');
     }
   }

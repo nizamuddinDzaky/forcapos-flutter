@@ -17,8 +17,66 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends LoginViewModel {
+  bool isDebug = false;
+
+  Widget _more(Widget child) {
+    return PopupMenuButton<int>(
+      onSelected: (int idx) {
+        Future.delayed(Duration(milliseconds: 300)).then((value) {
+          Map<String, String> data = {};
+          switch (idx) {
+            case 1:
+              data['username'] = 'admgudang@sbi.com';
+              data['password'] = 'Dynamix1';
+              forceLogin(data);
+              break;
+            case 2:
+              data['username'] = 'gudang3@sbi.com';
+              data['password'] = 'Dynamix1';
+              forceLogin(data);
+              break;
+            default:
+              data['username'] = 'jabar@sbi.com';
+              data['password'] = 'Dynamix1';
+              forceLogin(data);
+              break;
+          }
+        });
+      },
+      child: child,
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+        PopupMenuItem<int>(
+          child: const Text('Super Admin'),
+          value: 0,
+        ),
+        PopupMenuItem<int>(
+          child: const Text('Admin Gudang'),
+          value: 1,
+        ),
+        PopupMenuItem<int>(
+          child: const Text('Kasir'),
+          value: 2,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget logoForcaPoS = Container(
+      height: Get.height * 0.25,
+      child: Center(
+        child: Hero(
+          tag: 'logoForcaPoS',
+          child: MyLogo.logoForcaPoSColor(),
+        ),
+      ),
+    );
+
+    if (isDebug) {
+      logoForcaPoS = _more(logoForcaPoS);
+    }
+
     var formLayout = Container(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -200,25 +258,16 @@ class _LoginScreenState extends LoginViewModel {
                   child: IntrinsicHeight(
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          height: Get.height * 0.25,
-                          child: Center(
-                            child: Hero(
-                              tag: 'logoForcaPoS',
-                              child: MyLogo.logoForcaPoSColor(),
-                            ),
-                          ),
-                        ),
+                        logoForcaPoS,
                         formLayout,
                         Expanded(
                           child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              padding: EdgeInsets.only(bottom: 8),
-                              child: MyText.textBlackSmall(
-                                  'Ⓒ 2020 PT SISI, All Right Reserved.'),
-                            )
-                          ),
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                padding: EdgeInsets.only(bottom: 8),
+                                child: MyText.textBlackSmall(
+                                    'Ⓒ 2020 PT SISI, All Right Reserved.'),
+                              )),
                         ),
                       ],
                     ),
@@ -230,5 +279,14 @@ class _LoginScreenState extends LoginViewModel {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    assert(() {
+      isDebug = true;
+      return true;
+    }());
+    super.initState();
   }
 }

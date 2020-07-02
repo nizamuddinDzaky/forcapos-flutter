@@ -185,7 +185,7 @@ class _AddCustomerToCGScreenState extends State<AddCustomerToCGScreen> {
                   Icons.search,
                   size: 24,
                 ),
-                hintText: 'Cari atas produk/kode',
+                hintText: 'Cari Pelanggan',
                 suffixIcon: searchController.text.isEmpty
                     ? null
                     : IconButton(

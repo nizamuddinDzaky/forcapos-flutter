@@ -36,7 +36,9 @@ class ApiClient {
 //        token = 'aGNUeGJzT2ROSUk1UDYrU1JLY0JHZHFNRzBPbzJUc05pVjd1ZE5iU2lWTVRUSURGOjrClToY3zBN7qChVoCiHwLUOjrZnRCcRjF0yMtoiwg=';//sbj
 //        token = 'MHZDeWprTXJMVkg1d0hwTUtyRUtNL3pENnlOMUkwWCtTL2VxMDdxNXNUbz06Oq6JsfLg3cMucEM64dSy3pc6OoeQ8IgrX7Tsh7sGMw==';//devsisi2
 //        token = 'emRiWWlYYytTNUVsY3FLa3hsbFFKRjlkMVBLdkFmMkdMVWV3YTdsNTMySFZLU3pQOjrQKFrlmJbxfV5Ba3fe/v8GOjorB7ppAg4nc5ogLeU=';//bjbu
+//        token = 'L2RLSTZNTTBPWks5L25lWmVvRDZ5ak9GTWIybXkwQjdicDRiMi9VVGR5R05HR3RQYUZuUTo6cfgk7BxZjp65EmHXW2wYNTo6fgx/Oj7VA/BO2MSd';//lancarjayautama
 //        token = 'M1VjRWJqSUFpZzNxaHRrQTZManVxVkRIeXlubnRrcWNkcGh1YmNQekY2c25MNG1YTFZnPTo6pOtmmYOag6TZv8wq6LF9pjo6CkN7Hp4kXWFer5Y/';//kenang
+//        token = 'bWxnVklaR24zV0tnZGRSUWJHRUVQQ05YNWIzb0pLZUZIZXVWRjU5Nkd1alhHem1aY0Y0PTo6zzrF/wO7QaFFV4pYSr//YDo685E/qRdLsx1VEsaK';//bmj
         options.headers.addAll(
             {MyString.KEY_FORCA_TOKEN: token?.isNotEmpty == true ? token : ''});
       }
@@ -135,6 +137,7 @@ class ApiClient {
           responseApi._setFailed(
               title, 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
         } else {
+          responseApi._setError(title, 'Gagal akses. [$statusCode]');
           print('error gan $error ${error.response}');
         }
       }
