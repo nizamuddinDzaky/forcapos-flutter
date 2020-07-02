@@ -83,7 +83,7 @@ abstract class ReportViewModel extends State<ReportScreen> {
   }
 
   void selectMonth(DateTime newDate) {
-    currentDate = DateTime(currentDate.year, newDate.month, currentDate.day);
+    currentDate = DateTime(newDate.year, newDate.month, currentDate.day);
   }
 
   bool prevLimit() {
