@@ -18,6 +18,37 @@ class SalesBookingScreen extends StatefulWidget {
 }
 
 class _SalesBookingScreenState extends SalesBookingViewModel {
+  _showMenu(SalesBooking sb) {
+    final action = CupertinoActionSheet(
+      title: Text('Menu Penjualan'),
+      message: sb.referenceNo == null ? null : Text(sb.referenceNo),
+      actions: <Widget>[
+        CupertinoActionSheetAction(
+          child: Text("Rincian Penjualan"),
+          onPressed: () {
+            Get.back();
+            goToDetail(sb);
+          },
+        ),
+        CupertinoActionSheetAction(
+          child: Text("Selesaikan Penjualan"),
+          onPressed: () {
+            Get.back();
+            actionClose(sb);
+          },
+        ),
+      ],
+      cancelButton: CupertinoActionSheetAction(
+        child: Text("Batal"),
+        onPressed: () {
+          Get.back();
+        },
+      ),
+    );
+
+    showCupertinoModalPopup(context: context, builder: (context) => action);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeState>(
@@ -212,11 +243,11 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
       elevation: 8,
       child: InkWell(
         onTap: () async {
-          var result =
-              await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
-          if (getArg('result', myArg: result) != null) {
-            actionRefresh();
+          if (sliding == 1) {
+            _showMenu(sb);
+            return;
           }
+          await goToDetail(sb);
         },
         child: Column(
           mainAxisSize: MainAxisSize.max,

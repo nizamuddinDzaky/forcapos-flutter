@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/app/my_router.dart';
+import 'package:posku/helper/custom_dialog.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/salebooking/sales_booking_screen.dart';
+import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_string.dart';
 
 abstract class SalesBookingViewModel extends State<SalesBookingScreen>
@@ -156,5 +159,46 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
     });
 
     return null;
+  }
+
+  actionClose(sb) async {
+    var params = {
+      MyString.KEY_ID_SALES: sb?.id,
+    };
+    var status = await ApiClient.methodPost(
+      ApiConfig.urlCloseSalesBooking,
+      {},
+      params,
+      onSuccess: (data, _) {
+        setState(() {
+          isFirst[2] = true;
+          isFirst[1] = true;
+          sliding = 2;
+        });
+        actionRefresh();
+      },
+      onFailed: (title, message) {
+        var errorData = BaseResponse.fromJson(tryJsonDecode(message) ?? {});
+        CustomDialog.showAlertDialog(Get.overlayContext,
+            title: title,
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
+            leftAction: CustomDialog.customAction());
+      },
+      onError: (title, message) {
+        CustomDialog.showAlertDialog(Get.overlayContext,
+            title: title,
+            message: message,
+            leftAction: CustomDialog.customAction());
+      },
+    );
+    status.execute();
+  }
+
+  goToDetail(sb) async {
+    var result =
+    await Get.toNamed(sbDetailScreen, arguments: sb.toJson());
+    if (getArg('result', myArg: result) != null) {
+      actionRefresh();
+    }
   }
 }
