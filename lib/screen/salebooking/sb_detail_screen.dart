@@ -1198,12 +1198,14 @@ class _SBDetailScreenState extends SBDetailViewModel {
   Widget _actionButton() {
     var isEdit =
         oldSB?.deliveryStatus != 'pending' || (listDelivery?.length ?? 0) > 0;
+    var isClose = (newSb ?? oldSB)?.saleStatus == 'reserved';
+    var isEnable = isClose || !isEdit;
     if (sliding == 0)
       return CupertinoButton(
         minSize: 0,
         padding: EdgeInsets.all(0.0),
-        onPressed: isEdit ? null : () => goToEditSales(),
-        child: Text('Ubah'),
+        onPressed: isEnable ? () => showOptionMenu(isEdit) : null,
+        child: Text('Opsi'),
       );
     if (sliding == 1 && sb.saleStatus == 'pending') return null;
     if (sliding == 1 && sb.paymentStatus == 'paid') return null;

@@ -6,6 +6,7 @@ import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/custom_cupertino_page_route.dart';
+import 'package:posku/helper/custom_dialog.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/company.dart';
 import 'package:posku/model/customer.dart';
@@ -278,6 +279,68 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
     if (result != null) {
       setState(() {});
     }
+  }
+
+  actionClose() async {
+    var params = {
+      MyString.KEY_ID_SALES: sb?.id ?? oldSB?.id,
+    };
+    var status = await ApiClient.methodPost(
+      ApiConfig.urlCloseSalesBooking,
+      {},
+      params,
+      onSuccess: (data, _) {
+        Get.snackbar('Penjualan', 'Berhasil dinyatakan selesai');
+        actionRefresh();
+      },
+      onFailed: (title, message) {
+        var errorData = BaseResponse.fromJson(tryJsonDecode(message) ?? {});
+        CustomDialog.showAlertDialog(Get.overlayContext,
+            title: title,
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
+            leftAction: CustomDialog.customAction());
+      },
+      onError: (title, message) {
+        CustomDialog.showAlertDialog(Get.overlayContext,
+            title: title,
+            message: message,
+            leftAction: CustomDialog.customAction());
+      },
+    );
+    status.execute();
+  }
+
+  showOptionMenu(bool isEdit) {
+    final action = CupertinoActionSheet(
+      title: Text('Menu Penjualan'),
+      message: sb?.referenceNo == null ? null : Text(sb.referenceNo),
+      actions: <Widget>[
+        if (!isEdit)
+          CupertinoActionSheetAction(
+            child: Text("Ubah Penjualan"),
+            onPressed: () {
+              Get.back();
+              goToEditSales();
+            },
+          ),
+        if ((newSb ?? oldSB)?.saleStatus == 'reserved')
+          CupertinoActionSheetAction(
+            child: Text("Selesaikan Penjualan"),
+            onPressed: () {
+              Get.back();
+              actionClose();
+            },
+          ),
+      ],
+      cancelButton: CupertinoActionSheetAction(
+        child: Text("Batal"),
+        onPressed: () {
+          Get.back();
+        },
+      ),
+    );
+
+    showCupertinoModalPopup(context: context, builder: (context) => action);
   }
 
   goToEditSales() async {

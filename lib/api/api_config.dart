@@ -26,6 +26,7 @@ class ApiConfig {
   static String urlDetailDeliveries = '${path}sales_booking/detail_deliveries';
   static String urlEditDeliveriesBooking = '${path}sales_booking/edit_deliveries_booking';
   static String urlReturnDeliveriesBooking = '${path}sales_booking/add_return_deliveries';
+  static String urlCloseSalesBooking = '${path}sales_booking/close_sales_booking';
 
   //purchase
   static String urlAddGRtoPO = '${path}purchases/add_gr_to_po';

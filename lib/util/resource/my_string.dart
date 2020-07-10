@@ -6,6 +6,7 @@ class MyString {
 
   // sales booking
   static const KEY_ID_SALES_BOOKING = "id_sales_booking";
+  static const KEY_ID_SALES = "id_sales";
   static const KEY_SALE_STATUS = "sale_status";
   static const KEY_DELIVERY_STATUS_SALE = "delivery_status_sale";
 
