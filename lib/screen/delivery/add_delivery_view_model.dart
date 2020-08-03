@@ -70,16 +70,16 @@ abstract class AddDeliveryViewModel extends State<AddDeliveryScreen> {
       sb = arg['sale'];
       customer = arg['customer'];
       List<SalesBookingItem> originSbItems = arg['sbItems'];
-      sbItems.addAll(originSbItems.map((sbi) {
+      sbItems.addAll(originSbItems?.map((sbi) {
         var qtyUnsent = MyNumber.strUSToDouble(sbi.quantity) -
             MyNumber.strUSToDouble(sbi.sentQuantity);
         return sbi..unitQuantity = qtyUnsent.toString();
-      }).toList());
+      })?.toList() ?? []);
       company = MyPref.getCompany();
       deliveredController.text = company.name;
-      receivedController.text = customer.name;
-      customerController.text = customer.company;
-      addressController.text = customer.address;
+      receivedController.text = customer?.name;
+      customerController.text = customer?.company;
+      addressController.text = customer?.address;
       isFirst = false;
     }
   }

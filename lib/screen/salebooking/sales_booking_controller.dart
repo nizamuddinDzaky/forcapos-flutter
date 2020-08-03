@@ -11,6 +11,7 @@ import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/model/product.dart';
 import 'package:posku/model/sales_booking.dart';
+import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/model/warehouse.dart';
 import 'package:posku/util/my_util.dart';
 
@@ -27,6 +28,7 @@ class SalesBookingController extends GetController {
   List<Customer> listCustomer = [];
   bool isFirst = true;
   SalesBooking sales;
+  bool isAddDelivery = false;
 
   void qtyMinus(Product p) {
     var newQty = p.minOrder.toDouble() - 1;
@@ -210,8 +212,39 @@ class SalesBookingController extends GetController {
       'note': sales?.note ?? '',
       'products': salesItem,
     };
-    print('add sales $body');
-    await _actionPostSB(body);
+    print('add sales $isAddDelivery $body');
+    if (isAddDelivery) {
+      goToAddDelivery();
+    }
+    //await _actionPostSB(body);
+  }
+
+  goToAddDelivery() async {
+    if (true) {
+      sales.referenceNo = 'SALE/2020/08/0001';
+    }
+    List<SalesBookingItem> sbItems = [];
+    cartList?.forEach((p) {
+      sbItems.add(SalesBookingItem(
+        productName: p.name,
+        productCode: p.code,
+        quantity: p.minOrder,
+        sentQuantity: p.minOrder,
+        unitQuantity: p.minOrder,
+        productUnitCode: p.unitName,
+      ));
+    });
+    var result = await Get.toNamed(
+      addDeliveryScreen,
+      arguments: {
+        'sale': sales,
+        'customer': currentCustomer,
+        'sbItems': sbItems,
+      },
+    );
+    if (result == 'newDelivery') {
+      //actionRefresh();
+    }
   }
 
   _actionPostSB(body) async {
