@@ -18,7 +18,7 @@ class AddDeliveryScreen extends StatefulWidget {
 
 class _AddDeliveryScreenState extends AddDeliveryViewModel {
   Widget _body() {
-    refNoController.text = sb.referenceNo;
+    refNoController.text = sb?.referenceNo;
     return Container(
       color: MyColor.mainBg,
       child: SingleChildScrollView(
@@ -275,7 +275,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
             MyDivider.spaceDividerLogin(custom: 6),
             Column(
               children: <Widget>[
-                ...sbItems.map((sbi) {
+                ...(sbItems ?? []).map((sbi) {
                   var qtyUnsent = MyNumber.strUSToDouble(sbi.quantity) -
                       MyNumber.strUSToDouble(sbi.sentQuantity);
                   final qtyController = TextEditingController(
@@ -559,24 +559,7 @@ class _AddDeliveryScreenState extends AddDeliveryViewModel {
                   LoadingButton(
                     title: 'KIRIM',
                     onPressed: () async {
-                      var body = {
-                        'date': date.toStr(),
-                        'sale_reference_no': sb.referenceNo,
-                        'customer': customerController.text,
-                        'address': addressController.text,
-                        'status': statusDelivery,
-                        'delivered_by': deliveredController.text,
-                        'received_by': receivedController.text,
-                        'note': noteController.text,
-                        'products': sbItems.map((sbi) {
-                          return {
-                            'sale_items_id': sbi.id,
-                            'sent_quantity': sbi.unitQuantity,
-                          };
-                        }).toList(),
-                      };
-                      //print('new delivery $body');
-                      await actionPostDelivery(body);
+                      await actionSubmit();
                     },
                     noMargin: true,
                   ),

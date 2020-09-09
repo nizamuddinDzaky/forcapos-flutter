@@ -709,6 +709,9 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                       onPressed: () {
                                         setState(() {
                                           vm.sales?.saleStatus = data[1];
+                                          if (data[1] == 'pending') {
+                                            vm.isAddDelivery = false;
+                                          }
                                         });
                                       },
                                       color: vm.sales?.saleStatus == data[1]
@@ -843,6 +846,39 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                               ),
                               SizedBox(
                                 height: 8,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    vm.isAddDelivery = !vm.isAddDelivery;
+                                    if (vm.isAddDelivery) {
+                                      vm.sales?.saleStatus = 'reserved';
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  color: Colors.transparent,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Checkbox(
+                                        activeColor: MyColor.lineTxtField,
+                                        value: vm.isAddDelivery,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            vm.isAddDelivery = value;
+                                            if (vm.isAddDelivery) {
+                                              vm.sales?.saleStatus = 'reserved';
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        'Tambah Pengiriman',
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),

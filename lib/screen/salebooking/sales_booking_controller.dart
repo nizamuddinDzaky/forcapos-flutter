@@ -27,6 +27,7 @@ class SalesBookingController extends GetController {
   List<Customer> listCustomer = [];
   bool isFirst = true;
   SalesBooking sales;
+  bool isAddDelivery = false;
 
   void qtyMinus(Product p) {
     var newQty = p.minOrder.toDouble() - 1;
@@ -52,12 +53,10 @@ class SalesBookingController extends GetController {
 
   void qtyEdit(String newValue, TextEditingController qtyController) {
     if (newValue.isEmpty) return;
-    var newQty =
-    newValue.toDoubleID();
+    var newQty = newValue.toDoubleID();
     if (newQty < 1) {
       newQty = 1;
-      lastCursorEditText(
-          qtyController, newQty);
+      lastCursorEditText(qtyController, newQty);
     }
   }
 
@@ -210,8 +209,27 @@ class SalesBookingController extends GetController {
       'note': sales?.note ?? '',
       'products': salesItem,
     };
-    print('add sales $body');
+    print('add sales $isAddDelivery $body');
+    if (cartList?.isEmpty ?? true) {
+      Get.defaultDialog(
+        title: "Maaf",
+        content: Text("Belum ada produk"),
+        textCancel: "OK",
+      );
+      return;
+    }
     await _actionPostSB(body);
+  }
+
+  goToAddDelivery(String idSalesBooking) async {
+    Get.offNamedUntil(
+      addDeliveryScreen,
+      (route) => route.settings.name == homeScreen,
+      arguments: {
+        'customer': currentCustomer,
+        'fromAddSales': idSalesBooking,
+      },
+    );
   }
 
   _actionPostSB(body) async {
@@ -221,17 +239,23 @@ class SalesBookingController extends GetController {
       {},
       onBefore: (status) {},
       onSuccess: (data, _) {
-        Get.snackbar('Sales', 'Tambah Penjualan Berhasil');
-        Get.until((route) {
-          if (route.settings.name == homeScreen) {
-            var arg = (route.settings.arguments as Map);
-            arg['result'] = DateTime.now().millisecondsSinceEpoch;
-            arg['status'] = sales?.saleStatus;
-            return true;
-          } else {
-            return false;
-          }
-        });
+        var response = BaseResponse.fromJson(data);
+        if (isAddDelivery &&
+            (response?.data?.salesBooking?.id?.isNotEmpty ?? false)) {
+          goToAddDelivery(response?.data?.salesBooking?.id);
+        } else {
+          Get.snackbar('Sales', 'Tambah Penjualan Berhasil');
+          Get.until((route) {
+            if (route.settings.name == homeScreen) {
+              var arg = (route.settings.arguments as Map);
+              arg['result'] = DateTime.now().millisecondsSinceEpoch;
+              arg['status'] = sales?.saleStatus;
+              return true;
+            } else {
+              return false;
+            }
+          });
+        }
       },
       onFailed: (title, message) {
         print(message);
