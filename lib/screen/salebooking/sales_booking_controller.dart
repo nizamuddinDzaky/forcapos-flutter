@@ -11,7 +11,6 @@ import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/model/product.dart';
 import 'package:posku/model/sales_booking.dart';
-import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/model/warehouse.dart';
 import 'package:posku/util/my_util.dart';
 
@@ -54,12 +53,10 @@ class SalesBookingController extends GetController {
 
   void qtyEdit(String newValue, TextEditingController qtyController) {
     if (newValue.isEmpty) return;
-    var newQty =
-    newValue.toDoubleID();
+    var newQty = newValue.toDoubleID();
     if (newQty < 1) {
       newQty = 1;
-      lastCursorEditText(
-          qtyController, newQty);
+      lastCursorEditText(qtyController, newQty);
     }
   }
 
@@ -213,38 +210,26 @@ class SalesBookingController extends GetController {
       'products': salesItem,
     };
     print('add sales $isAddDelivery $body');
-    if (isAddDelivery) {
-      goToAddDelivery();
+    if (cartList?.isEmpty ?? true) {
+      Get.defaultDialog(
+        title: "Maaf",
+        content: Text("Belum ada produk"),
+        textCancel: "OK",
+      );
+      return;
     }
-    //await _actionPostSB(body);
+    await _actionPostSB(body);
   }
 
-  goToAddDelivery() async {
-    if (true) {
-      sales.referenceNo = 'SALE/2020/08/0001';
-    }
-    List<SalesBookingItem> sbItems = [];
-    cartList?.forEach((p) {
-      sbItems.add(SalesBookingItem(
-        productName: p.name,
-        productCode: p.code,
-        quantity: p.minOrder,
-        sentQuantity: p.minOrder,
-        unitQuantity: p.minOrder,
-        productUnitCode: p.unitName,
-      ));
-    });
-    var result = await Get.toNamed(
+  goToAddDelivery(String idSalesBooking) async {
+    Get.offNamedUntil(
       addDeliveryScreen,
+      (route) => route.settings.name == homeScreen,
       arguments: {
-        'sale': sales,
         'customer': currentCustomer,
-        'sbItems': sbItems,
+        'fromAddSales': idSalesBooking,
       },
     );
-    if (result == 'newDelivery') {
-      //actionRefresh();
-    }
   }
 
   _actionPostSB(body) async {
@@ -254,17 +239,23 @@ class SalesBookingController extends GetController {
       {},
       onBefore: (status) {},
       onSuccess: (data, _) {
-        Get.snackbar('Sales', 'Tambah Penjualan Berhasil');
-        Get.until((route) {
-          if (route.settings.name == homeScreen) {
-            var arg = (route.settings.arguments as Map);
-            arg['result'] = DateTime.now().millisecondsSinceEpoch;
-            arg['status'] = sales?.saleStatus;
-            return true;
-          } else {
-            return false;
-          }
-        });
+        var response = BaseResponse.fromJson(data);
+        if (isAddDelivery &&
+            (response?.data?.salesBooking?.id?.isNotEmpty ?? false)) {
+          goToAddDelivery(response?.data?.salesBooking?.id);
+        } else {
+          Get.snackbar('Sales', 'Tambah Penjualan Berhasil');
+          Get.until((route) {
+            if (route.settings.name == homeScreen) {
+              var arg = (route.settings.arguments as Map);
+              arg['result'] = DateTime.now().millisecondsSinceEpoch;
+              arg['status'] = sales?.saleStatus;
+              return true;
+            } else {
+              return false;
+            }
+          });
+        }
       },
       onFailed: (title, message) {
         print(message);

@@ -13,11 +13,13 @@ import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/screen/delivery/add_delivery_screen.dart';
 import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_pref.dart';
+import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_string.dart';
 
 abstract class AddDeliveryViewModel extends State<AddDeliveryScreen> {
   DateTime date = DateTime.now();
   bool isFirst = true;
+  String fromAddSales;
   SalesBooking sb;
   Customer customer;
   Company company;
@@ -30,6 +32,48 @@ abstract class AddDeliveryViewModel extends State<AddDeliveryScreen> {
   var addressController = TextEditingController();
   var noteController = TextEditingController();
   var qtySentController = TextEditingController();
+
+  actionSubmit() async {
+    var body = {
+      'date': date.toStr(),
+      'sale_reference_no': sb.referenceNo,
+      'customer': customerController.text,
+      'address': addressController.text,
+      'status': statusDelivery,
+      'delivered_by': deliveredController.text,
+      'received_by': receivedController.text,
+      'note': noteController.text,
+      'products': sbItems.map((sbi) {
+        return {
+          'sale_items_id': sbi.id,
+          'sent_quantity': sbi.unitQuantity,
+        };
+      }).toList(),
+    };
+    debugPrint('new delivery $body');
+    actionPostDelivery(body);
+  }
+
+  Future<List<SalesBookingItem>> getSalesBookingItem(String idSales) async {
+    if (sbItems != null) return sbItems;
+    var params = {
+      MyString.KEY_ID_SALES_BOOKING: idSales,
+    };
+    var status = await ApiClient.methodGet(
+      ApiConfig.urlDetailSalesBooking,
+      params: params,
+      onSuccess: (data, flag) {
+        var baseResponse = BaseResponse.fromJson(data);
+        sb = baseResponse?.data?.salesBooking ?? sb;
+        sbItems = baseResponse?.data?.salesBookingItems ?? [];
+      },
+      onAfter: (status) {
+        setState(() {});
+      },
+    );
+    status.execute();
+    return null;
+  }
 
   actionPostDelivery(Map body) async {
     var params = {
@@ -70,16 +114,25 @@ abstract class AddDeliveryViewModel extends State<AddDeliveryScreen> {
       sb = arg['sale'];
       customer = arg['customer'];
       List<SalesBookingItem> originSbItems = arg['sbItems'];
+      fromAddSales = arg['fromAddSales'];
+      debugPrint('cek fromAddSales $originSbItems $fromAddSales');
       sbItems.addAll(originSbItems?.map((sbi) {
-        var qtyUnsent = MyNumber.strUSToDouble(sbi.quantity) -
-            MyNumber.strUSToDouble(sbi.sentQuantity);
-        return sbi..unitQuantity = qtyUnsent.toString();
-      })?.toList() ?? []);
+            var qtyUnsent = MyNumber.strUSToDouble(sbi.quantity) -
+                MyNumber.strUSToDouble(sbi.sentQuantity);
+            debugPrint('isi $qtyUnsent ${sbi.quantity} ${sbi.sentQuantity}');
+            return sbi..unitQuantity = qtyUnsent.toString();
+          })?.toList() ??
+          []);
       company = MyPref.getCompany();
       deliveredController.text = company.name;
       receivedController.text = customer?.name;
       customerController.text = customer?.company;
       addressController.text = customer?.address;
+      if (fromAddSales?.isNotEmpty ?? false) {
+        sb = null;
+        sbItems = null;
+        getSalesBookingItem(fromAddSales);
+      }
       isFirst = false;
     }
   }

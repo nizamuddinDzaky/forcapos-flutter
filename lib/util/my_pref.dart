@@ -7,8 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MyPref {
   static Future<SharedPreferences> get _instance async =>
-      _prefs ??= await SharedPreferences.getInstance();
-  static SharedPreferences _prefs;
+      _prefsInstance ??= await SharedPreferences.getInstance();
   static SharedPreferences _prefsInstance;
 
   // call this method from iniState() function of mainApp().

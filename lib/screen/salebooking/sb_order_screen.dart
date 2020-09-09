@@ -847,32 +847,38 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                               SizedBox(
                                 height: 8,
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Checkbox(
-                                    activeColor: MyColor.lineTxtField,
-                                    value: vm.isAddDelivery,
-                                    onChanged: (bool value) {
-                                      setState(() {
-                                        vm.isAddDelivery = value;
-                                      });
-                                    },
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    vm.isAddDelivery = !vm.isAddDelivery;
+                                    if (vm.isAddDelivery) {
+                                      vm.sales?.saleStatus = 'reserved';
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  color: Colors.transparent,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Checkbox(
+                                        activeColor: MyColor.lineTxtField,
+                                        value: vm.isAddDelivery,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            vm.isAddDelivery = value;
+                                            if (vm.isAddDelivery) {
+                                              vm.sales?.saleStatus = 'reserved';
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        'Tambah Pengiriman',
+                                        style: TextStyle(color: Colors.black),
+                                      )
+                                    ],
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        vm.isAddDelivery = !vm.isAddDelivery;
-                                        if (vm.isAddDelivery) {
-                                          vm.sales?.saleStatus = 'reserved';
-                                        }
-                                      });
-                                    },
-                                    child: new Text(
-                                      'Tambah Pengiriman',
-                                      style: new TextStyle(color: Colors.black),
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
                             ],
                           ),
