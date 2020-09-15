@@ -37,6 +37,8 @@ class DataResponse {
   int totalCustomerData;
   List<Product> listGroupProductPrice;
   List<Warehouse> listWarehouses;
+  List<Warehouse> listWarehousesSelected;
+  List<Warehouse> listWarehousesDefault;
   List<Product> listProducts;
   List<Customer> customerSelected;
 
@@ -78,9 +80,18 @@ class DataResponse {
     listProducts = ifExistList(json, 'list_products', (obj) {
       return Product.fromJson(obj);
     });
-    listWarehouses = ifExistList(json, 'list_warehouses', (obj) {
+    listWarehouses = ifExistList(json, 'warehouses', (obj) {
       return Warehouse.fromJson(obj);
     });
+    listWarehousesSelected = ifExistList(json, 'warehouses_selected', (obj) {
+      return Warehouse.fromJson(obj);
+    });
+    listWarehousesDefault = ifExistList(json, 'warehouses_default', (obj) {
+      return Warehouse.fromJson(obj);
+    });
+    listWarehouses = ifExistList(json, 'list_warehouses', (obj) {
+      return Warehouse.fromJson(obj);
+    }) ?? listWarehouses;
     listGroupProductPrice = ifExistList(json, 'group_product_price', (obj) {
       return Product.fromJson(obj);
     });

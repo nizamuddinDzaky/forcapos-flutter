@@ -1,6 +1,7 @@
 class ApiConfig {
 //  static const String host = 'http://qp.forca.id/';
-  static const String host = 'https://qp.forca.id/';
+//   static const String host = 'https://qp.forca.id/';
+  static const String host = 'https://pos.forca.id/';
 //  static const String host = 'http://10.15.4.102/'; //ip qp
 //  static String host = 'http://10.15.4.102:9090/'; //dirty
   static String path = '${host}api/v1/distributor/';
@@ -60,6 +61,7 @@ class ApiConfig {
   static String urlProductPriceGroupUpdate = '${path}customers/update_product_in_price_group';
   static String urlMemberCustomerGroup = '${path}customers/list_customer_member_of_customer_group';
   static String urlMemberPriceGroup = '${path}customers/list_customer_member_of_price_group';
+  static String urlSelectedWarehouse = '${path}customers/list_customer_warehouse';
 
   //product
   static String urlListProduct = '${path}products/list_products';

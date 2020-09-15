@@ -111,7 +111,8 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
               ),
               Expanded(
                 child: LoadingButton(
-                  title: vm.customer?.customerGroupName ?? 'Pilih Kelompok Pelanggan',
+                  title: vm.customer?.customerGroupName ??
+                      'Pilih Kelompok Pelanggan',
                   noMargin: true,
                   noPadding: true,
                   isActionNavigation: true,
@@ -504,15 +505,58 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
               }).toList(),
             ],
           ),
-          SizedBox(
-            height: 24,
+        ],
+      ),
+    );
+  }
+
+  Widget _layoutWarehouse(CustomerController vm) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Info Gudang',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          LoadingButton(
-            title: 'Simpan',
-            noMargin: true,
-            onPressed: () async {
-              await vm.actionSubmit();
-            },
+          Text(
+            'Pelanggan dapat terdaftar lebih dari 1 gudang',
+          ),
+          SizedBox(
+            height: 2,
+          ),
+          Expanded(
+            child: Container(
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (ctx, index) {
+                  var warehouse = vm.listWarehouses[index];
+                  return ListTile(
+                    title: Text("${warehouse?.name ?? ''}"),
+                    leading: Checkbox(
+                      onChanged: vm.isCheckDefaultWarehouse(warehouse)
+                          ? null
+                          : (bool value) {
+                        vm.onChangeCheckBox(value, warehouse);
+                      },
+                      value: (vm.listWarehousesSelected ?? []).contains(warehouse),
+                    ),
+                    trailing: Radio(
+                      value: warehouse.id,
+                      groupValue: vm.defaultWarehouse?.id,
+                      onChanged: (value) {
+                        vm.onChangeRadio(warehouse);
+                      },
+                    ),
+                  );
+                },
+                separatorBuilder: (ctx, index) {
+                  return Divider();
+                },
+                itemCount: vm.listWarehouses?.length ?? 0,
+              ),
+            ),
           ),
         ],
       ),
@@ -539,19 +583,57 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
         ),
 */
       ),
-      child: Scaffold(
-        body: SafeArea(
-          child: GetBuilder<CustomerController>(
-            init: CustomerController(customer: customer),
-            builder: (vm) => SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Form(key: vm.formKey, child: _body(vm))),
+      child: GetBuilder<CustomerController>(
+        init: CustomerController(customer: customer),
+        builder: (vm) => SafeArea(
+          child: Material(
+            child: DefaultTabController(
+              length: 2,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    color: Colors.blue,
+                    height: 40,
+                    child: TabBar(
+                      tabs: [
+                        Tab(
+                          child: Text("Pelanggan"),
+                        ),
+                        Tab(
+                          child: Text("Gudang"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        SingleChildScrollView(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: Form(key: vm.formKey, child: _body(vm))),
+                        _layoutWarehouse(vm),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  LoadingButton(
+                    title: 'Simpan',
+                    noMargin: true,
+                    onPressed: () async {
+                      await vm.actionSubmit();
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
-
 
   @override
   void didChangeDependencies() {
