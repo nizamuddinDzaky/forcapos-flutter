@@ -8,8 +8,10 @@ import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/model/customer_group.dart';
 import 'package:posku/model/price_group.dart';
+import 'package:posku/model/warehouse.dart';
 import 'package:posku/model/zone.dart';
 import 'package:posku/util/my_util.dart';
+import 'package:posku/util/resource/my_string.dart';
 
 class CustomerController extends GetController {
   static CustomerController get to => Get.find();
@@ -17,14 +19,79 @@ class CustomerController extends GetController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isEdit = false;
   Customer customer;
+
   Customer get checkCustomer {
     customer = customer ?? Customer();
     return customer;
   }
+
   List<PriceGroup> listPriceGroup = [];
   List<CustomerGroup> listCustomerGroup = [];
   List<Zone> listProvince, listCity, listState;
   Zone province, city, state;
+
+  List<Warehouse> listWarehouses;
+  List<Warehouse> listWarehousesSelected;
+  Warehouse defaultWarehouse;
+
+  actionGetSelectedWarehouse() async {
+    if (listWarehouses?.isNotEmpty ?? false) return;
+
+    var params = {
+      MyString.KEY_ID_CUSTOMER: customer?.id,
+    };
+    var status = await ApiClient.methodGet(
+        isEdit ? ApiConfig.urlSelectedWarehouse : ApiConfig.urlListWarehouse,
+        params: params,
+        onBefore: (status) {}, onSuccess: (data, flag) {
+      var baseResponse = BaseResponse.fromJson(data);
+      listWarehouses = baseResponse?.data?.listWarehouses;
+      listWarehouses?.forEach((element) {
+        baseResponse?.data?.listWarehousesSelected?.forEach((element2) {
+          if (element.id == element2.id) {
+            listWarehousesSelected = listWarehousesSelected ?? [];
+            listWarehousesSelected.add(element);
+          }
+        });
+      });
+      var tempDefaultWarehouse =
+          baseResponse?.data?.listWarehousesDefault?.first;
+      if (tempDefaultWarehouse != null && tempDefaultWarehouse.id.isNotEmpty)
+        listWarehouses?.forEach((warehouse) {
+          if (warehouse?.id == tempDefaultWarehouse?.id) {
+            defaultWarehouse = warehouse;
+          }
+        });
+    }, onAfter: (status) {
+      debugPrint('default warehouse ${defaultWarehouse?.id}');
+      refresh();
+    });
+    status.execute();
+  }
+
+  bool isCheckDefaultWarehouse(Warehouse warehouse) {
+    if (warehouse?.id == null || defaultWarehouse?.id == null) return false;
+    return warehouse.id == defaultWarehouse.id;
+  }
+
+  onChangeCheckBox(bool value, Warehouse warehouse) {
+    listWarehousesSelected = listWarehousesSelected ?? [];
+    if (value) {
+      listWarehousesSelected.add(warehouse);
+    } else if (warehouse?.id != defaultWarehouse?.id) {
+      listWarehousesSelected.remove(warehouse);
+    }
+    refresh();
+  }
+
+  onChangeRadio(Warehouse warehouse) {
+    defaultWarehouse = warehouse;
+    if (!(listWarehousesSelected ?? []).contains(warehouse)) {
+      listWarehousesSelected = listWarehousesSelected ?? [];
+      listWarehousesSelected.add(warehouse);
+    }
+    refresh();
+  }
 
   callAddress(buildContext, title, key) async {
     List<Zone> zones = await actionGetAddress(
@@ -57,7 +124,6 @@ class CustomerController extends GetController {
           refresh();
         },
       );
-    } else {
     }
   }
 
@@ -114,13 +180,12 @@ class CustomerController extends GetController {
     return Future.value(zones);
   }
 
-
   var statusCustomer = [
     ['Aktif', '1'],
     ['Non-aktif', '0'],
   ];
 
-  CustomerController({this.customer}){
+  CustomerController({this.customer}) {
     this.isEdit = customer != null;
     print('terdeteksi ubah $isEdit');
     if (this.isEdit) {
@@ -128,6 +193,7 @@ class CustomerController extends GetController {
       city = Zone()..txt = customer?.city;
       state = Zone()..txt = customer?.state;
     }
+    actionGetSelectedWarehouse();
   }
 
   refresh() {
@@ -164,7 +230,15 @@ class CustomerController extends GetController {
   }
 
   actionSubmit() async {
-    formKey.currentState.save();
+    if (defaultWarehouse == null || defaultWarehouse.id == null) {
+      Get.defaultDialog(
+        title: "Maaf",
+        content: Text("Belum ada default gudang"),
+        textCancel: "OK",
+      );
+      return;
+    }
+    formKey?.currentState?.save();
     var body = {
       'name': customer?.name,
       'company': customer?.company,
@@ -182,11 +256,15 @@ class CustomerController extends GetController {
       'vat_no': customer?.vatNo,
       //'cf1': customer?.cf1,
       'is_active': customer?.isActive,
+      'warehouses': listWarehousesSelected?.map((e) => e.id)?.toList(),
+      'default': defaultWarehouse?.id
     };
     print('action api ${isEdit ? 'edit' : 'add'} customer $body');
     if (isEdit) {
+      debugPrint('put edit');
       await actionPutEditCustomer(body);
     } else {
+      debugPrint('post add');
       await actionPostAddCustomer(body);
     }
   }

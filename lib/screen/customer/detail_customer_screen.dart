@@ -12,6 +12,44 @@ class DetailCustomerScreen extends StatefulWidget {
 }
 
 class _DetailCustomerScreenState extends DetailCustomerViewModel {
+  Widget _listItem(
+    String title, {
+    String val,
+    bool forceShow = true,
+    bool isEnd = false,
+  }) {
+    return val != null || forceShow
+        ? Container(
+            color: Colors.white,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(title ?? ''),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Flexible(
+                        child: Text(
+                          (val ?? '').isEmpty ? '-' : val,
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (!isEnd) MyDivider.lineDivider(),
+              ],
+            ),
+          )
+        : Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -33,6 +71,7 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
             color: MyColor.mainBg,
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -87,6 +126,38 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                   _listItem('Kab./Kota', val: customer?.city),
                   _listItem('Provinsi', val: customer?.country),
                   _listItem('ID BK', val: customer?.cf1, isEnd: true),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            'Info Gudang',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Default Gudang: ${defaultWarehouse?.name ?? '-'}',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ...(listWarehouses ?? [])?.map(
+                    (warehouse) => Container(
+                      color: Colors.white,
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: _listItem(warehouse?.name ?? '', val: ' '),
+                    ),
+                  )?.toList(),
                 ],
               ),
             ),
@@ -94,44 +165,5 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
         ),
       ),
     );
-  }
-
-  Widget _listItem(
-    String title, {
-    String val,
-    bool forceShow = true,
-    bool isEnd = false,
-  }) {
-    return val != null || forceShow
-        ? Container(
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(title ?? ''),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Flexible(
-                        child: Text(
-                          (val ?? '').isEmpty ? '-' : val,
-                          //val ?? '',
-                          textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (!isEnd) MyDivider.lineDivider(),
-              ],
-            ),
-          )
-        : Container();
   }
 }

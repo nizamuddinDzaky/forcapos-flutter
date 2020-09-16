@@ -554,6 +554,59 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     );
   }
 
+  Widget _layoutWarehouse(CustomerController vm) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Info Gudang',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(
+            'Pelanggan dapat terdaftar lebih dari 1 gudang',
+          ),
+          SizedBox(
+            height: 2,
+          ),
+          Expanded(
+            child: Container(
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (ctx, index) {
+                  var warehouse = vm.listWarehouses[index];
+                  return ListTile(
+                    title: Text("${warehouse?.name ?? ''}"),
+                    leading: Checkbox(
+                      onChanged: vm.isCheckDefaultWarehouse(warehouse)
+                          ? null
+                          : (bool value) {
+                        vm.onChangeCheckBox(value, warehouse);
+                      },
+                      value: (vm.listWarehousesSelected ?? []).contains(warehouse),
+                    ),
+                    trailing: Radio(
+                      value: warehouse.id,
+                      groupValue: vm.defaultWarehouse?.id,
+                      onChanged: (value) {
+                        vm.onChangeRadio(warehouse);
+                      },
+                    ),
+                  );
+                },
+                separatorBuilder: (ctx, index) {
+                  return Divider();
+                },
+                itemCount: vm.listWarehouses?.length ?? 0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -574,13 +627,51 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         ),
 */
       ),
-      child: Scaffold(
-        body: SafeArea(
-          child: GetBuilder<CustomerController>(
-            init: CustomerController(),
-            builder: (vm) => SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Form(key: vm.formKey, child: _body(vm))),
+      child: GetBuilder<CustomerController>(
+        init: CustomerController(),
+        builder: (vm) => SafeArea(
+          child: Material(
+            child: DefaultTabController(
+              length: 2,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    color: Colors.blue,
+                    height: 40,
+                    child: TabBar(
+                      tabs: [
+                        Tab(
+                          child: Text("Pelanggan"),
+                        ),
+                        Tab(
+                          child: Text("Gudang"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        SingleChildScrollView(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Form(key: vm.formKey, child: _body(vm))),
+                        _layoutWarehouse(vm),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  LoadingButton(
+                    title: 'Simpan',
+                    noMargin: true,
+                    onPressed: () async {
+                      await vm.actionSubmit();
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
