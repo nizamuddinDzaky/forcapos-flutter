@@ -95,7 +95,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                     noMargin: true,
                     noPadding: true,
                     isActionNavigation: true,
-                    onPressed: () async {
+                    onPressed: (vm.cWarehouse != null && vm.sales.saleStatus == 'reserved') ? null : () async {
                       await vm.actionGetWarehouse();
                       vm.showWarehousePicker(context);
                     },

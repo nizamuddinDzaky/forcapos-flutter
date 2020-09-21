@@ -35,6 +35,11 @@ class _LoginScreenState extends LoginViewModel {
               data['password'] = 'Dynamix1';
               forceLogin(data);
               break;
+            case 3:
+              data['username'] = 'developersisi2@gmail.com';
+              data['password'] = '12345678';
+              forceLogin(data);
+              break;
             default:
               data['username'] = 'jabar@sbi.com';
               data['password'] = 'Dynamix1';
@@ -56,6 +61,10 @@ class _LoginScreenState extends LoginViewModel {
         PopupMenuItem<int>(
           child: const Text('Kasir'),
           value: 2,
+        ),
+        PopupMenuItem<int>(
+          child: const Text('Devsisi2'),
+          value: 3,
         ),
       ],
     );

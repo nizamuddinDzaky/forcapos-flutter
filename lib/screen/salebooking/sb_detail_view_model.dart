@@ -325,7 +325,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
           ),
         if ((newSb ?? oldSB)?.saleStatus == 'reserved')
           CupertinoActionSheetAction(
-            child: Text("Selesaikan Penjualan"),
+            child: Text("Tutup Penjualan"),
             onPressed: () {
               Get.back();
               actionClose();

@@ -198,7 +198,7 @@ class ApiClient {
           responseApi._setFailed(title, 'Akses informasi tidak valid.');
         } else if (statusCode == 400 && error.request.uri.toString().contains('login')) {
           responseApi._setFailed(
-              error.request.uri.toString(), 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
+              'Maaf', 'Periksa Nama Pengguna & Kata Sandi, kemudian ulangi');
         } else {
           print('error gan $error ${error.response}');
           responseApi._setFailed(title, error.response.toString());

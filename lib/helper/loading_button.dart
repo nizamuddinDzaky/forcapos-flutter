@@ -36,7 +36,7 @@ class _LoadingButtonState extends State<LoadingButton> {
       isLoading = true;
     });
 //    await Future.delayed(Duration(seconds: 3));
-    await widget.onPressed();
+    await widget.onPressed?.call();
     setState(() {
       isLoading = false;
     });
@@ -55,7 +55,9 @@ class _LoadingButtonState extends State<LoadingButton> {
                       vertical: 8,
                     )
                   : null,
-              onPressed: isLoading ? null : actionOnPressed,
+              onPressed: isLoading
+                  ? null
+                  : (widget.onPressed != null ? actionOnPressed : null),
               child: isLoading
                   ? CupertinoActivityIndicator()
                   : (widget.isSpinner
@@ -87,7 +89,9 @@ class _LoadingButtonState extends State<LoadingButton> {
                         ),
                 ],
               ),
-              onPressed: isLoading ? null : actionOnPressed,
+              onPressed: isLoading
+                  ? null
+                  : (widget.onPressed != null ? actionOnPressed : null),
             ),
     );
   }

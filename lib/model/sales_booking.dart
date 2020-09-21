@@ -123,7 +123,7 @@ class SalesBooking {
         this.deliveryStatus});
 
   SalesBooking.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id']?.toString();
     date = json['date'];
     referenceNo = json['reference_no'];
     customerId = json['customer_id'];

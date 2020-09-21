@@ -31,7 +31,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
           },
         ),
         CupertinoActionSheetAction(
-          child: Text("Selesaikan Penjualan"),
+          child: Text("Tutup Penjualan"),
           onPressed: () {
             Get.back();
             actionClose(sb);
