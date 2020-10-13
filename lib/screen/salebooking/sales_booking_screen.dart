@@ -333,7 +333,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                               softWrap: true,
                               text: TextSpan(children: <TextSpan>[
                                 TextSpan(
-                                    text: strToDate(sb.date),
+                                    text: strToDateMMM(sb.date),
                                     style: TextStyle(
                                         color: MyColor.txtField,
                                         fontWeight: FontWeight.bold)),

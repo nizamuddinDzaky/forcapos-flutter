@@ -130,7 +130,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
 
   Widget sectionTotal({String totalItem}) {
     var newGrandTotal = MyNumber.strUSToDouble(sb.total) -
-        MyNumber.strUSToDouble(sb.paid) -
+        MyNumber.strUSToDouble(sb.paid) +
+        MyNumber.strUSToDouble(sb.shipping) -
         MyNumber.strUSToDouble(sb.totalDiscount);
     return Container(
       color: Colors.white,
@@ -151,6 +152,10 @@ class _SBDetailScreenState extends SBDetailViewModel {
             sb.paid,
           ),
           sectionTotalDetail(
+            'Biaya Pengiriman (Rp)',
+            sb.shipping,
+          ),
+          sectionTotalDetail(
             'Jumlah Akhir (Rp)',
             newGrandTotal.toString(),
             color: MyColor.mainBlue,
@@ -160,9 +165,53 @@ class _SBDetailScreenState extends SBDetailViewModel {
     );
   }
 
+  Widget sectionNote() {
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Icon(Icons.note),
+          SizedBox(
+            width: 8,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Note',
+                  style:
+                  TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  sb?.note ?? '',
+                  style:
+                  TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Staff Note',
+                  style:
+                  TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  sb?.staffNote ?? '',
+                  style:
+                  TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget sectionDetail() {
     var statusStyle = saleStatus(sb.saleStatus);
-//    var deliveryStyle = saleDeliveryStatus(sb.deliveryStatus);
+    var deliveryStyle = saleDeliveryStatus(sb.deliveryStatus);
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -240,16 +289,16 @@ class _SBDetailScreenState extends SBDetailViewModel {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-//                          Text(
-//                            'Status Pengiriman',
-//                            style: TextStyle(color: MyColor.txtField),
-//                          ),
-//                          Text(
-//                            '${deliveryStyle[0]}',
-//                            style: TextStyle(
-//                                color: deliveryStyle[1],
-//                                fontWeight: FontWeight.bold),
-//                          ),
+                         Text(
+                           'Status Pengiriman',
+                           style: TextStyle(color: MyColor.txtField),
+                         ),
+                         Text(
+                           '${deliveryStyle[0]}',
+                           style: TextStyle(
+                               color: deliveryStyle[1],
+                               fontWeight: FontWeight.bold),
+                         ),
                         ],
                       ),
                     ),
@@ -480,6 +529,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
           ),
           MyDivider.lineDivider(),
           sectionTotal(),
+          MyDivider.spaceDividerLogin(),
+          sectionNote(),
         ],
       ),
     );

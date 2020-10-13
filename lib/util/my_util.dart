@@ -83,6 +83,12 @@ String strToDate(String txtDate, {BuildContext context}) {
   return dateFormatOut.format(DateTime.tryParse(txtDate));
 }
 
+String strToDateMMM(String txtDate, {BuildContext context}) {
+  if (txtDate == null) return '';
+  var dateFormatOut = DateFormat('dd MMM yyyy', 'in_ID');
+  return dateFormatOut.format(DateTime.tryParse(txtDate));
+}
+
 String strToDateTimeFormat(String txtDate, {BuildContext context}) {
   if (txtDate == null) return '';
   var dateFormatOut = DateFormat('dd MMMM yyyy HH:mm', 'in_ID');
