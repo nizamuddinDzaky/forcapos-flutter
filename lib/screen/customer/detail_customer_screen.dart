@@ -70,6 +70,7 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
           child: Container(
             color: MyColor.mainBg,
             child: SingleChildScrollView(
+              padding: EdgeInsets.only(bottom: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -112,6 +113,10 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                     ),
                   ),
                   _listItem('Nama Toko', val: customer?.company),
+                  _listItem('Pemilik', val: customer?.name),
+                  _listItem('Status Aktif',
+                      val: '1' == customer?.isActive ? 'Aktif' : 'Non-Aktif'),
+                  _listItem('Kelompok Harga', val: customer?.priceGroupName),
                   _listItem('Kelompok Pelanggan',
                       val: customer?.customerGroupName),
                   _listItem('NPWP', val: customer?.vatNo),
@@ -125,6 +130,7 @@ class _DetailCustomerScreenState extends DetailCustomerViewModel {
                   _listItem('Kecamatan', val: customer?.state),
                   _listItem('Kab./Kota', val: customer?.city),
                   _listItem('Provinsi', val: customer?.country),
+                  _listItem('Kode pos', val: customer?.postalCode),
                   _listItem('ID BK', val: customer?.cf1, isEnd: true),
                   SizedBox(
                     height: 12,
