@@ -81,7 +81,7 @@ class _MultiDateRangePickerState extends State<MultiDateRangePicker> {
     DateTime start = DateTime(masterDate.year, masterDate.month);
     DateTime finish = DateTime(masterDate.year, masterDate.month + 1);
 
-    print(dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK);
+    // print(dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK);
 
     start = start.add(Duration(days: -start.weekday));
 
@@ -318,109 +318,121 @@ class _MultiDateRangePickerState extends State<MultiDateRangePicker> {
     DateFormat formatter = new DateFormat("MMMM yyyy");
 
     return Card(
+      elevation: 0,
       child: Container(
         color: widget.backgroundTextColor,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  RaisedButton(
-                    child: Icon(
-                      Icons.navigate_before,
-                      color: widget.primaryTextColor,
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                MaterialButton(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  color: widget.buttonColor,
+                  child: Icon(
+                    Icons.navigate_before,
+                    color: widget.primaryTextColor,
+                  ),
+                  elevation: 0,
+                  onPressed: () {
+                    setState(() {
+                      masterDate = masterDate.add(Duration(days: -31));
+                    });
+                  },
+                  minWidth: 0,
+                  shape: StadiumBorder(),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      formatter.format(masterDate),
+                      style: TextStyle(
+                        color: widget.primaryTextColor,
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        masterDate = masterDate.add(Duration(days: -31));
-                      });
-                    },
-                    color: widget.buttonColor,
                   ),
-                  Text(
-                    formatter.format(masterDate),
-                    style: TextStyle(
-                      color: widget.primaryTextColor,
+                ),
+                MaterialButton(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  color: widget.buttonColor,
+                  child: Icon(
+                    Icons.navigate_next,
+                    color: widget.primaryTextColor,
+                  ),
+                  elevation: 0,
+                  onPressed: () {
+                    setState(() {
+                      masterDate = masterDate.add(Duration(days: 31));
+                    });
+                  },
+                  minWidth: 0,
+                  shape: StadiumBorder(),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 1)).toUpperCase().replaceAll(".", ""),
+                      style: TextStyle(
+                        color: widget.primaryTextColor,
+                      ),
                     ),
-                  ),
-                  RaisedButton(
-                    child: Icon(
-                      Icons.navigate_next,
-                      color: widget.primaryTextColor,
+                    Text(
+                      DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 2)).toUpperCase().replaceAll(".", ""),
+                      style: TextStyle(
+                        color: widget.primaryTextColor,
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        masterDate = masterDate.add(Duration(days: 31));
-                      });
-                    },
-                    color: widget.buttonColor,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 1)).toUpperCase().replaceAll(".", ""),
-                        style: TextStyle(
-                          color: widget.primaryTextColor,
-                        ),
+                    Text(
+                      DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 3)).toUpperCase().replaceAll(".", ""),
+                      style: TextStyle(
+                        color: widget.primaryTextColor,
                       ),
-                      Text(
-                        DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 2)).toUpperCase().replaceAll(".", ""),
-                        style: TextStyle(
-                          color: widget.primaryTextColor,
-                        ),
+                    ),
+                    Text(
+                      DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 4)).toUpperCase().replaceAll(".", ""),
+                      style: TextStyle(
+                        color: widget.primaryTextColor,
                       ),
-                      Text(
-                        DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 3)).toUpperCase().replaceAll(".", ""),
-                        style: TextStyle(
-                          color: widget.primaryTextColor,
-                        ),
+                    ),
+                    Text(
+                      DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 5)).toUpperCase().replaceAll(".", ""),
+                      style: TextStyle(
+                        color: widget.primaryTextColor,
                       ),
-                      Text(
-                        DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 4)).toUpperCase().replaceAll(".", ""),
-                        style: TextStyle(
-                          color: widget.primaryTextColor,
-                        ),
+                    ),
+                    Text(
+                      DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 6)).toUpperCase().replaceAll(".", ""),
+                      style: TextStyle(
+                        color: widget.primaryTextColor,
                       ),
-                      Text(
-                        DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 5)).toUpperCase().replaceAll(".", ""),
-                        style: TextStyle(
-                          color: widget.primaryTextColor,
-                        ),
+                    ),
+                    Text(
+                      DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 7)).toUpperCase().replaceAll(".", ""),
+                      style: TextStyle(
+                        color: widget.primaryTextColor,
                       ),
-                      Text(
-                        DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 6)).toUpperCase().replaceAll(".", ""),
-                        style: TextStyle(
-                          color: widget.primaryTextColor,
-                        ),
-                      ),
-                      Text(
-                        DateFormat("EEE").format(DateTime(1, 1, dateTimeSymbolMap()[Intl.getCurrentLocale()].FIRSTDAYOFWEEK + 7)).toUpperCase().replaceAll(".", ""),
-                        style: TextStyle(
-                          color: widget.primaryTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Column(
-                    children: buildCalendar(),
-                  )
-                ],
-              )
-            ],
-          ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Column(
+                  children: buildCalendar(),
+                )
+              ],
+            )
+          ],
         ),
       ),
     );

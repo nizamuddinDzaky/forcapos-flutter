@@ -36,7 +36,19 @@ class _CustomerScreenState extends CustomerViewModel {
                           constraints: BoxConstraints(
                               minHeight: viewportConstraints.maxHeight),
                           child: Center(
-                            child: Text('Data Kosong'),
+                            child: Column(
+                              children: <Widget>[
+                                Image.asset('assets/images/female_forca.png'),
+                                SizedBox(height: 16),
+                                Text('Belum ada data',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    )),
+                                SizedBox(height: 16),
+                                Text('Tarik ke bawah untuk memuat ulang'),
+                              ],
+                            ),
                           ),
                         ),
                       );

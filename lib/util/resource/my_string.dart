@@ -13,6 +13,7 @@ class MyString {
   // good received
   static const KEY_ID_GOODS_RECEIVED = "id_goods_received";
   static const KEY_GR_STATUS = "goods_received_status";
+  static const KEY_PAY_STATUS = "payment_status";
   static const KEY_GR_PRICE = "price";
   static const KEY_GOOD_RECEIVED = "good_received";
 

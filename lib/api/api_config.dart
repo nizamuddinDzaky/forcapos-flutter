@@ -1,7 +1,7 @@
 class ApiConfig {
 //  static const String host = 'http://qp.forca.id/';
-//   static const String host = 'https://qp.forca.id/';
-  static const String host = 'https://pos.forca.id/';
+  static const String host = 'https://qp.forca.id/';
+  // static const String host = 'https://pos.forca.id/';
 //  static const String host = 'http://10.15.4.102/'; //ip qp
 //  static String host = 'http://10.15.4.102:9090/'; //dirty
   static String path = '${host}api/v1/distributor/';

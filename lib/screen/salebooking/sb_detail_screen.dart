@@ -525,7 +525,20 @@ class _SBDetailScreenState extends SBDetailViewModel {
                             child: Container(
                               color: Colors.white,
                               child: Center(
-                                child: Text('Data Kosong'),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Image.asset('assets/images/female_forca.png'),
+                                    SizedBox(height: 16),
+                                    Text((sb.saleStatus == 'pending') ? 'Belum ada data' : 'Data kosong',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        )),
+                                    SizedBox(height: 16),
+                                    Text((sb.saleStatus == 'pending') ? 'Pembayaran belum tersedia.\nPenjualan masih menunggu.' : 'Tarik ke bawah untuk memuat ulang'),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -841,7 +854,20 @@ class _SBDetailScreenState extends SBDetailViewModel {
                             child: Container(
                               color: Colors.white,
                               child: Center(
-                                child: Text('Data Kosong'),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Image.asset('assets/images/female_forca.png'),
+                                    SizedBox(height: 16),
+                                    Text((sb.saleStatus == 'pending') ? 'Belum ada data' : 'Data kosong',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        )),
+                                    SizedBox(height: 16),
+                                    Text((sb.saleStatus == 'pending') ? 'Pengiriman belum tersedia.\nPenjualan masih menunggu.' : 'Tarik ke bawah untuk memuat ulang'),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
