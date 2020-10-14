@@ -78,12 +78,16 @@ class PaginationListState<T> extends State<PaginationList<T>>
   final List<T> _itemList = <T>[];
   dynamic _error;
   final StreamController<PageState> _streamController =
-  StreamController<PageState>();
+      StreamController<PageState>();
+  bool isDispose;
+  bool onLoad;
 
   @override
   void initState() {
     _itemList.addAll(widget.initialData);
     if (widget.initialData.length > 0) _itemList.add(null);
+    isDispose = false;
+    onLoad = false;
     super.initState();
   }
 
@@ -93,7 +97,7 @@ class PaginationListState<T> extends State<PaginationList<T>>
     return StreamBuilder<PageState>(
       stream: _streamController.stream,
       initialData:
-      (_itemList.length == 0) ? PageState.firstLoad : PageState.pageLoad,
+          (_itemList.length == 0) ? PageState.firstLoad : PageState.pageLoad,
       builder: (BuildContext context, AsyncSnapshot<PageState> snapshot) {
         if (!snapshot.hasData) {
           return widget.onLoading;
@@ -130,7 +134,7 @@ class PaginationListState<T> extends State<PaginationList<T>>
           padding: widget.padding,
           itemCount: _itemList.length,
           separatorBuilder: (BuildContext context, int index) =>
-          widget.separatorWidget,
+              widget.separatorWidget,
         );
       },
     );
@@ -138,17 +142,24 @@ class PaginationListState<T> extends State<PaginationList<T>>
 
   void resetFetchPageData() {
     _itemList.clear();
+    _itemList.addAll(widget.initialData);
+    _itemList.add(null);
+    _streamController.add(null);
     fetchPageData(offset: 0);
   }
 
   void fetchPageData({int offset = 0}) {
-    debugPrint('slidinng ${widget.sliding}');
-    var fetch = widget.pageFetch(offset - widget.initialData.length, widget.sliding);
+    if (onLoad) return;
+    onLoad = true;
+    var fetch =
+        widget.pageFetch(offset - widget.initialData.length, widget.sliding);
     if (widget?.isSearch == true && widget?.lastOffset == -1) {
       fetch = widget.pageFetch(-1, 0);
     }
     fetch.then(
-          (List<T> list) {
+      (List<T> list) {
+        onLoad = false;
+        if (isDispose) return;
         if (_itemList.contains(null)) {
           _itemList.remove(null);
         }
@@ -167,6 +178,7 @@ class PaginationListState<T> extends State<PaginationList<T>>
         _streamController.add(PageState.pageLoad);
       },
       onError: (dynamic _error) {
+        onLoad = false;
         this._error = _error;
         if (offset == 0) {
           _streamController.add(PageState.firstError);
@@ -182,6 +194,7 @@ class PaginationListState<T> extends State<PaginationList<T>>
 
   @override
   void dispose() {
+    isDispose = true;
     _streamController.close();
     super.dispose();
   }

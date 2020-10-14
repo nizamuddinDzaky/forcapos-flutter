@@ -5,6 +5,7 @@ import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/custom_dialog.dart';
+import 'package:posku/helper/my_pagination.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/home/home_screen.dart';
@@ -13,7 +14,7 @@ import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_string.dart';
 
 abstract class SalesBookingViewModel extends State<SalesBookingScreen>
-    with SingleTickerProviderStateMixin, ChangeNotifier {
+    with TickerProviderStateMixin, ChangeNotifier {
   int sliding = 0;
   final TextEditingController searchTextController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
@@ -21,21 +22,37 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
   AnimationController animationController;
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
   new GlobalKey<RefreshIndicatorState>();
-  List<bool> isFirst = [true, true, true];
+  List<bool> isFirst = [false, false, false];
   List<List<SalesBooking>> listSalesBooking = [[], [], []];
   List<SalesBooking> listSearch;
   Map<String, String> filterData = {'sortBy': 'date', 'sortType': 'desc'};
   bool isSearch = false;
   Map<String, String> searchData;
+  TabController tabController;
+  GlobalKey<PaginationListState<SalesBooking>> keyGRSearch = GlobalKey();
+  List<GlobalKey<PaginationListState<SalesBooking>>> keyGR = [
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+  ];
+  List<int> lastOffset = [-1, -1, -1];
+  int lastOffsetSearch = -1;
 
   @override
   void dispose() {
     searchTextController.dispose();
+    tabController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
+    tabController = new TabController(vsync: this, length: 3);
+    tabController.addListener(() {
+      setState(() {
+        sliding = tabController.index;
+      });
+    });
     animationController = new AnimationController(
       duration: new Duration(milliseconds: 200),
       vsync: this,
@@ -45,11 +62,6 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
       curve: Curves.easeInOut,
       reverseCurve: Curves.easeInOut,
     );
-//    searchTextController.add
-//    showSearch();
-//    WidgetsBinding.instance
-//        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
-    actionRefresh();
     super.initState();
   }
 
@@ -60,7 +72,7 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
     searchData = {
       'search': submit,
     };
-    refreshIndicatorKey.currentState.show();
+    actionRefresh();
   }
 
   FocusNode initSearch({FocusNode searchFocusNode, HomeState homeState}) {
@@ -108,8 +120,8 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
     }
   }
 
-  String getSaleStatus() {
-    switch(sliding) {
+  String getSaleStatus({int customSliding}) {
+    switch(customSliding ?? sliding) {
       case 1:
         return 'reserved';
       case 2:
@@ -119,9 +131,20 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
     }
   }
 
-  Future<Null> actionRefresh() async {
+  Future<List<SalesBooking>> pageFetch(int offset, int curSliding) async {
+    if (!isSearch) {
+      if (offset == lastOffset[curSliding]) return null;
+      lastOffset[curSliding] = offset;
+    } else {
+      if (offset == -1) return null;
+      lastOffsetSearch = offset;
+    }
+    List<SalesBooking> upcomingList;
     var params = {
-      MyString.KEY_SALE_STATUS: getSaleStatus(),
+      if (!isSearch)
+        MyString.KEY_SALE_STATUS: getSaleStatus(customSliding: curSliding),
+      'offset': offset.toString(),
+      'limit': '10',
     };
     params.addAll(filterData);
     if (searchData != null && searchData.isNotEmpty) {
@@ -134,18 +157,7 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
         }, onSuccess: (data, flag) {
           var baseResponse = BaseResponse.fromJson(data);
           var newListSB = baseResponse?.data?.listSalesBooking ?? [];
-          if (isSearch) {
-            if (listSearch == null)
-              listSearch = [];
-            else
-              listSearch?.clear();
-            listSearch.addAll(newListSB);
-          } else {
-            if (isFirst[flag]) isFirst[flag] = false;
-            listSalesBooking[flag].clear();
-            listSalesBooking[flag].addAll(newListSB);
-            listSalesBooking[flag].sort((a, b) => b.date.compareTo(a.date));
-          }
+          upcomingList = newListSB;
         }, onFailed: (title, message) {
           Get.defaultDialog(title: title, content: Text(message));
         }, onError: (title, message) {
@@ -154,10 +166,18 @@ abstract class SalesBookingViewModel extends State<SalesBookingScreen>
 //      if (status == ResponseStatus.success)
 //        MyPref.setRemember(isRemember, currentData);
         });
-    setState(() {
-      status.execute();
-    });
+    status.execute();
+    return upcomingList;
+  }
 
+  Future<Null> actionRefresh() async {
+    if (isSearch) {
+      lastOffsetSearch = 0;
+      keyGRSearch?.currentState?.resetFetchPageData();
+      return null;
+    }
+    lastOffset[sliding] = -1;
+    keyGR[sliding]?.currentState?.resetFetchPageData();
     return null;
   }
 

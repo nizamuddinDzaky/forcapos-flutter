@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
+import 'package:posku/helper/my_pagination.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/screen/home/home_screen.dart';
 import 'package:posku/screen/salebooking/sales_booking_view_model.dart';
@@ -107,7 +108,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                           onValueChanged: (newValue) {
                             setState(() {
                               sliding = newValue;
-                              if (isFirst[sliding]) actionRefresh();
+                              tabController.index = sliding;
                             });
                           },
                         ),
@@ -123,7 +124,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                             if (result != null &&
                                 result as Map<String, String> != null) {
                               filterData = result as Map<String, String>;
-                              refreshIndicatorKey.currentState.show();
+                              actionRefresh();
                             }
                           },
                           child: Icon(
@@ -160,10 +161,13 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                       ),
                   ];
                 },
-                body: homeState.isSearch == true
-                    ? _contentSearch()
-                    : _contentBody(),
-              ),
+                body: DefaultTabController(
+                  initialIndex: sliding,
+                  length: 3,
+                  child: homeState.isSearch == true
+                      ? _contentSearch()
+                      : _contentBody(),
+                ),              ),
             ),
           ),
         );
@@ -175,26 +179,22 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
     return RefreshIndicator(
       key: refreshIndicatorKey,
       onRefresh: actionRefresh,
-      child: (listSearch == null || listSearch.isEmpty)
-          ? LayoutBuilder(
-              builder:
-                  (BuildContext context, BoxConstraints viewportConstraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                        minHeight: viewportConstraints.maxHeight),
-                    child: Center(
-                      child: Text(
-                        listSearch == null
-                            ? 'Mau cari apa nih?'
-                            : 'Tidak menemukan hasil',
-                      ),
-                    ),
-                  ),
-                );
-              },
-            )
-          : _body(),
+      child: PaginationList<SalesBooking>(
+        key: keyGRSearch,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, SalesBooking salesBooking) {
+          return _listItem(salesBooking);
+        },
+        lastOffset: lastOffsetSearch,
+        sliding: 0,
+        isSearch: isSearch,
+        pageFetch: pageFetch,
+        initialData: [],
+        onLoading: Center(child: CupertinoActivityIndicator()),
+        onPageLoading: Center(child: CircularProgressIndicator()),
+        onError: (_) => _refreshEmpty(text: 'Terjadi Kesalahan Akses'),
+        onEmpty: _refreshEmpty(),
+      ),
     );
   }
 
@@ -203,51 +203,114 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
         ? Center(
             child: CupertinoActivityIndicator(),
           )
-        : RefreshIndicator(
-            key: refreshIndicatorKey,
-            onRefresh: actionRefresh,
-            child: listSalesBooking[sliding].length == 0
-                ? LayoutBuilder(
-                    builder: (BuildContext context,
-                        BoxConstraints viewportConstraints) {
-                      return SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                              minHeight: viewportConstraints.maxHeight),
-                          child: Center(
-                            child: Column(
-                              children: <Widget>[
-                                Image.asset('assets/images/female_forca.png'),
-                                SizedBox(height: 16),
-                                Text('Belum ada transaksi',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    )),
-                                SizedBox(height: 16),
-                                Text('Tarik ke bawah untuk memuat ulang'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                : _body(),
-          );
+        : _body();
   }
 
-  Widget _body() {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      physics: ClampingScrollPhysics(),
-//      controller: isFilter? null : _controller,
-      itemBuilder: (c, i) => _listItem(listData()[i], i),
-      itemCount: listData().length,
+  Widget _refreshEmpty({String text}) {
+    return RefreshIndicator(
+      onRefresh: actionRefresh,
+      child: LayoutBuilder(
+        builder: (BuildContext context,
+            BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  minHeight: viewportConstraints.maxHeight),
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    Image.asset('assets/images/female_forca.png'),
+                    SizedBox(height: 16),
+                    Text(text ?? 'Belum ada transaksi',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        )),
+                    SizedBox(height: 16),
+                    Text('Tarik ke bawah untuk memuat ulang'),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _listItem(SalesBooking sb, int index) {
+  Widget _body() {
+    if (sliding == 0) {
+      lastOffset[1] = -1;
+      lastOffset[2] = -1;
+    }
+    if (sliding == 1) {
+      lastOffset[0] = -1;
+      lastOffset[2] = -1;
+    }
+    lastOffset[0] = -1;
+    lastOffset[1] = -1;
+    return TabBarView(
+      controller: tabController,
+      children: <Widget>[
+        RefreshIndicator(
+          onRefresh: actionRefresh,
+          child: PaginationList<SalesBooking>(
+            key: keyGR[0],
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, SalesBooking salesBooking) {
+              return _listItem(salesBooking);
+            },
+            lastOffset: lastOffset[0],
+            sliding: 0,
+            pageFetch: pageFetch,
+            initialData: [],
+            onLoading: Center(child: CupertinoActivityIndicator()),
+            onPageLoading: Center(child: CircularProgressIndicator()),
+            onError: (_) => _refreshEmpty(text: 'Terjadi Kesalahan Akses'),
+            onEmpty: _refreshEmpty(),
+          ),
+        ),
+        RefreshIndicator(
+          onRefresh: actionRefresh,
+          child: PaginationList<SalesBooking>(
+            key: keyGR[1],
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, SalesBooking salesBooking) {
+              return _listItem(salesBooking);
+            },
+            lastOffset: lastOffset[1],
+            sliding: 1,
+            pageFetch: pageFetch,
+            initialData: [],
+            onLoading: Center(child: CupertinoActivityIndicator()),
+            onPageLoading: Center(child: CircularProgressIndicator()),
+            onError: (_) => _refreshEmpty(text: 'Terjadi Kesalahan Akses'),
+            onEmpty: _refreshEmpty(),
+          ),
+        ),
+        RefreshIndicator(
+          onRefresh: actionRefresh,
+          child: PaginationList<SalesBooking>(
+            key: keyGR[2],
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, SalesBooking salesBooking) {
+              return _listItem(salesBooking);
+            },
+            lastOffset: lastOffset[2],
+            sliding: 2,
+            pageFetch: pageFetch,
+            initialData: [],
+            onLoading: Center(child: CupertinoActivityIndicator()),
+            onPageLoading: Center(child: CircularProgressIndicator()),
+            onError: (_) => _refreshEmpty(text: 'Terjadi Kesalahan Akses'),
+            onEmpty: _refreshEmpty(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _listItem(SalesBooking sb) {
     var paymentStyle = paymentStatus(sb.paymentStatus);
     var deliveryStyle = deliveryStatus(sb.deliveryStatus);
     return Card(
