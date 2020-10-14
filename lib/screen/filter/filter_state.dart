@@ -42,9 +42,9 @@ class FilterState extends ChangeNotifier {
       })?.first) ??
           ['', ''];
     }
-    if (first.containsKey(MyString.KEY_SALE_STATUS)) {
-      _selectedStatus = (_statusDelivery.where((data) {
-        return data[1] == first[MyString.KEY_SALE_STATUS];
+    if (first.containsKey(MyString.KEY_DELIVERY_STATUS)) {
+      selectedShipment = (statusShipment.where((data) {
+        return data[1] == first[MyString.KEY_DELIVERY_STATUS];
       })?.first) ??
           ['', ''];
     }
@@ -64,6 +64,11 @@ class FilterState extends ChangeNotifier {
       ['Lunas', 'paid'],
       ['Jatuh Tempo', 'due'],
     ]);
+    statusShipment.addAll([
+      ['Menunggu', 'pending'],
+      ['Dipesan', 'reserved'],
+      ['Selesai', 'closed'],
+    ]);
     _statusDelivery.addAll([
       ['Menunggu', 'pending'],
       ['Dipesan', 'reserved'],
@@ -75,6 +80,7 @@ class FilterState extends ChangeNotifier {
     currentPage = page;
     _statusDelivery = [];
     statusPayment = [];
+    statusShipment = [];
     switch(page) {
       case 'gr':
         _initFilterGR();
@@ -94,6 +100,8 @@ class FilterState extends ChangeNotifier {
   List<List<String>> statusPayment = [];
   List<String> _selectedStatus = ['', ''];
   List<String> selectedPayment = ['', ''];
+  List<List<String>> statusShipment = [];
+  List<String> selectedShipment = ['', ''];
 
   List<String> get selectedStatus => _selectedStatus;
 
@@ -101,6 +109,7 @@ class FilterState extends ChangeNotifier {
 
   bool getStatus(int index) => _selectedStatus == _statusDelivery[index];
   bool getStatusPayment(int index) => selectedPayment == statusPayment[index];
+  bool getStatusShipment(index) => selectedShipment == statusShipment[index];
 
   void changeStatus(int index) {
     _selectedStatus = _statusDelivery[index];
@@ -109,6 +118,11 @@ class FilterState extends ChangeNotifier {
 
   void changeStatusPayment(int index) {
     selectedPayment = statusPayment[index];
+    notifyListeners();
+  }
+
+  void changeStatusShipment(int index) {
+    selectedShipment = statusShipment[index];
     notifyListeners();
   }
 
@@ -182,6 +196,9 @@ class FilterState extends ChangeNotifier {
     if (_selectedStatus.isNotEmpty && _selectedStatus[1] != '' && page == 'sb') {
       result[MyString.KEY_SALE_STATUS] = _selectedStatus[1];
     }
+    if (selectedShipment.isNotEmpty && selectedShipment[1] != '' && page == 'sb') {
+      result[MyString.KEY_DELIVERY_STATUS] = selectedShipment[1];
+    }
     if (selectedPayment.isNotEmpty && selectedPayment[1] != '' && page == 'sb') {
       result[MyString.KEY_PAY_STATUS] = selectedPayment[1];
     }
@@ -193,6 +210,8 @@ class FilterState extends ChangeNotifier {
 
   void onReset() {
     _selectedStatus = ['', ''];
+    selectedShipment = ['', ''];
+    selectedPayment = ['', ''];
     intervals = [];
     differenceDate = null;
     indexSort = 0;

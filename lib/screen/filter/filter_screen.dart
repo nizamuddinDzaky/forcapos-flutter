@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/helper/custom_expandable_button.dart';
 import 'package:posku/screen/filter/card_payment.dart';
+import 'package:posku/screen/filter/card_shipment.dart';
 import 'package:posku/screen/filter/filter_state.dart';
 import 'package:posku/screen/filter/multi_date_range_picker.dart';
 import 'package:posku/util/my_util.dart';
@@ -59,6 +60,8 @@ class _FilterScreenState extends State<FilterScreen> {
                     child: ListView(
                       physics: const BouncingScrollPhysics(),
                       children: <Widget>[
+                        if (page == 'sb')
+                          CardShipment(),
                         if (page == 'sb')
                           CardPayment(),
                         if (page == 'gr')
