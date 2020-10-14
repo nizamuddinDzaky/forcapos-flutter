@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/helper/empty_app_bar.dart';
 import 'package:posku/helper/ios_search_bar.dart';
+import 'package:posku/helper/my_pagination.dart';
 import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/screen/goodreceived/good_received_view_model.dart';
 import 'package:posku/screen/home/home_screen.dart';
@@ -47,7 +48,8 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                           onValueChanged: (newValue) {
                             setState(() {
                               sliding = newValue;
-                              if (isFirst[sliding]) actionRefresh();
+                              // if (isFirst[sliding]) actionRefresh();
+                              tabController.index = sliding;
                             });
                           },
                         ),
@@ -65,7 +67,7 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                             if (result != null &&
                                 result as Map<String, String> != null) {
                               filterData = result as Map<String, String>;
-                              refreshIndicatorKey.currentState.show();
+                              actionRefresh();
                             }
                           },
                           child: Icon(
@@ -101,9 +103,13 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                       ),
                   ];
                 },
-                body: homeState.isSearch == true
-                    ? _contentSearch()
-                    : _contentBody(),
+                body: DefaultTabController(
+                  initialIndex: sliding,
+                  length: 2,
+                  child: homeState.isSearch == true
+                      ? _contentSearch()
+                      : _contentBody(),
+                ),
               ),
             ),
           ),
@@ -114,28 +120,45 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
 
   Widget _contentSearch() {
     return RefreshIndicator(
-      key: refreshIndicatorKey,
       onRefresh: actionRefresh,
+      child: PaginationList<GoodReceived>(
+        key: keyGRSearch,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, GoodReceived gr) {
+          return _listItem(gr);
+        },
+        lastOffset: lastOffsetSearch,
+        sliding: 0,
+        isSearch: isSearch,
+        pageFetch: pageFetch,
+        initialData: [],
+        onLoading: Center(child: CupertinoActivityIndicator()),
+        onPageLoading: Center(child: CircularProgressIndicator()),
+        onError: (_) => _refreshEmpty(text: 'Terjadi Kesalahan Akses'),
+        onEmpty: _refreshEmpty(),
+      ),
+/*
       child: (listSearch == null || listSearch.isEmpty)
           ? LayoutBuilder(
-              builder:
-                  (BuildContext context, BoxConstraints viewportConstraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                        minHeight: viewportConstraints.maxHeight),
-                    child: Center(
-                      child: Text(
-                        listSearch == null
-                            ? 'Mau cari apa nih?'
-                            : 'Tidak menemukan hasil',
-                      ),
-                    ),
-                  ),
-                );
-              },
-            )
+        builder:
+            (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  minHeight: viewportConstraints.maxHeight),
+              child: Center(
+                child: Text(
+                  listSearch == null
+                      ? 'Mau cari apa nih?'
+                      : 'Tidak menemukan hasil',
+                ),
+              ),
+            ),
+          );
+        },
+      )
           : _body(),
+*/
     );
   }
 
@@ -144,39 +167,90 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
         ? Center(
             child: CupertinoActivityIndicator(),
           )
-        : RefreshIndicator(
-            key: refreshIndicatorKey,
-            onRefresh: actionRefresh,
-            child: listGoodReceived[sliding].length == 0
-                ? LayoutBuilder(
-                    builder: (BuildContext context,
-                        BoxConstraints viewportConstraints) {
-                      return SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                              minHeight: viewportConstraints.maxHeight),
-                          child: Center(
-                            child: Text('Data Kosong'),
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                : _body(),
-          );
+        : _body();
   }
 
-  Widget _body() {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      physics: ClampingScrollPhysics(),
-//      controller: isFilter? null : _controller,
-      itemBuilder: (c, i) => _listItem(listData()[i], i),
-      itemCount: listData().length,
+  Widget _refreshEmpty({String text}) {
+    return RefreshIndicator(
+      onRefresh: actionRefresh,
+      child: LayoutBuilder(
+        builder: (BuildContext context,
+            BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  minHeight: viewportConstraints.maxHeight),
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    Image.asset('assets/images/female_forca.png'),
+                    SizedBox(height: 16),
+                    Text(text ?? 'Belum ada transaksi',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        )),
+                    SizedBox(height: 16),
+                    Text('Tarik ke bawah untuk memuat ulang'),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _listItem(GoodReceived gr, int index) {
+  Widget _body() {
+    if (sliding == 0) {
+      lastOffset[1] = -1;
+    }
+    lastOffset[0] = -1;
+    return TabBarView(
+      controller: tabController,
+      children: <Widget>[
+        RefreshIndicator(
+          onRefresh: actionRefresh,
+          child: PaginationList<GoodReceived>(
+            key: keyGR[0],
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, GoodReceived gr) {
+              return _listItem(gr);
+            },
+            lastOffset: lastOffset[0],
+            sliding: 0,
+            pageFetch: pageFetch,
+            initialData: [],
+            onLoading: Center(child: CupertinoActivityIndicator()),
+            onPageLoading: Center(child: CircularProgressIndicator()),
+            onError: (_) => _refreshEmpty(text: 'Terjadi Kesalahan Akses'),
+            onEmpty: _refreshEmpty(),
+          ),
+        ),
+        RefreshIndicator(
+          onRefresh: actionRefresh,
+          child: PaginationList<GoodReceived>(
+            key: keyGR[1],
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, GoodReceived gr) {
+              return _listItem(gr);
+            },
+            lastOffset: lastOffset[1],
+            sliding: 1,
+            pageFetch: pageFetch,
+            initialData: [],
+            onLoading: Center(child: CupertinoActivityIndicator()),
+            onPageLoading: Center(child: CircularProgressIndicator()),
+            onError: (_) => _refreshEmpty(text: 'Terjadi Kesalahan Akses'),
+            onEmpty: _refreshEmpty(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _listItem(GoodReceived gr) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
       elevation: 8,
@@ -261,7 +335,7 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
           InkWell(
             onTap: () async {
               var result =
-                  await Get.toNamed(grDetailScreen, arguments: gr.toJson());
+              await Get.toNamed(grDetailScreen, arguments: gr.toJson());
               if (result != null) {
                 setState(() {
                   var newGr = GoodReceived.fromJson(result);
@@ -289,21 +363,21 @@ class _GoodReceiveScreenState extends GoodReceivedViewModel {
                     onPressed: gr.statusPenerimaan == "received"
                         ? null
                         : () async {
-                            var result = await Get.toNamed(grConfirmationScreen,
-                                arguments: gr.toJson());
-                            if (result != null) {
-                              setState(() {
-                                var newGr = GoodReceived.fromJson(result);
-                                gr.statusPenerimaan = newGr.statusPenerimaan;
-                              });
-                            }
-                          },
+                      var result = await Get.toNamed(grConfirmationScreen,
+                          arguments: gr.toJson());
+                      if (result != null) {
+                        setState(() {
+                          var newGr = GoodReceived.fromJson(result);
+                          gr.statusPenerimaan = newGr.statusPenerimaan;
+                        });
+                      }
+                    },
                     child: gr.statusPenerimaan == "received"
                         ? null
                         : Text(
-                            'Terima',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                      'Terima',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],

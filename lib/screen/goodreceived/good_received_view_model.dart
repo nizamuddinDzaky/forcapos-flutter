@@ -3,35 +3,50 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:posku/api/api_client.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/helper/my_pagination.dart';
 import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/screen/goodreceived/good_received_screen.dart';
 import 'package:posku/screen/home/home_screen.dart';
 
 abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
-    with SingleTickerProviderStateMixin, ChangeNotifier {
+    with TickerProviderStateMixin, ChangeNotifier {
   int sliding = 0;
   final TextEditingController searchTextController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
   Animation animation;
   AnimationController animationController;
-  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
-  List<bool> isFirst = [true, true];
+
+  List<bool> isFirst = [false, false];
   List<List<GoodReceived>> listGoodReceived = [[], []];
   List<GoodReceived> listSearch;
   Map<String, String> filterData = {'date': 'desc'};
   bool isSearch = false;
   Map<String, String> searchData;
+  TabController tabController;
+  GlobalKey<PaginationListState<GoodReceived>> keyGRSearch = GlobalKey();
+  List<GlobalKey<PaginationListState<GoodReceived>>> keyGR = [
+    GlobalKey(),
+    GlobalKey(),
+  ];
+  List<int> lastOffset = [-1, -1];
+  int lastOffsetSearch = -1;
 
   @override
   void dispose() {
     searchTextController.dispose();
+    tabController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
+    tabController = new TabController(vsync: this, length: 2);
+    tabController.addListener(() {
+      setState(() {
+        sliding = tabController.index;
+      });
+    });
     animationController = new AnimationController(
       duration: new Duration(milliseconds: 200),
       vsync: this,
@@ -41,11 +56,6 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
       curve: Curves.easeInOut,
       reverseCurve: Curves.easeInOut,
     );
-//    searchTextController.add
-//    showSearch();
-//    WidgetsBinding.instance
-//        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
-    actionRefresh();
     super.initState();
   }
 
@@ -57,7 +67,8 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
     searchData = {
       'search': submit,
     };
-    refreshIndicatorKey.currentState.show();
+    print('actionRefresh(); ');
+    actionRefresh();
   }
 
   FocusNode initSearch({FocusNode searchFocusNode, HomeState homeState}) {
@@ -105,11 +116,24 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
     }
   }
 
-  Future<Null> actionRefresh() async {
+  Future<List<GoodReceived>> pageFetch(int offset, int curSliding) async {
+    if (!isSearch) {
+      if (offset == lastOffset[curSliding]) return null;
+      lastOffset[curSliding] = offset;
+    } else {
+      if (offset == -1) return null;
+      lastOffsetSearch = offset;
+    }
+    debugPrint('cek offset $offset');
+    List<GoodReceived> upcomingList;
     var params = {
-      'goods_received_status': sliding == 0 ? 'delivering' : 'received',
+      if (!isSearch)
+        'goods_received_status': curSliding == 0 ? 'delivering' : 'received',
+      'offset': offset.toString(),
+      'limit': '10',
     };
     params.addAll(filterData);
+    debugPrint('filterdata $filterData}');
     if (searchData != null && searchData.isNotEmpty) {
       params.clear();
       params.addAll(searchData);
@@ -120,31 +144,23 @@ abstract class GoodReceivedViewModel extends State<GoodReceiveScreen>
     }, onSuccess: (data, flag) {
       var baseResponse = BaseResponse.fromJson(data);
       var newListGR = baseResponse?.data?.listGoodsReceived ?? [];
-      if (isSearch) {
-        if (listSearch == null)
-          listSearch = [];
-        else
-          listSearch?.clear();
-        listSearch.addAll(newListGR);
-      } else {
-        if (isFirst[flag]) isFirst[flag] = false;
-        listGoodReceived[flag].clear();
-        listGoodReceived[flag].addAll(newListGR);
-        listGoodReceived[flag]
-            .sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      }
-    }, onFailed: (title, message) {
-      Get.defaultDialog(title: title, content: Text(message));
-    }, onError: (title, message) {
-      Get.defaultDialog(title: title, content: Text(message));
-    }, onAfter: (status) {
-//      if (status == ResponseStatus.success)
-//        MyPref.setRemember(isRemember, currentData);
-    });
-    setState(() {
-      status.execute();
-    });
+      upcomingList = newListGR;
+    },
+        onFailed: (title, message) {},
+        onError: (title, message) {},
+        onAfter: (status) {});
+    status.execute();
+    return upcomingList;
+  }
 
+  Future<Null> actionRefresh() async {
+    if (isSearch) {
+      lastOffsetSearch = 0;
+      keyGRSearch?.currentState?.resetFetchPageData();
+      return null;
+    }
+    lastOffset[sliding] = -1;
+    keyGR[sliding]?.currentState?.resetFetchPageData();
     return null;
   }
 }
