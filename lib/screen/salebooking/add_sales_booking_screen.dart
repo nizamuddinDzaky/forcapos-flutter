@@ -156,7 +156,9 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text("Pilih Pelanggan", style: TextStyle(color: MyColor.greyText),),
+                          Text(
+                            vm.currentCustomer?.name ?? 'Pilih Pelanggan', style: TextStyle(color: MyColor.greyText, fontSize: 16),
+                          ),
                           Icon(Icons.keyboard_arrow_down),
                         ],
                       ),

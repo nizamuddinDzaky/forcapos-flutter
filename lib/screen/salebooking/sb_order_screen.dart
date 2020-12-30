@@ -294,19 +294,21 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                       children: <Widget>[
                         Text(
                           p.name ?? '',
-                          style: Theme.of(context).textTheme.headline6,
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text(p.code ?? ''),
+                        SizedBox(height: 4,),
+                        Text(p.code ?? '', style:  TextStyle(fontSize: 16),),
+                        SizedBox(height: 4,),
                         Row(
                           children: <Widget>[
-                            Text(p.price?.toRp() ?? ''),
+                            Text(p.price?.toRp() ?? '', style:  TextStyle(fontSize: 16),),
                             if (p.unitName != null)
                               SizedBox(
                                 width: 8,
                               ),
-                            if (p.unitName != null) Text(p.unitName ?? ''),
-                            if (p.minOrder != null) Text(' x '),
-                            if (p.minOrder != null) Text(p.minOrder.toNumId()),
+                            if (p.unitName != null) Text(p.unitName ?? '', style:  TextStyle(fontSize: 16),),
+                            if (p.minOrder != null) Text(' x ' , style:  TextStyle(fontSize: 16),),
+                            if (p.minOrder != null) Text(p.minOrder.toNumId(), style:  TextStyle(fontSize: 16),),
                           ],
                         ),
                       ],
@@ -335,7 +337,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
               children: <Widget>[
-                Row(
+                /*Row(
                   children: <Widget>[
                     Icon(
                       Icons.insert_drive_file,
@@ -356,7 +358,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                 ),
                 SizedBox(
                   height: 8,
-                ),
+                ),*/
                 Row(
                   children: <Widget>[
                     Expanded(
@@ -365,7 +367,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                         children: <Widget>[
                           Text(
                             'Gudang',
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Row(
                             children: <Widget>[
@@ -384,11 +386,19 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                     vm.showWarehousePicker(context);
                                   },
                                   padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text(
-                                    vm.currentWarehouse?.name ?? 'Pilih Gudang',
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          vm.currentWarehouse?.name ?? 'Pilih Gudang',
+                                          style: TextStyle(color: MyColor.greyText, fontSize: 16),
+                                          textAlign: TextAlign.start,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                      Icon(Icons.keyboard_arrow_down),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -411,7 +421,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                         children: <Widget>[
                           Text(
                             'Pelanggan',
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Row(
                             children: <Widget>[
@@ -430,11 +440,19 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                     vm.showCustomerPicker(context);
                                   },
                                   padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text(
-                                    vm.currentCustomer?.name ??
-                                        'Pilih Pelanggan',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          vm.currentCustomer?.name ??
+                                              'Pilih Pelanggan',
+                                          style: TextStyle(color: MyColor.greyText, fontSize: 16),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                      Icon(Icons.keyboard_arrow_down),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -491,31 +509,36 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
             ),
           ),
           Container(
-            color: Colors.white,
-            margin: EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 0.5,
+                    offset: Offset(0.0, 10)
+                )
+              ],
+              color: Colors.white,
+            ),
+            margin: EdgeInsets.only(top: 4),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
               children: <Widget>[
+                SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
                       'Jumlah',
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          .copyWith(color: MyColor.txtField),
+                      style: TextStyle(fontSize: 16,),
                     ),
                     Text(
                       //MyNumber.toNumberRp(0.0),
                       vm.getTotal(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          .copyWith(color: MyColor.txtField),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
+                SizedBox(height: 4),
                 Row(
                   children: <Widget>[
                     LoadingButton(
