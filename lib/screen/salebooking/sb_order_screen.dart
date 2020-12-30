@@ -101,7 +101,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
               height: 8,
             ),
             Container(
-              margin: EdgeInsets.only(bottom: 10),
+              margin: EdgeInsets.only(bottom: 30),
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Row(
@@ -207,30 +207,33 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
               ),
             ),
             if (p.minOrder != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Checkbox(
-                    value: p.minOrder != null && isDelete,
-                    onChanged: (status) {
-                      setState(() {
-                        isDelete = p.minOrder != null && status;
-                      });
-                    },
-                  ),
-                  RaisedButton(
-                    onPressed: !isDelete
-                        ? null
-                        : () {
-                            vm.deleteFromCart(p);
-                          },
-                    color: MyColor.mainRed,
-                    child: Text(
-                      'Hapus dari keranjang',
-                      style: TextStyle(color: Colors.white),
+              Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Checkbox(
+                      value: p.minOrder != null && isDelete,
+                      onChanged: (status) {
+                        setState(() {
+                          isDelete = p.minOrder != null && status;
+                        });
+                      },
                     ),
-                  ),
-                ],
+                    RaisedButton(
+                      onPressed: !isDelete
+                          ? null
+                          : () {
+                              vm.deleteFromCart(p);
+                            },
+                      color: MyColor.mainRed,
+                      child: Text(
+                        'Hapus dari keranjang',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
           ],
         ),

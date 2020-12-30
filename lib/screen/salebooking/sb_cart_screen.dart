@@ -73,7 +73,7 @@ class _SalesBookingCartScreenState extends State<SalesBookingCartScreen> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -110,7 +110,9 @@ class _SalesBookingCartScreenState extends State<SalesBookingCartScreen> {
                                         .textTheme
                                         .headline6,
                                   ),
+                                  SizedBox(height: 4),
                                   Text(p?.code ?? ''),
+                                  SizedBox(height: 4),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
