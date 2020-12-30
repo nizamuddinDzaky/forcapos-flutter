@@ -203,7 +203,10 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
         ? Center(
             child: CupertinoActivityIndicator(),
           )
-        : _body();
+        : Container(
+            color: Color(0xffE9E9E9),
+            child: _body(),
+          );
   }
 
   Widget _refreshEmpty({String text}) {
@@ -255,6 +258,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
         RefreshIndicator(
           onRefresh: actionRefresh,
           child: PaginationList<SalesBooking>(
+            padding: EdgeInsets.symmetric(vertical: 4),
             key: keyGR[0],
             shrinkWrap: true,
             itemBuilder: (BuildContext context, SalesBooking salesBooking) {
@@ -273,6 +277,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
         RefreshIndicator(
           onRefresh: actionRefresh,
           child: PaginationList<SalesBooking>(
+            padding: EdgeInsets.symmetric(vertical: 4),
             key: keyGR[1],
             shrinkWrap: true,
             itemBuilder: (BuildContext context, SalesBooking salesBooking) {
@@ -291,6 +296,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
         RefreshIndicator(
           onRefresh: actionRefresh,
           child: PaginationList<SalesBooking>(
+            padding: EdgeInsets.symmetric(vertical: 4),
             key: keyGR[2],
             shrinkWrap: true,
             itemBuilder: (BuildContext context, SalesBooking salesBooking) {
@@ -314,8 +320,8 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
     var paymentStyle = paymentStatus(sb.paymentStatus);
     var deliveryStyle = deliveryStatus(sb.deliveryStatus);
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-      elevation: 8,
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+      elevation: 0,
       child: InkWell(
         onTap: () async {
           if (sliding == 1) {

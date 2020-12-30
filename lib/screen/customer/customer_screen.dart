@@ -57,7 +57,7 @@ class _CustomerScreenState extends CustomerViewModel {
                 : Container(
                     color: Color(0xffE9E9E9),
                     child: ListView.builder(
-                      padding: EdgeInsets.symmetric(vertical: 8),
+                      padding: EdgeInsets.symmetric(vertical: 4),
                       physics: ClampingScrollPhysics(),
                       itemBuilder: (c, i) => _listItem(listCustomer[i], i),
                       itemCount: listCustomer.length,
