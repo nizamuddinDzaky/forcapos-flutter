@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:posku/api/api_config.dart';
+import 'package:posku/main.dart';
 import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_string.dart';
@@ -17,7 +18,7 @@ typedef APIFailedCallback = dynamic Function(String title, String message);
 
 class ApiClient {
   static addInterceptor() {
-//    addInterceptor1();
+    if (!isProd) addInterceptor1();
     addInterceptor2();
   }
 

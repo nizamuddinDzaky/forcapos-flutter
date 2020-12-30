@@ -1,11 +1,13 @@
+import 'package:posku/main.dart';
+
 class ApiConfig {
 //  static const String host = 'http://qp.forca.id/';
-  static const String host = 'https://qp.forca.id/';
-  // static const String host = 'https://pos.forca.id/';
+  static const String hostDev = 'https://qp.forca.id/';
+  static const String host = 'https://pos.forca.id/';
 //  static const String host = 'http://10.15.4.102/'; //ip qp
 //  static String host = 'http://10.15.4.102:9090/'; //dirty
-  static String path = '${host}api/v1/distributor/';
-  static String local = '${host}api/Local/';
+  static const String path = '${isProd ? host : hostDev}api/v1/distributor/';
+  static const String local = '${isProd ? host : hostDev}api/Local/';
 
   //auth
   static String urlLogin = '${path}auth/login';

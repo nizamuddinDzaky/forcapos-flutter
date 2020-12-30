@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:posku/app/middle_ware.dart';
 import 'package:posku/app/my_router.dart';
+import 'package:posku/main.dart';
 import 'package:posku/util/resource/my_color.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    var materialApp = MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'POSku',
       theme: ThemeData(
@@ -39,6 +41,19 @@ class MyApp extends StatelessWidget {
       ],
       onGenerateRoute: MyRouter.generateRoute,
     );
+
+    if (isProd == false || kDebugMode) {
+      return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Banner(
+          message: 'QP',
+          location: BannerLocation.bottomEnd,
+          child: materialApp,
+        ),
+      );
+    }
+
+    return materialApp;
   }
 }
 
