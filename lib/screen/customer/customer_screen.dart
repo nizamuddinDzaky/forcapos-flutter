@@ -54,12 +54,14 @@ class _CustomerScreenState extends CustomerViewModel {
                       );
                     },
                   )
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    physics: ClampingScrollPhysics(),
-//      controller: isFilter? null : _controller,
-                    itemBuilder: (c, i) => _listItem(listCustomer[i], i),
-                    itemCount: listCustomer.length,
+                : Container(
+                    color: Color(0xffE9E9E9),
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      physics: ClampingScrollPhysics(),
+                      itemBuilder: (c, i) => _listItem(listCustomer[i], i),
+                      itemCount: listCustomer.length,
+                    ),
                   ),
           );
   }
@@ -69,8 +71,8 @@ class _CustomerScreenState extends CustomerViewModel {
     address.add(customer?.city);
     address.add(customer?.country);
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-      elevation: 8,
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+      elevation: 0,
       child: InkWell(
         onTap: () {
           Get.toNamed(detailCustomerScreen, arguments: {
@@ -78,7 +80,7 @@ class _CustomerScreenState extends CustomerViewModel {
           });
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
