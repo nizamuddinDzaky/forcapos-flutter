@@ -109,16 +109,16 @@ class _CustomerScreenState extends CustomerViewModel {
                   children: <Widget>[
                     Text(
                       customer?.company ?? '~',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     if ((customer?.cf1 ?? '').isNotEmpty)
                       Text(
                         customer?.cf1 ?? '~',
-                        style: Theme.of(context).textTheme.subtitle1,
+                        style:  TextStyle(fontSize: 16),
                       ),
                     Text(
-                      address?.where((dt) => dt != null)?.join(', '),
-                      style: Theme.of(context).textTheme.subtitle1,
+                      address?.where((dt) => dt != null)?.join(', ') ?? '',
+                      style:  TextStyle(fontSize: 16),
                     ),
                   ],
                 ),

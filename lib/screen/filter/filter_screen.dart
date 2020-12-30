@@ -133,7 +133,7 @@ class Card1 extends StatelessWidget {
                       ),
                       Text(
                         state.selectedStatus[0],
-                        style: TextStyle(color: MyColor.mainRed),
+                        style: TextStyle(color: MyColor.blueDio, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -159,7 +159,7 @@ class Card1 extends StatelessWidget {
                         child: RaisedButton(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide(color: MyColor.mainRed),
+                            side: BorderSide(color: Colors.transparent),
                           ),
                           onPressed: () {
                             state.changeStatus(index);
@@ -167,15 +167,11 @@ class Card1 extends StatelessWidget {
 //                            setState(() {
 //                            });
                           },
-                          color: state.getStatus(index)
-                              ? MyColor.mainRed
-                              : Colors.white,
+                          color: state.getStatus(index) ? Colors.blue : Color(0xffededed),
                           child: Text(
                             data[0],
                             style: TextStyle(
-                              color: state.getStatus(index)
-                                  ? Colors.white
-                                  : MyColor.txtField,
+                              color: state.getStatus(index) ? Colors.white : MyColor.txtField,
                             ),
                           ),
                         ),
@@ -261,7 +257,7 @@ class Card2 extends StatelessWidget {
                       ),
                       Text(
                         state.differenceDate ?? '',
-                        style: TextStyle(color: MyColor.mainRed),
+                        style: TextStyle(color: MyColor.blueDio, fontWeight: FontWeight.bold ),
                       ),
                     ],
                   ),
@@ -395,7 +391,7 @@ class Card3 extends StatelessWidget {
                           ),
                           Text(
                             '${state.labelType()}',
-                            style: TextStyle(color: MyColor.mainRed),
+                            style: TextStyle(color: MyColor.blueDio, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -439,11 +435,11 @@ class Card3 extends StatelessWidget {
                       RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
-                          side: BorderSide(color: MyColor.mainRed),
+                          side: BorderSide(color: MyColor.mainGreen),
                         ),
                         onPressed: state.updateSortType,
                         color: (state.isAsc ?? '') == 'desc'
-                            ? MyColor.mainRed
+                            ? MyColor.mainGreen
                             : Colors.white,
                         child: Text(
                           state.labelType(),

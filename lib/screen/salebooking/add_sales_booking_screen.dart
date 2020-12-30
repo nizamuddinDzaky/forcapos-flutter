@@ -25,7 +25,7 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
           //date
           Text(
             'Tanggal',
-            style: Theme.of(context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -54,7 +54,13 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
 //                      });
                     },
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text('${strToDate(vm.currentDate.toString())}'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('${strToDate(vm.currentDate.toString())}', style: TextStyle(color: MyColor.greyText, fontSize: 16),),
+                        Icon(Icons.keyboard_arrow_down),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -71,39 +77,45 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
           //warehouse
           Text(
             'Gudang',
-            style: Theme.of(context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.store,
-                size: 16,
-                color: MyColor.blueDio,
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Column(
-                children: <Widget>[
-                  CupertinoButton(
-                    minSize: 0,
-                    onPressed: () async {
+          Container(
+            width: double.infinity,
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.store,
+                  size: 16,
+                  color: MyColor.blueDio,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Column(
+                  children: <Widget>[
+                    CupertinoButton(
+                      minSize: 0,
+                      onPressed: () async {
 //                      await actionGetWarehouse(vm);
-                      await vm.actionGetWarehouse();
-                      vm.showWarehousePicker(context);
+                        await vm.actionGetWarehouse();
+                        vm.showWarehousePicker(context);
 //                      showWarehousePicker();
-                    },
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      vm.currentWarehouse?.name ?? 'Pilih Gudang',
-//                      style: TextStyle(
-//                        color: currentWarehouse == null ? null : Colors.black,
-//                      ),
+                      },
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            vm.currentWarehouse?.name ?? 'Pilih Gudang', style: TextStyle(color: MyColor.greyText, fontSize: 16),
+                          ),
+                          Icon(Icons.keyboard_arrow_down),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
           MyDivider.lineDivider(
             customColor: MyColor.txtBlack,
@@ -116,39 +128,43 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
           //customer
           Text(
             'Pelanggan',
-            style: Theme.of(context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.perm_identity,
-                size: 16,
-                color: MyColor.blueDio,
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Column(
-                children: <Widget>[
-                  CupertinoButton(
-                    minSize: 0,
-                    onPressed: () async {
+          Container(
+            width: double.infinity,
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.perm_identity,
+                  size: 16,
+                  color: MyColor.blueDio,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Column(
+                  children: <Widget>[
+                    CupertinoButton(
+                      minSize: 0,
+                      onPressed: () async {
 //                      await actionGetCustomer(vm);
-                      await vm.actionGetCustomer();
-                      vm.showCustomerPicker(context);
+                        await vm.actionGetCustomer();
+                        vm.showCustomerPicker(context);
 //                      showCustomerPicker();
-                    },
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      vm.currentCustomer?.name ?? 'Pilih Pelanggan',
-//                      style: TextStyle(
-//                        color: currentWarehouse == null ? null : Colors.black,
-//                      ),
+                      },
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text("Pilih Pelanggan", style: TextStyle(color: MyColor.greyText),),
+                          Icon(Icons.keyboard_arrow_down),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
           MyDivider.lineDivider(
             customColor: MyColor.txtBlack,
