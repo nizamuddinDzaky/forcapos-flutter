@@ -54,28 +54,31 @@ class _CustomerGroupScreenState extends PriceGroupViewModel {
                       );
                     },
                   )
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(vertical: 8),
+                :Container(
+                  color: Color(0xffE9E9E9),
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(vertical: 4),
                     physics: ClampingScrollPhysics(),
 //      controller: isFilter? null : _controller,
                     itemBuilder: (c, i) => _listItem(listPriceGroup[i], i),
                     itemCount: listPriceGroup.length,
-                  ),
+                  )
+                ),
           );
   }
 
   Widget _listItem(PriceGroup pg, int index) {
     GlobalKey _keyMore = GlobalKey();
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-      elevation: 8,
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+      elevation: 0,
       child: InkWell(
         onTap: () {
           dynamic moreState = _keyMore.currentState;
           moreState.showButtonMenu();
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

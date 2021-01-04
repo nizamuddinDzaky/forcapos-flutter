@@ -28,7 +28,7 @@ class _AddEditCGScreenState extends State<AddEditCGScreen> {
             //Customer Group Name
             Text(
               'Nama Kelompok',
-              style: Theme.of(Get.context).textTheme.subtitle2,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Row(
               children: <Widget>[
@@ -71,7 +71,7 @@ class _AddEditCGScreenState extends State<AddEditCGScreen> {
             //Group Percentage
             Text(
               'Persenan Kelompok',
-              style: Theme.of(Get.context).textTheme.subtitle2,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Row(
               children: <Widget>[
@@ -114,7 +114,7 @@ class _AddEditCGScreenState extends State<AddEditCGScreen> {
             //Credit Limit
             Text(
               'Limit Kredit',
-              style: Theme.of(Get.context).textTheme.subtitle2,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
             ),
             Row(
               children: <Widget>[
@@ -150,13 +150,6 @@ class _AddEditCGScreenState extends State<AddEditCGScreen> {
             SizedBox(
               height: 24,
             ),
-            LoadingButton(
-              title: 'Simpan',
-              noMargin: true,
-              onPressed: () async {
-                await vm.actionSubmitAdd();
-              },
-            ),
           ],
         ),
       ),
@@ -177,6 +170,25 @@ class _AddEditCGScreenState extends State<AddEditCGScreen> {
         child: Scaffold(
           body: SafeArea(
             child: _body(vm),
+          ),
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.black54,
+                    blurRadius: 4.0,
+                    offset: Offset(0.0, 0.75))
+              ],
+              color: Colors.white,
+            ),
+            child: LoadingButton(
+              title: 'Simpan',
+              noMargin: true,
+              onPressed: () async {
+                await vm.actionSubmitAdd();
+              },
+            ),
           ),
         ),
       ),

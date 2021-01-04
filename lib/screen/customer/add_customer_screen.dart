@@ -13,6 +13,8 @@ class AddCustomerScreen extends StatefulWidget {
 }
 
 class _AddCustomerScreenState extends State<AddCustomerScreen> {
+  List<String> addCustomerTabs = ["Pelanggan", "Gudang"];
+
   Widget _body(CustomerController vm) {
     return Container(
       child: Column(
@@ -21,7 +23,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //company name
           Text(
             'Nama Perusahaan',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -57,7 +59,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //owner name
           Text(
             'Nama Pemilik',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -93,7 +95,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Kelompok Pelanggan',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -131,7 +133,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Kelompok Harga',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -206,7 +208,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Telp',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -243,7 +245,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Alamat',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -280,7 +282,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Provinsi',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -317,7 +319,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Kabupaten',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -354,7 +356,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Kecamatan',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -391,7 +393,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Kode Pos',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -427,7 +429,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'NPWP',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -502,7 +504,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           //
           Text(
             'Status',
-            style: Theme.of(Get.context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           GridView.count(
             shrinkWrap: true,
@@ -517,7 +519,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 return RaisedButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    side: BorderSide(color: MyColor.mainRed),
+                    side: BorderSide(color: Colors.transparent),
                   ),
                   onPressed: () {
                     setState(() {
@@ -525,8 +527,8 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                     });
                   },
                   color: vm.customer?.isActive == data[1]
-                      ? MyColor.mainRed
-                      : Colors.white,
+                      ? Colors.blue
+                      : Color(0xffededed),
                   child: Text(
                     data[0],
                     style: TextStyle(
@@ -541,13 +543,6 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           ),
           SizedBox(
             height: 24,
-          ),
-          LoadingButton(
-            title: 'Simpan',
-            noMargin: true,
-            onPressed: () async {
-              await vm.actionSubmit();
-            },
           ),
         ],
       ),
@@ -636,38 +631,63 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    color: Colors.blue,
-                    height: 40,
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 4.0,
+                            offset: Offset(0.0, 0.75))
+                      ],
+                      color: Colors.white,
+                    ),
                     child: TabBar(
+                      indicatorColor: Color(0xff004C97),
+                      labelColor: Color(0xff515151),
+                      labelStyle:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      unselectedLabelStyle: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.normal),
                       tabs: [
-                        Tab(
-                          child: Text("Pelanggan"),
-                        ),
-                        Tab(
-                          child: Text("Gudang"),
-                        ),
+                        Tab(text: "Pelanggan"),
+                        Tab(text: "Gudang"),
                       ],
                     ),
                   ),
                   Expanded(
-                    child: TabBarView(
-                      children: [
-                        SingleChildScrollView(
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            child: Form(key: vm.formKey, child: _body(vm))),
-                        _layoutWarehouse(vm),
-                      ],
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      padding: EdgeInsets.only(top: 8),
+                      color: Colors.white,
+                      child: TabBarView(
+                        children: [
+                          SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Form(key: vm.formKey, child: _body(vm))),
+                          _layoutWarehouse(vm),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: 1,
-                  ),
-                  LoadingButton(
-                    title: 'Simpan',
-                    noMargin: true,
-                    onPressed: () async {
-                      await vm.actionSubmit();
-                    },
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 4.0,
+                            offset: Offset(0.0, 0.75)
+                        )
+                      ],
+                      color: Colors.white,
+                    ),
+                    child: LoadingButton(
+                      title: 'Simpan',
+                      noMargin: true,
+                      onPressed: () async {
+                        await vm.actionSubmit();
+                      },
+                    ),
                   ),
                 ],
               ),

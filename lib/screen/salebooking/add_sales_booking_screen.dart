@@ -57,7 +57,10 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text('${strToDate(vm.currentDate.toString())}', style: TextStyle(color: MyColor.greyText, fontSize: 16),),
+                        Text(
+                          '${strToDate(vm.currentDate.toString())}',
+                          style: TextStyle(fontSize: 16),
+                        ),
                         Icon(Icons.keyboard_arrow_down),
                       ],
                     ),
@@ -106,7 +109,8 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            vm.currentWarehouse?.name ?? 'Pilih Gudang', style: TextStyle(color: MyColor.greyText, fontSize: 16),
+                            vm.currentWarehouse?.name ?? 'Pilih Gudang',
+                            style: TextStyle(fontSize: 16),
                           ),
                           Icon(Icons.keyboard_arrow_down),
                         ],
@@ -157,7 +161,7 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            vm.currentCustomer?.name ?? 'Pilih Pelanggan', style: TextStyle(color: MyColor.greyText, fontSize: 16),
+                            vm.currentCustomer?.name ?? 'Pilih Pelanggan', style: TextStyle(fontSize: 16),
                           ),
                           Icon(Icons.keyboard_arrow_down),
                         ],
@@ -186,29 +190,22 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
               ),
             ),
           ),
-          LoadingButton(
-            title: 'Lanjutkan',
-            noMargin: true,
-            onPressed: () {
-              if (vm.currentWarehouse != null && vm.currentCustomer != null)
-                Get.toNamed(salesBookingOrderScreen);
-            },
-          ),
         ],
       ),
     );
   }
 
   Widget _body(SalesBookingController vm) {
-    return Container(
-      color: MyColor.mainBg,
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: Column(
-                children: <Widget>[
-                  _sectionDetail(vm),
+    return Scaffold(
+      body: Container(
+        color: MyColor.mainBg,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    _sectionDetail(vm),
 //                  MyDivider.spaceDividerLogin(custom: 6),
 //                  Form(
 //                    key: formKey,
@@ -216,10 +213,32 @@ class _AddSalesBookingScreenState extends State<AddSalesBookingScreen> {
 //                  ),
 //                  MyDivider.lineDivider(customColor: MyColor.txtField),
 //                  _footer(),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.black54,
+                blurRadius: 4.0,
+                offset: Offset(0.0, 0.75)
+            )
           ],
+          color: Colors.white,
+        ),
+        child: LoadingButton(
+          title: 'Lanjutkan',
+          noMargin: true,
+          onPressed: () {
+            if (vm.currentWarehouse != null && vm.currentCustomer != null)
+              Get.toNamed(salesBookingOrderScreen);
+          },
         ),
       ),
     );

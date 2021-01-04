@@ -391,14 +391,13 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                   padding: EdgeInsets.symmetric(vertical: 8),
                                   child: Row(
                                     children: [
-                                      Flexible(
-                                        child: Text(
-                                          vm.currentWarehouse?.name ?? 'Pilih Gudang',
-                                          style: TextStyle(color: MyColor.greyText, fontSize: 16),
-                                          textAlign: TextAlign.start,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
+                                      Text(
+                                        vm.currentWarehouse?.name ??
+                                            'Pilih Gudang',
+                                        style: TextStyle(fontSize: 16),
+                                        textAlign: TextAlign.start,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
                                       Icon(Icons.keyboard_arrow_down),
                                     ],
@@ -445,14 +444,12 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                   padding: EdgeInsets.symmetric(vertical: 8),
                                   child: Row(
                                     children: [
-                                      Flexible(
-                                        child: Text(
-                                          vm.currentCustomer?.name ??
-                                              'Pilih Pelanggan',
-                                          style: TextStyle(color: MyColor.greyText, fontSize: 16),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
+                                      Text(
+                                        vm.currentCustomer?.name ??
+                                            'Pilih Pelanggan',
+                                        style: TextStyle(fontSize: 16),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
                                       Icon(Icons.keyboard_arrow_down),
                                     ],
@@ -614,7 +611,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                       child: Form(
                         child: Container(
                           color: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -623,7 +620,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                               Text(
                                 'Diskon',
                                 style:
-                                    Theme.of(Get.context).textTheme.subtitle2,
+                                TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               Row(
                                 children: <Widget>[
@@ -668,7 +665,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                               Text(
                                 'Biaya Pengiriman',
                                 style:
-                                    Theme.of(Get.context).textTheme.subtitle2,
+                                TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               Row(
                                 children: <Widget>[
@@ -711,7 +708,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                               //status
                               Text(
                                 'Status',
-                                style: Theme.of(context).textTheme.subtitle2,
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               GridView.count(
                                 shrinkWrap: true,
@@ -730,7 +727,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                         borderRadius:
                                             BorderRadius.circular(30.0),
                                         side:
-                                            BorderSide(color: MyColor.mainRed),
+                                        BorderSide(color: Colors.transparent)
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -741,8 +738,8 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                         });
                                       },
                                       color: vm.sales?.saleStatus == data[1]
-                                          ? MyColor.mainRed
-                                          : Colors.white,
+                                          ? Colors.blue
+                                          : Color(0xffededed),
                                       child: Text(
                                         data[0],
                                         style: TextStyle(
@@ -762,7 +759,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                               Text(
                                 'Jangka Waktu Pembayaran',
                                 style:
-                                    Theme.of(Get.context).textTheme.subtitle2,
+                                TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               Row(
                                 children: <Widget>[
@@ -801,7 +798,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                               Text(
                                 'Catatan Pegawai',
                                 style:
-                                    Theme.of(Get.context).textTheme.subtitle2,
+                                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               Row(
                                 children: <Widget>[
@@ -839,7 +836,7 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                               Text(
                                 'Catatan Penjualan',
                                 style:
-                                    Theme.of(Get.context).textTheme.subtitle2,
+                                TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
                               ),
                               Row(
                                 children: <Widget>[

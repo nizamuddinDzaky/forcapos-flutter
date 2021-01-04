@@ -28,7 +28,7 @@ class _AddEditPGScreenState extends State<AddEditPGScreen> {
             //Price Group Name
             Text(
               'Nama Kelompok',
-              style: Theme.of(Get.context).textTheme.subtitle2,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Row(
               children: <Widget>[
@@ -71,33 +71,45 @@ class _AddEditPGScreenState extends State<AddEditPGScreen> {
             //warehouse
             Text(
               'Gudang',
-              style: Theme.of(context).textTheme.subtitle2,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Row(
-              children: <Widget>[
-                Icon(
-                  Icons.store,
-                  size: 16,
-                  color: MyColor.blueDio,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Column(
-                  children: <Widget>[
-                    LoadingButton(
-                      title: vm.warehouse?.name ?? 'Pilih Gudang',
-                      noMargin: true,
-                      noPadding: true,
-                      isActionNavigation: true,
+            Container(
+              width: double.infinity,
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.store,
+                    size: 16,
+                    color: MyColor.blueDio,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: CupertinoButton(
+                      minSize: 0,
                       onPressed: () async {
                         await vm.actionGetWarehouse();
                         vm.showWarehousePicker(context);
                       },
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            vm.warehouse?.name ?? 'Pilih Gudang',
+                            style: TextStyle(fontSize: 16),
+    //                      style: TextStyle(
+    //                        color: currentWarehouse == null ? null : Colors.black,
+    //                      ),
+                          ),
+                          Icon(Icons.keyboard_arrow_down),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
             MyDivider.lineDivider(
               customColor: MyColor.txtBlack,
@@ -106,13 +118,6 @@ class _AddEditPGScreenState extends State<AddEditPGScreen> {
             ),
             SizedBox(
               height: 24,
-            ),
-            LoadingButton(
-              title: 'Simpan',
-              noMargin: true,
-              onPressed: () async {
-                await vm.actionSubmitAdd();
-              },
             ),
           ],
         ),
@@ -135,6 +140,25 @@ class _AddEditPGScreenState extends State<AddEditPGScreen> {
           body: SafeArea(
             child: _body(vm),
           ),
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.black54,
+                    blurRadius: 4.0,
+                    offset: Offset(0.0, 0.75))
+              ],
+              color: Colors.white,
+            ),
+            child: LoadingButton(
+              title: 'Simpan',
+              noMargin: true,
+              onPressed: () async {
+                await vm.actionSubmitAdd();
+              },
+            ),
+          )
         ),
       ),
     );
