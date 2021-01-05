@@ -364,19 +364,34 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                         padding: EdgeInsets.symmetric(vertical: 2),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
                               '${sb.referenceNo}',
                               style: TextStyle(
+                                fontSize: 16,
                                 color: MyColor.blueDio,
                                 fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text(
+                              strToDate(sb.date),
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: MyColor.txtField,
+                                  fontStyle: FontStyle.normal),
+                            ),
+                            SizedBox(
+                              height: 10,
                             ),
                             Text(
                               '${sb.customerId == '1' ? 'Eceran' : sb.customer}',
                               style: TextStyle(
                                 color: MyColor.txtField,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -387,31 +402,32 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                     SizedBox(
                       width: 8,
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(
-                            Icons.av_timer,
-                            size: 14,
-                          ),
-                          Expanded(
-                            child: RichText(
-                              textAlign: TextAlign.left,
-                              softWrap: true,
-                              text: TextSpan(children: <TextSpan>[
-                                TextSpan(
-                                    text: strToDateMMM(sb.date),
-                                    style: TextStyle(
-                                        color: MyColor.txtField,
-                                        fontWeight: FontWeight.bold)),
-                              ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Expanded(
+                    //   flex: 2,
+                    //   child: Row(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: <Widget>[
+                    //       Icon(
+                    //         Icons.av_timer,
+                    //         size: 14,
+                    //       ),
+                    //       Expanded(
+                    //         child: RichText(
+                    //           textAlign: TextAlign.left,
+                    //           softWrap: true,
+                    //           text: TextSpan(children: <TextSpan>[
+                    //             TextSpan(
+                    //                 text: strToDate(sb.date),
+                    //                 style: TextStyle(
+                    //                     color: Colors.black,
+                    //                     fontSize: 12,
+                    //                     fontWeight: FontWeight.normal)),
+                    //           ]),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

@@ -30,21 +30,22 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
           //date
           Text(
             'Tanggal',
-            style: Theme.of(context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.date_range,
-                size: 16,
-                color: MyColor.blueDio,
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Column(
-                children: <Widget>[
-                  CupertinoButton(
+          Container(
+            width: double.infinity,
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.date_range,
+                  size: 16,
+                  color: MyColor.blueDio,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: CupertinoButton(
                     minSize: 0,
                     onPressed: () async {
                       var date = vm.cSales?.date?.toDateTime();
@@ -59,11 +60,20 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                       });
                     },
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text("${strToDate(vm.cSales?.date)}"),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "${strToDate(vm.cSales?.date)}",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
           MyDivider.lineDivider(
             customColor: MyColor.txtBlack,
@@ -76,7 +86,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
           //warehouse
           Text(
             'Gudang',
-            style: Theme.of(context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Row(
             children: <Widget>[
@@ -88,19 +98,24 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               SizedBox(
                 width: 8,
               ),
-              Column(
-                children: <Widget>[
-                  LoadingButton(
-                    title: vm.cWarehouse?.name ?? 'Pilih Gudang',
-                    noMargin: true,
-                    noPadding: true,
-                    isActionNavigation: true,
-                    onPressed: (vm.cWarehouse != null && vm.sales.saleStatus == 'reserved') ? null : () async {
-                      await vm.actionGetWarehouse();
-                      vm.showWarehousePicker(context);
-                    },
+              Expanded(
+                child: CupertinoButton(
+                  minSize: 0,
+                  onPressed: (vm.cWarehouse != null &&
+                      vm.sales.saleStatus == 'reserved') ? null : () async {
+                    await vm.actionGetWarehouse();
+                    vm.showWarehousePicker(context);
+                  },
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(vm.cWarehouse?.name ?? 'Pilih Gudang',
+                        style: TextStyle(fontSize: 16),),
+                      Icon(Icons.arrow_drop_down),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),
@@ -115,7 +130,7 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
           //customer
           Text(
             'Pelanggan',
-            style: Theme.of(context).textTheme.subtitle2,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
           ),
           Row(
             children: <Widget>[
@@ -127,19 +142,23 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
               SizedBox(
                 width: 8,
               ),
-              Column(
-                children: <Widget>[
-                  LoadingButton(
-                    title: vm.cCustomer?.name ?? 'Pilih Pelanggan',
-                    noMargin: true,
-                    noPadding: true,
-                    isActionNavigation: true,
-                    onPressed: () async {
-                      await vm.actionGetCustomer();
-                      vm.showCustomerPicker(context);
-                    },
+              Expanded(
+                child: CupertinoButton(
+                  minSize: 0,
+                  onPressed: () async {
+                    await vm.actionGetCustomer();
+                    vm.showCustomerPicker(context);
+                  },
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(vm.cCustomer?.name ?? 'Pilih Pelanggan',
+                        style: TextStyle(fontSize: 16),),
+                      Icon(Icons.arrow_drop_down),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),
@@ -425,7 +444,8 @@ class _EditSalesBookingScreenState extends State<EditSalesBookingScreen> {
                   children: <Widget>[
                     Text(
                       'Produk',
-                      style: Theme.of(context).textTheme.subtitle2,
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),

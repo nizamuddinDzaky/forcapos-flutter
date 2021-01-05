@@ -54,7 +54,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //owner name
           Text(
@@ -90,7 +90,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -108,16 +108,27 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 width: 8,
               ),
               Expanded(
-                child: LoadingButton(
-                  title: vm.customer?.customerGroupName ?? 'Pilih Kelompok Pelanggan',
-                  noMargin: true,
-                  noPadding: true,
-                  isActionNavigation: true,
-                  isSpinner: true,
+                child: CupertinoButton(
+                  minSize: 0,
                   onPressed: () async {
                     await vm.actionGetCustomerGroup();
                     vm.showCustomerGroupPicker(context);
                   },
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        vm.customer?.customerGroupName ??
+                            'Pilih Kelompok Pelanggan',
+                        style: TextStyle(fontSize: 16),
+//                      style: TextStyle(
+//                        color: currentWarehouse == null ? null : Colors.black,
+//                      ),
+                      ),
+                      Icon(Icons.arrow_drop_down),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -128,7 +139,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             thickness: 0.5,
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -146,16 +157,26 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 width: 8,
               ),
               Expanded(
-                child: LoadingButton(
-                  title: vm.customer?.priceGroupName ?? 'Pilih Kelompok Harga',
-                  noMargin: true,
-                  noPadding: true,
-                  isActionNavigation: true,
-                  isSpinner: true,
+                child: CupertinoButton(
+                  minSize: 0,
                   onPressed: () async {
                     await vm.actionGetPriceGroup();
                     vm.showPriceGroupPicker(context);
                   },
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        vm.customer?.priceGroupName ?? 'Pilih Kelompok Harga',
+                        style: TextStyle(fontSize: 16),
+//                      style: TextStyle(
+//                        color: currentWarehouse == null ? null : Colors.black,
+//                      ),
+                      ),
+                      Icon(Icons.arrow_drop_down),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -166,7 +187,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             thickness: 0.5,
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -203,7 +224,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -240,7 +261,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -277,7 +298,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -295,15 +316,25 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 width: 8,
               ),
               Expanded(
-                child: LoadingButton(
-                  title: vm.province?.txt ?? 'Pilih Provinsi',
-                  noMargin: true,
-                  noPadding: true,
-                  isActionNavigation: true,
-                  isSpinner: true,
+                child: CupertinoButton(
+                  minSize: 0,
                   onPressed: () async {
                     vm.callAddress(context, 'Provinsi', 'province');
                   },
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        vm.province?.txt ?? 'Pilih Provinsi',
+                        style: TextStyle(fontSize: 16),
+//                      style: TextStyle(
+//                        color: currentWarehouse == null ? null : Colors.black,
+//                      ),
+                      ),
+                      Icon(Icons.arrow_drop_down),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -314,7 +345,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             thickness: 0.5,
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -332,15 +363,25 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 width: 8,
               ),
               Expanded(
-                child: LoadingButton(
-                  title: vm.city?.txt ?? 'Pilih Kabupaten/Kota',
-                  noMargin: true,
-                  noPadding: true,
-                  isActionNavigation: true,
-                  isSpinner: true,
+                child: CupertinoButton(
+                  minSize: 0,
                   onPressed: () async {
                     vm.callAddress(context, 'Kab. Kota', 'city');
                   },
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        vm.city?.txt ?? 'Pilih Kabupaten/Kota',
+                        style: TextStyle(fontSize: 16),
+//                      style: TextStyle(
+//                        color: currentWarehouse == null ? null : Colors.black,
+//                      ),
+                      ),
+                      Icon(Icons.arrow_drop_down),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -351,7 +392,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             thickness: 0.5,
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -369,15 +410,25 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 width: 8,
               ),
               Expanded(
-                child: LoadingButton(
-                  title: vm.state?.txt ?? 'Pilih Kecamatan',
-                  noMargin: true,
-                  noPadding: true,
-                  isActionNavigation: true,
-                  isSpinner: true,
+                child: CupertinoButton(
+                  minSize: 0,
                   onPressed: () async {
                     vm.callAddress(context, 'Kecamatan', 'state');
                   },
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        vm.state?.txt ?? 'Pilih Kecamatan',
+                        style: TextStyle(fontSize: 16),
+//                      style: TextStyle(
+//                        color: currentWarehouse == null ? null : Colors.black,
+//                      ),
+                      ),
+                      Icon(Icons.arrow_drop_down),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -388,7 +439,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             thickness: 0.5,
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -424,7 +475,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
           //
           Text(
@@ -460,7 +511,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 15,
           ),
 /*
           //
@@ -574,6 +625,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                   return ListTile(
                     title: Text("${warehouse?.name ?? ''}"),
                     leading: Checkbox(
+                      activeColor: MyColor.blueDio,
                       onChanged: vm.isCheckDefaultWarehouse(warehouse)
                           ? null
                           : (bool value) {
@@ -582,6 +634,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       value: (vm.listWarehousesSelected ?? []).contains(warehouse),
                     ),
                     trailing: Radio(
+                      activeColor: Color(0xff1CA865),
                       value: warehouse.id,
                       groupValue: vm.defaultWarehouse?.id,
                       onChanged: (value) {

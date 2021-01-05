@@ -35,7 +35,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                 children: <Widget>[
                   Text(
                     title,
-                    style: TextStyle(color: MyColor.txtBlack),
+                    style: TextStyle(color: MyColor.txtBlack, fontSize: 16),
                   ),
                   Stack(
                     children: <Widget>[
@@ -61,16 +61,19 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                   data[1] ?? '',
                                   style: TextStyle(
                                       color: MyColor.txtBlack,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   data[2]?.toString()?.trim() ?? '',
-                                  style: TextStyle(color: MyColor.txtField),
+                                  style: TextStyle(
+                                      color: MyColor.txtField, fontSize: 16),
                                 ),
                                 if (data[3] != null)
                                   Text(
                                     data[3] ?? 'tes',
-                                    style: TextStyle(color: MyColor.txtField),
+                                    style: TextStyle(
+                                        color: MyColor.txtField, fontSize: 16),
                                   ),
                               ],
                             ),
@@ -91,14 +94,19 @@ class _SBDetailScreenState extends SBDetailViewModel {
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Row(
         children: <Widget>[
-          Icon(Icons.book),
+          Icon(
+            Icons.widgets,
+            color: Colors.black,
+          ),
           SizedBox(
             width: 8,
           ),
           Text(
             'Produk',
-            style:
-                TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: MyColor.txtBlack,
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
           ),
         ],
       ),
@@ -116,12 +124,16 @@ class _SBDetailScreenState extends SBDetailViewModel {
           Text(
             key ?? '',
             style:
-                TextStyle(color: MyColor.txtField, fontWeight: FontWeight.bold),
+            TextStyle(color: MyColor.txtField,
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
           ),
           Text(
             '${MyNumber.toNumberIdStr(value)}',
             style: TextStyle(
-                color: color ?? MyColor.txtField, fontWeight: FontWeight.bold),
+                color: color ?? MyColor.txtField,
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
           ),
         ],
       ),
@@ -218,7 +230,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(Icons.insert_drive_file),
+          Icon(Icons.insert_drive_file, color: Colors.blue,),
           SizedBox(
             width: 8,
           ),
@@ -233,13 +245,14 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         children: <Widget>[
                           Text(
                             'Referensi',
-                            style: TextStyle(color: MyColor.txtField),
+                            style: TextStyle(color: MyColor.txtField,
+                                fontSize: 16),
                           ),
                           Text(
                             '${sb.referenceNo}',
                             style: TextStyle(
                                 color: MyColor.txtBlack,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ],
                       ),
@@ -250,13 +263,16 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         children: <Widget>[
                           Text(
                             'Tanggal',
-                            style: TextStyle(color: MyColor.txtField),
+                            style: TextStyle(color: MyColor.txtField,
+                                fontSize: 16),
                           ),
                           Text(
                             '${strToDateTimeFormat(sb.date)}',
                             style: TextStyle(
-                                color: MyColor.txtField,
-                                fontWeight: FontWeight.bold),
+                              color: MyColor.txtField,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
@@ -274,12 +290,14 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         children: <Widget>[
                           Text(
                             'Status Penjualan',
-                            style: TextStyle(color: MyColor.txtField),
+                            style: TextStyle(color: MyColor.txtField,
+                                fontSize: 16),
                           ),
                           Text(
                             '${statusStyle[0]}',
                             style: TextStyle(
                                 color: statusStyle[1],
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -345,17 +363,17 @@ class _SBDetailScreenState extends SBDetailViewModel {
                     sbi.productName ?? '',
                     maxLines: 2,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       color: MyColor.mainRed,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(
-                    height: 8,
+                    height: 12,
                   ),
                   Text(
                     'Satuan Harga',
-                    textScaleFactor: 1.0,
+                    // textScaleFactor: 1.0,
                     style: TextStyle(
                       fontSize: 16,
                       color: MyColor.txtField,
@@ -378,7 +396,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
                         ),
                       Text(
                         MyNumber.toNumberRpStr(sbi.unitPrice) ?? '',
-                        textScaleFactor: 1.0,
+                        // textScaleFactor: 1.0,
                         style: TextStyle(
                           fontSize: 16,
                           color: MyColor.txtBlack,
@@ -391,19 +409,23 @@ class _SBDetailScreenState extends SBDetailViewModel {
               ),
             ),
           ),
-          Column(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Text(
                 MyNumber.toNumberIdStr(sbi.quantity) ?? '',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   color: MyColor.txtField,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(width: 3,),
               Text(
                 sbi.productUnitCode ?? '',
+                style: TextStyle(fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: MyColor.txtField,),
               ),
             ],
           )
@@ -499,7 +521,7 @@ class _SBDetailScreenState extends SBDetailViewModel {
           sectionDetail(),
           MyDivider.spaceDividerLogin(),
           sectionDO(noDo: sb.saleStatus),
-          MyDivider.lineDivider(),
+          MyDivider.spaceDividerSmooth(),
           FutureBuilder(
             future: getSalesBookingItem(sb.id),
             builder: (context, snapshot) {
@@ -568,7 +590,8 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                     style: Theme.of(context)
                                         .textTheme
                                         .subtitle2
-                                        .copyWith(color: Colors.black)),
+                                        .copyWith(
+                                        color: Colors.black, fontSize: 16)),
                               ],
                             ),
                           ),
@@ -894,10 +917,12 @@ class _SBDetailScreenState extends SBDetailViewModel {
                                   width: 8,
                                 ),
                                 Text('Daftar Pengiriman',
-                                    style: Theme.of(context)
+                                    style: Theme
+                                        .of(context)
                                         .textTheme
                                         .subtitle2
-                                        .copyWith(color: Colors.black)),
+                                        .copyWith(
+                                        color: Colors.black, fontSize: 16)),
                               ],
                             ),
                           ),

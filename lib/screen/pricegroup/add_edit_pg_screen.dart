@@ -103,7 +103,7 @@ class _AddEditPGScreenState extends State<AddEditPGScreen> {
     //                        color: currentWarehouse == null ? null : Colors.black,
     //                      ),
                           ),
-                          Icon(Icons.keyboard_arrow_down),
+                          Icon(Icons.arrow_drop_down),
                         ],
                       ),
                     ),
