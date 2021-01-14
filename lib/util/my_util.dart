@@ -157,9 +157,22 @@ paymentStatus(String status) {
     case 'partial':
       return ['Sebagian', MyColor.mainBlue];
     case 'due':
-      return ['Jatuh tempo', MyColor.mainOrange];
+      return ['Jatuh tempo', MyColor.mainRed];
     default:
-      return ['Menunggu', MyColor.mainRed];
+      return ['Menunggu', MyColor.mainOrange];
+  }
+}
+
+purchaseStatus(String status) {
+  switch(status?.toLowerCase()) {
+    case 'received':
+      return ['Diterima', MyColor.mainGreen];
+    case 'returned':
+      return ['Return', MyColor.mainRed];
+    case 'partial':
+      return ['Sebagian', MyColor.mainBlue];
+    default:
+      return ['Menunggu', MyColor.mainOrange];
   }
 }
 

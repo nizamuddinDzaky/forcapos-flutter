@@ -31,11 +31,17 @@ class ApiConfig {
   static String urlReturnDeliveriesBooking = '${path}sales_booking/add_return_deliveries';
   static String urlCloseSalesBooking = '${path}sales_booking/close_sales_booking';
 
-  //purchase
+  //GR
   static String urlAddGRtoPO = '${path}purchases/add_gr_to_po';
   static String urlListGoodReceived = '${path}purchases/list_goods_received';
   static String urlListGoodReceivedPaging = '${path}purchases/list_goods_received_paging';
   static String urlDetailGoodReceived = '${path}purchases/detail_goods_received';
+
+  //purchase
+  static String urlListPurchase = '${path}Purchases/list_purchases';
+  static String urlAddPurchase = '${path}Purchases/add_purchases';
+  static String urlDetailPurchase = '${path}Purchases/detail_purchases';
+  static String urlUpdatePurchase = '${path}Purchases/edit_purchase';
 
   //warehouse
   static String urlListWarehouse = '${path}warehouses/list_warehouses';
@@ -67,6 +73,7 @@ class ApiConfig {
 
   //product
   static String urlListProduct = '${path}products/list_products';
+  static String urlListProductPurchase = '${path}products/list_product_purchase';
 
   //local
   static String urlListProvince = '${local}list_province';

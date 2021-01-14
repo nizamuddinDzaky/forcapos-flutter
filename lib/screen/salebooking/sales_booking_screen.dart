@@ -74,6 +74,7 @@ class _SalesBookingScreenState extends SalesBookingViewModel {
                           onPressed: () async {
                             var old = getArg('result');
                             await Get.toNamed(addSalesBookingScreen);
+                            debugPrint("asdasd $old ${getArg('result')} ${getArg('status')}");
                             if (old != getArg('result')) {
                               setState(() {
                                 switch (getArg('status')) {

@@ -14,6 +14,7 @@ import 'package:posku/model/delivery.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
+import 'package:posku/model/supplier.dart';
 import 'package:posku/model/warehouse.dart';
 import 'package:posku/screen/salebooking/edit_sb_controller.dart';
 import 'package:posku/screen/salebooking/sb_detail_screen.dart';
@@ -28,7 +29,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
   Customer customer;
-  Company supplier;
+  Supplier supplier;
   Warehouse warehouse;
   List<Payment> listPayment;
   List<Delivery> listDelivery;
@@ -155,7 +156,7 @@ abstract class SBDetailViewModel extends State<SBDetailScreen> {
     return null;
   }
 
-  Future<Company> getDetailSupplier(String idCompany) async {
+  Future<Supplier> getDetailSupplier(String idCompany) async {
     if (supplier != null) return supplier;
     var params = {
       MyString.KEY_ID_SUPPLIER: idCompany,

@@ -164,15 +164,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <List<String>>[
-                        [kIconSale, 'Penjualan'],
-                        [kIconDelivery, 'Pengiriman'],
-                        [kIconPurchase, 'Pemesanan'],
-                        [kIconMaster, 'Master'],
+                        [kIconSale, 'Pembelian', listPurchase],
+                        [kIconDelivery, 'Pengiriman', null],
+                        [kIconPurchase, 'Pemesanan', null],
+                        [kIconMaster, 'Master', null],
                       ].map((List<String> data) {
                         return Expanded(
                           flex: 1,
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              if(data[2] != null)
+                              Get.toNamed(
+                                data[2],
+                              );
+                              /*if(data[1].toLowerCase() == 'pembelian')
+                              debugPrint("asdasd" + data[1]);*/
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[

@@ -23,6 +23,12 @@ import 'package:posku/screen/pricegroup/add_customer_to_pg_screen.dart';
 import 'package:posku/screen/pricegroup/add_edit_pg_screen.dart';
 import 'package:posku/screen/pricegroup/pg_detail_screen.dart';
 import 'package:posku/screen/profile/profile_screen.dart';
+import 'package:posku/screen/purchase/add_purchase_screen.dart';
+import 'package:posku/screen/purchase/edit_purchase_screen.dart';
+import 'package:posku/screen/purchase/list_purchase_screen.dart';
+import 'package:posku/screen/purchase/add_product_purchase_screen.dart';
+import 'package:posku/screen/purchase/purchase_cart_screen.dart';
+import 'package:posku/screen/purchase/purchase_detail_screen.dart';
 import 'package:posku/screen/salebooking/add_sales_booking_screen.dart';
 import 'package:posku/screen/salebooking/edit_sales_booking_screen.dart';
 import 'package:posku/screen/salebooking/edit_sb_item_screen.dart';
@@ -64,6 +70,12 @@ const addEditPGScreen = "/AddEditPGScreen";
 const addEditCGScreen = "/AddEditCGScreen";
 const addCustomerScreen = "/AddCustomerScreen";
 const editCustomerScreen = "/EditCustomerScreen";
+const listPurchase = "/ListPurchaseScreen";
+const addPurchase = "/AddPurchaseScreen";
+const addProductPurchase = "/AddProductPurchaseScreen";
+const purchaseCart = "/PurchaseCartScreen";
+const purchaseDetail = "/PurchaseDetailScreen";
+const editPurchaseScreen = "/EditPurchaseScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -250,6 +262,42 @@ class MyRouter {
           transition: Transition.rightToLeft,
           page: EditCustomerScreen(),
         );
+      case listPurchase:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: ListPurchaseScreen(),
+        );
+      case addPurchase:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: AddPurchaseScreen(),
+        );
+      case addProductPurchase:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: AddProductPurchaseScreen(),
+        );
+      case purchaseCart:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: PurchaseCartScreen(),
+        );
+      case purchaseDetail:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: PurchaseDetailScreen(),
+        );
+        case editPurchaseScreen:
+          return GetRouteBase(
+            settings: settings,
+            transition: Transition.rightToLeft,
+            page: EditPurchaseScreen(),
+          );
       default:
         return GetRouteBase(
             settings: settings,

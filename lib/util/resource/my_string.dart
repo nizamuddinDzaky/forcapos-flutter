@@ -11,6 +11,11 @@ class MyString {
   static const KEY_DELIVERY_STATUS = "delivery_status";
   static const KEY_DELIVERY_STATUS_SALE = "delivery_status_sale";
 
+  //purchase
+  static const KEY_PURCHASE_STATUS = "purchase_status";
+  static const KEY_PURCHASES_ID = "id_purchases";
+  static const KEY_PURCHASE_ID = "id_purchase";
+
   // good received
   static const KEY_ID_GOODS_RECEIVED = "id_goods_received";
   static const KEY_GR_STATUS = "goods_received_status";
@@ -29,6 +34,7 @@ class MyString {
 
   // supplier
   static const KEY_ID_SUPPLIER = "id_supplier";
+  static const KEY_SUPPLIER_ID = "supplier_id";
 
   // product
   // customer group

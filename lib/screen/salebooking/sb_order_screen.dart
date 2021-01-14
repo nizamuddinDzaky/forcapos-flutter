@@ -391,13 +391,15 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                   padding: EdgeInsets.symmetric(vertical: 8),
                                   child: Row(
                                     children: [
-                                      Text(
-                                        vm.currentWarehouse?.name ??
-                                            'Pilih Gudang',
-                                        style: TextStyle(fontSize: 16),
-                                        textAlign: TextAlign.start,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+                                      Flexible(
+                                        child: Text(
+                                          vm.currentWarehouse?.name ??
+                                              'Pilih Gudang',
+                                          style: TextStyle(fontSize: 16),
+                                          textAlign: TextAlign.start,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
                                       Icon(Icons.keyboard_arrow_down),
                                     ],
@@ -444,12 +446,14 @@ class _SalesBookingOrderScreenState extends State<SalesBookingOrderScreen> {
                                   padding: EdgeInsets.symmetric(vertical: 8),
                                   child: Row(
                                     children: [
-                                      Text(
-                                        vm.currentCustomer?.name ??
-                                            'Pilih Pelanggan',
-                                        style: TextStyle(fontSize: 16),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+                                      Flexible(
+                                        child: Text(
+                                          vm.currentCustomer?.name ??
+                                              'Pilih Pelanggan',
+                                          style: TextStyle(fontSize: 16),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
                                       Icon(Icons.keyboard_arrow_down),
                                     ],

@@ -1,5 +1,6 @@
 import 'package:posku/model/GoodReceived.dart';
 import 'package:posku/model/GoodReceivedItem.dart';
+import 'package:posku/model/Purchase.dart';
 import 'package:posku/model/company.dart';
 import 'package:posku/model/customer.dart';
 import 'package:posku/model/customer_group.dart';
@@ -8,21 +9,26 @@ import 'package:posku/model/delivery_item.dart';
 import 'package:posku/model/payment.dart';
 import 'package:posku/model/price_group.dart';
 import 'package:posku/model/product.dart';
+import 'package:posku/model/purchase_items.dart';
 import 'package:posku/model/sales_booking.dart';
 import 'package:posku/model/sales_booking_item.dart';
 import 'package:posku/model/user.dart';
 import 'package:posku/model/warehouse.dart';
+import 'package:posku/model/supplier.dart';
 
 class DataResponse {
   int totalGoodsReceived;
   List<SalesBooking> listSalesBooking;
+  Purchase purchase;
+  List<Purchase> listPurchase;
+  List<PurchaseItems> purchaseItems;
   List<SalesBookingItem> salesBookingItems;
   SalesBooking salesBooking;
   List<GoodReceived> listGoodsReceived;
   List<GoodReceivedItem> goodReceivedItems;
   GoodReceived goodReceived;
   Customer customer;
-  Company supplier;
+  Supplier supplier;
   Warehouse warehouse;
   List<Payment> listPayment;
   List<Delivery> listDelivery;
@@ -32,6 +38,7 @@ class DataResponse {
   User user;
   String token;
   List<Customer> listCustomers;
+  List<Supplier> listSupplier;
   List<CustomerGroup> customerGroups;
   List<PriceGroup> priceGroups;
   int totalCustomerData;
@@ -92,6 +99,11 @@ class DataResponse {
     listWarehouses = ifExistList(json, 'list_warehouses', (obj) {
       return Warehouse.fromJson(obj);
     }) ?? listWarehouses;
+
+    listSupplier = ifExistList(json, 'list_suppliers', (obj) {
+      return Supplier.fromJson(obj);
+    }) ?? listSupplier;
+
     listGroupProductPrice = ifExistList(json, 'group_product_price', (obj) {
       return Product.fromJson(obj);
     });
@@ -131,7 +143,7 @@ class DataResponse {
       return Warehouse.fromJson(obj);
     });
     supplier = ifExistObject(json, 'supplier', (obj) {
-      return Company.fromJson(obj);
+      return Supplier.fromJson(obj);
     });
     salesBooking = ifExistObject(json, 'sale', (sb) {
       return SalesBooking.fromJson(sb);
@@ -139,9 +151,23 @@ class DataResponse {
     listSalesBooking = ifExistList(json, 'list_sales_booking', (sb) {
       return SalesBooking.fromJson(sb);
     });
+
     salesBookingItems = ifExistList(json, 'sale_items', (sb) {
       return SalesBookingItem.fromJson(sb);
     });
+
+    purchase = ifExistObject(json, 'purchase', (sb) {
+      return Purchase.fromJson(sb);
+    });
+
+    listPurchase = ifExistList(json, 'list_purchases', (purchase) {
+      return Purchase.fromJson(purchase);
+    });
+
+    purchaseItems = ifExistList(json, 'purchase_items', (sb) {
+      return PurchaseItems.fromJson(sb);
+    });
+
     totalGoodsReceived = ifExist(json, 'total_goods_received');
     if (json['list_goods_received'] != null) {
       listGoodsReceived = new List<GoodReceived>();
