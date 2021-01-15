@@ -24,6 +24,7 @@ abstract class ListPurchaseViewModel extends State<ListPurchaseScreen>
   final FocusNode searchFocusNode = FocusNode();
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
   new GlobalKey<RefreshIndicatorState>();
+  Map<String, String> searchData;
   GlobalKey<PaginationListState<Purchase>> keyGRSearch = GlobalKey();
   int lastOffsetSearch = -1;
   List<bool> isFirst = [false, false, false, false];
@@ -35,14 +36,15 @@ abstract class ListPurchaseViewModel extends State<ListPurchaseScreen>
     GlobalKey(),
   ];
   List<int> lastOffset = [-1, -1, -1, -1];
+  bool isFirstSearch = false;
   final TextEditingController searchTextController = TextEditingController();
 
   Future<Null> actionRefresh() async{
-    /*if (isSearch) {
+    if (isSearch) {
       lastOffsetSearch = 0;
       keyGRSearch?.currentState?.resetFetchPageData();
       return null;
-    }*/
+    }
     lastOffset[sliding] = -1;
     keyGR[sliding]?.currentState?.resetFetchPageData();
     return null;
@@ -105,7 +107,9 @@ abstract class ListPurchaseViewModel extends State<ListPurchaseScreen>
     super.initState();
   }
 
-  FocusNode initSearch({FocusNode searchFocusNode}) {
+  FocusNode initSearch({FocusNode searchFocusNode, PurchaseState homeState}) {
+    isSearch = true;
+    debugPrint("initsearch ${searchFocusNode.hasListeners}");
     if (searchFocusNode.hasListeners == false) {
       searchFocusNode?.addListener(() async {
         if (!animationController.isAnimating) {
@@ -116,29 +120,29 @@ abstract class ListPurchaseViewModel extends State<ListPurchaseScreen>
     return searchFocusNode;
   }
 
-  FocusNode initFocus() {
-    searchFocusNode.addListener(() {
-      setState(() {
-        isSearch = !isSearch;
-      });
+  FocusNode initFocus({PurchaseState homeState}) {
+    FocusNode focusNode = FocusNode();
+    focusNode.addListener(() async {
+      isSearch = true;
+      homeState.changeSearch(true);
+      await Future.delayed(Duration(milliseconds: 100));
+      searchFocusNode?.requestFocus();
     });
-    return searchFocusNode;
+    return focusNode;
   }
 
-  void cancelSearch() {
-    debugPrint("cancel Search");
+  void cancelSearch({PurchaseState purchaseState, bool notify}) {
     isSearch = false;
-    /*searchData = null;
-    listSearch?.clear();
+    searchData = null;
+    /*listSearch?.clear();
     listSearch = null;*/
-    /*if (notify ?? true) homeState?.changeSearch(false);*/
+    if (notify ?? true) purchaseState?.changeSearch(false);
     searchTextController.clear();
     searchFocusNode.unfocus();
     animationController.reverse();
   }
 
   void clearSearch() {
-    debugPrint("clear Search");
     searchTextController.clear();
   }
 
@@ -161,7 +165,7 @@ abstract class ListPurchaseViewModel extends State<ListPurchaseScreen>
       lastOffset[curSliding] = offset;
     } else {
       if (offset == -1) return null;
-      /*lastOffsetSearch = offset;*/
+      lastOffsetSearch = offset;
     }
     List<Purchase> upcomingList;
     var params = {
@@ -171,10 +175,10 @@ abstract class ListPurchaseViewModel extends State<ListPurchaseScreen>
       'limit': '10',
     };
     params.addAll(filterData);
-    /*if (searchData != null && searchData.isNotEmpty) {
+    if (searchData != null && searchData.isNotEmpty) {
       params.clear();
       params.addAll(searchData);
-    }*/
+    }
     var status = await ApiClient.methodGet(ApiConfig.urlListPurchase,
         params: params, tagOrFlag: sliding, onBefore: (status) {
 //      Get.back();
@@ -192,6 +196,16 @@ abstract class ListPurchaseViewModel extends State<ListPurchaseScreen>
         });
     status.execute();
     return upcomingList;
+  }
+
+  void onUpdate(String update) {}
+
+  void onSubmit(String submit) {
+    searchData?.clear();
+    searchData = {
+      'search': submit,
+    };
+    actionRefresh();
   }
 
   goToDetail(purchase) async {

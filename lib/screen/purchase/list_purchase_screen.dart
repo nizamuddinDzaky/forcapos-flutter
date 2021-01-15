@@ -8,9 +8,41 @@ import 'package:posku/model/Purchase.dart';
 import 'package:posku/app/my_router.dart';
 import 'package:posku/screen/purchase/list_purchase_view_model.dart';
 import 'package:posku/util/my_number.dart';
+import 'package:posku/util/my_pref.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:provider/provider.dart';
+
+class PurchaseState extends ChangeNotifier {
+  bool isBack = false;
+  bool _isSearch = false;
+  int _roleId;
+
+  bool get isSearch => _isSearch;
+
+  int get roleId => _roleId;
+
+//  int get roleId => MyString.ROLE_SUPER_ADMIN;
+//  int get roleId => MyString.ROLE_WAREHOUSE_ADMIN;
+//  int get roleId => MyString.ROLE_CASHIER;
+
+  void changeRole(int newRole, {bool isNotify}) {
+    _roleId = newRole;
+    if (isNotify == true) notifyListeners();
+  }
+
+  void changeSearch(bool isSearch, {Function action}) {
+    this._isSearch = isSearch;
+    if (action != null) action();
+    notifyListeners();
+  }
+
+  void popBack() {
+    isBack = true;
+    _isSearch = false;
+    notifyListeners();
+  }
+}
 
 class ListPurchaseScreen extends StatefulWidget {
   @override
@@ -18,129 +50,158 @@ class ListPurchaseScreen extends StatefulWidget {
 }
 
 class _ListPurchaseScreenState extends ListPurchaseViewModel {
+  /*PurchaseState purchaseState;*/
+
   @override
   Widget build(BuildContext context) {
+    /*debugPrint("asdds => ${purchaseState.isBack}");*/
+    /*if (purchaseState.isBack) {
+      purchaseState.isBack = false;
+      cancelSearch(purchaseState: purchaseState, notify: false);
+    }*/
     // TODO: implement build
-    return CupertinoPageScaffold(
-      child: Scaffold(
-        appBar: EmptyAppBar(),
-        body: SafeArea(
-          child: NestedScrollView(
-            headerSliverBuilder: (ctx, innerBoxIsScrolled) {
-             return [
-               if(!isSearch)
-               CupertinoSliverNavigationBar(
-                 leading: CupertinoButton(
-                   minSize: 0,
-                   padding: EdgeInsets.all(0.0),
-                   onPressed: () async {
-                     Get.back();
-                   },
-                   child: Icon(
-                     Icons.arrow_back,
-                     size: 24,
-                   ),
-                 ),
-                 transitionBetweenRoutes: false,
-                 heroTag: 'logoForcaPoS',
-                 middle: CupertinoSlidingSegmentedControl(
-                   children: {
-                     0: Flexible(
-                         child: Text(
-                             'Menunggu',
-                           style: TextStyle(fontSize: 16),
-                           overflow: TextOverflow.ellipsis,
-                           maxLines: 1,
-                         )
-                     ),
-                     1: Flexible(
-                         child: Text(
-                             'Diterima',
-                           style: TextStyle(fontSize: 16),
-                           overflow: TextOverflow.ellipsis,
-                           maxLines: 1,
-                         )
-                     ),
-                     2: Flexible(
-                         child: Text(
-                             'Sebagian',
-                           style: TextStyle(fontSize: 16),
-                           overflow: TextOverflow.ellipsis,
-                           maxLines: 1,
-                         )
-                     ),
-                     3: Flexible(
-                         child: Text(
-                             'Dikembalikan',
-                           style: TextStyle(fontSize: 16),
-                           overflow: TextOverflow.ellipsis,
-                           maxLines: 1,
-                         )
-                     ),
-                   },
-                   groupValue: sliding,
-                   onValueChanged: (newValue) {
-                     setState(() {
-                       sliding = newValue;
-                       tabController.index = sliding;
-                     });
-                   },
-                 ),
-                 trailing: CupertinoButton(
-                   minSize: 16,
-                   padding: EdgeInsets.all(0.0),
-                   onPressed: _showOption,
-                   child: Icon(
-                     Icons.more_vert,
-                     size: 24,
-                   ),
-                 ),
-                 largeTitle: Text("")/*IOSSearchBar(
-                   animation: animationController,
-                   controller: TextEditingController(),
-                   focusNode: initFocus(),
-                 )*/,
-               ),
-              /* if(isSearch)
-                 SliverToBoxAdapter(
-                   child: Container(
-                     padding: EdgeInsets.only(left: 8),
-                     child: CupertinoNavigationBar(
-                       middle: IOSSearchBar(
-                         controller: searchTextController,
-                         focusNode: initSearch(searchFocusNode: searchFocusNode),
-                         animation: animation,
-                         onCancel: () =>
-                             cancelSearch(),
-                         onClear: clearSearch,
-                         *//*
-                         onSubmit: onSubmit,
-                         onUpdate: onUpdate,*//*
-                       ),
-                     ),
-                   ),
-                 ),*/
-             ];
-            },
-            body: DefaultTabController(
-              initialIndex: sliding,
-              length: 4,
-              child: isSearch == true
-                  ? _contentSearch()
-                  : _contentBody(),
-            ),
-          )
-          ),
-        ),
-      );
+
+    Future<bool> _willPopCallback(PurchaseState homeState) async {
+      if (homeState.isSearch == true) {
+        homeState.popBack();
+        return false;
+      }
+      return true;
+    }
+
+    return ChangeNotifierProvider(
+      create: (_) => PurchaseState()..changeRole(MyPref.getRole()),
+        child: Consumer<PurchaseState>(
+            builder: (context, homeState, _) {
+              if (homeState.isBack) {
+                homeState.isBack = false;
+                cancelSearch(purchaseState: homeState, notify: false);
+              }
+              return WillPopScope(
+                onWillPop: () => _willPopCallback(homeState),
+                child: CupertinoPageScaffold(
+                  child: Scaffold(
+                    appBar: EmptyAppBar(),
+                    body: SafeArea(
+                        child: NestedScrollView(
+                          headerSliverBuilder: (ctx, innerBoxIsScrolled) {
+                            return [
+                              if(homeState.isSearch == false)
+                                CupertinoSliverNavigationBar(
+                                  leading: CupertinoButton(
+                                    minSize: 0,
+                                    padding: EdgeInsets.all(0.0),
+                                    onPressed: () async {
+                                      Get.back();
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  transitionBetweenRoutes: false,
+                                  heroTag: 'logoForcaPoS',
+                                  middle: CupertinoSlidingSegmentedControl(
+                                    children: {
+                                      0: Flexible(
+                                          child: Text(
+                                            'Menunggu',
+                                            style: TextStyle(fontSize: 16),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )
+                                      ),
+                                      1: Flexible(
+                                          child: Text(
+                                            'Diterima',
+                                            style: TextStyle(fontSize: 16),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )
+                                      ),
+                                      2: Flexible(
+                                          child: Text(
+                                            'Sebagian',
+                                            style: TextStyle(fontSize: 16),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )
+                                      ),
+                                      3: Flexible(
+                                          child: Text(
+                                            'Dikembalikan',
+                                            style: TextStyle(fontSize: 16),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )
+                                      ),
+                                    },
+                                    groupValue: sliding,
+                                    onValueChanged: (newValue) {
+                                      setState(() {
+                                        sliding = newValue;
+                                        tabController.index = sliding;
+                                      });
+                                    },
+                                  ),
+                                  trailing: CupertinoButton(
+                                    minSize: 16,
+                                    padding: EdgeInsets.all(0.0),
+                                    onPressed: _showOption,
+                                    child: Icon(
+                                      Icons.more_vert,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  largeTitle: IOSSearchBar(
+                                    animation: animationController,
+                                    controller: TextEditingController(),
+                                    focusNode: initFocus(homeState: homeState),
+                                  ),
+                                ),
+                              if(homeState.isSearch == true)
+                                SliverToBoxAdapter(
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 8),
+                                    child: CupertinoNavigationBar(
+                                      middle: IOSSearchBar(
+                                        controller: searchTextController,
+                                        focusNode: initSearch(
+                                          searchFocusNode: searchFocusNode,
+                                          homeState: homeState,
+                                        ),
+                                        animation: animation,
+                                        onCancel: () =>
+                                            cancelSearch(purchaseState: homeState),
+                                        onClear: clearSearch,
+                                        onSubmit: onSubmit,
+                                        onUpdate: onUpdate,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ];
+                          },
+                          body: DefaultTabController(
+                            initialIndex: sliding,
+                            length: 4,
+                            child: homeState.isSearch == true
+                                ? _contentSearch()
+                                : _contentBody(),
+                          ),
+                        )
+                    ),
+                  ),
+                ),
+              );
+            }
+        )
+    );
+    /*return ;*/
   }
 
   Widget _contentBody() {
-    return isFirst[sliding]
-        ? Center(
-      child: CupertinoActivityIndicator(),
-    )
-        : Container(
+    return Container(
       color: Color(0xffE9E9E9),
       child: _body(),
     );
@@ -173,13 +234,22 @@ class _ListPurchaseScreenState extends ListPurchaseViewModel {
     if (sliding == 0) {
       lastOffset[1] = -1;
       lastOffset[2] = -1;
+      lastOffset[3] = -1;
     }
     if (sliding == 1) {
       lastOffset[0] = -1;
       lastOffset[2] = -1;
+      lastOffset[3] = -1;
+    }
+
+    if(sliding == 2){
+      lastOffset[0] = -1;
+      lastOffset[1] = -1;
+      lastOffset[3] = -1;
     }
     lastOffset[0] = -1;
     lastOffset[1] = -1;
+    lastOffset[2] = -1;
     return TabBarView(
       controller: tabController,
       children: <Widget>[
