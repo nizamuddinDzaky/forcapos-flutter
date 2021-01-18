@@ -212,6 +212,24 @@ abstract class PurchaseDetailViewModel extends State<PurchaseDetailScreen> {
     }
   }
 
+  goToEditPayment(){
+    Get.toNamed(
+      editPaymentScreen,
+      arguments: {
+        /*'payment': payment.toJson(),*/
+      },
+    );
+  }
+
+  goToAddPayment(){
+    Get.toNamed(
+      addPaymentPurchaseScreen,
+      arguments: {
+        /*'payment': payment.toJson(),*/
+      },
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState

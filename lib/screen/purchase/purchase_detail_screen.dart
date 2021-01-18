@@ -87,6 +87,7 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
     );
   }
 
+
   Widget sectionDetail() {
     debugPrint("status purchase : ${purchase.status}");
     var statusStyle = purchaseStatus(purchase.status);
@@ -194,6 +195,331 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
           ),
         ],
       ),
+    );
+  }
+
+  Widget widgetPayment() {
+    return /*listPayment?.length == 0
+        ? LayoutBuilder(
+      builder:
+          (BuildContext context, BoxConstraints viewportConstraints) {
+        return CustomScrollView(slivers: <Widget>[
+          SliverFillRemaining(
+            hasScrollBody: true,
+            fillOverscroll: true,
+            child: IntrinsicHeight(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.insert_drive_file,
+                            size: 16,
+                            color: MyColor.blueDio,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text('Daftar Pembayaran',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2
+                                  .copyWith(
+                                  color: Colors.black, fontSize: 16)),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.white,
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Image.asset('assets/images/female_forca.png'),
+                              SizedBox(height: 16),
+                              Text((sb.saleStatus == 'pending') ? 'Belum ada data' : 'Data kosong',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  )),
+                              SizedBox(height: 16),
+                              Text((sb.saleStatus == 'pending') ? 'Pembayaran belum tersedia.\nPenjualan masih menunggu.' : 'Tarik ke bawah untuk memuat ulang'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ]);
+      },
+    )
+        : */Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.insert_drive_file,
+                size: 16,
+                color: MyColor.blueDio,
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Text('Daftar Pembayaran',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(color: Colors.black)),
+            ],
+          ),
+        ),Expanded(
+          child: ListView.separated(
+//            padding: EdgeInsets.symmetric(vertical: 12),
+            shrinkWrap: true,
+//                physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (buildContext, index) {
+              return Container(
+                color: Colors.white,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 64,
+                            height: 64,
+                            decoration: BoxDecoration(
+                              color: MyColor.blueDio,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(8)),
+                            ),
+                            child: Center(
+                              child: Text('PoS',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(color: Colors.white)),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Expanded(
+                            child: Stack(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        'No Referensi',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: MyColor.txtField,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        'POP/2021/01/0009',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: MyColor.txtField,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceBetween,
+                                        children: <Widget>[
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment
+                                                .start,
+                                            children: <Widget>[
+                                              Text(
+                                                'Nominal',
+                                                textScaleFactor: 1.0,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: MyColor
+                                                      .txtField,
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                MyNumber
+                                                    .toNumberRpStr(
+                                                    '40000'),
+                                                textScaleFactor: 1.0,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: MyColor
+                                                      .txtField,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment
+                                                .start,
+                                            children: <Widget>[
+                                              Text(
+                                                'Tipe Pembayaran',
+                                                textScaleFactor: 1.0,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: MyColor
+                                                      .txtField,
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                paidType(
+                                                    'cash')[0],
+                                                textScaleFactor: 1.0,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: MyColor
+                                                      .txtField,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  child: PopupMenuButton<int>(
+                                    onSelected: (idx) =>
+                                        goToEditPayment(
+                                          /*idx,
+                                          payment: listPayment[index],*/
+                                        ),
+                                    child: Icon(Icons.more_vert),
+                                    itemBuilder:
+                                        (BuildContext context) =>
+                                    <PopupMenuEntry<int>>[
+                                      PopupMenuItem<int>(
+                                        height: 30,
+                                        child: const Text('Ubah'),
+                                        value: 0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 1,
+                      color: MyColor.txtField,
+                    ),
+                    InkWell(
+                      onTap: ()=>{},/*listPayment[index]?.attachment == null
+                          ? null
+                          : goToDetailPayment(listPayment[index])*/
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.access_time,
+                                  size: 16,
+                                  color: MyColor.txtField,
+                                ),
+                                Text(
+                                  ' 11/01/2021 18:32',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: MyColor.txtField),
+                                ),
+                              ],
+                            ),
+                          ),
+                          /*if (listPayment[index]?.attachment != null)
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16),
+                              child: Text(
+                                'Selengkapnya',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: MyColor.mainBlue),
+                              ),
+                            ),*/
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (buildContext, index) {
+              return MyDivider.lineDivider(
+                bottom: 12,
+                customColor: MyColor.txtField,
+              );
+            },
+            itemCount: 10,
+          ),
+        )
+        /*FutureBuilder(
+          future: getListPayment(sb.id),
+          builder: (buildContext, snapshot) {
+            if (listPayment == null ||
+                snapshot.connectionState != ConnectionState.done) {
+              return Expanded(
+                  child: Container(
+                    color: Colors.white,
+                    child: Center(child: CupertinoActivityIndicator()),
+                  ));
+            }
+
+            if ((listPayment?.length ?? 0) == 0) {
+              return Container();
+            }
+
+            return ; //expanded
+          },
+        ),*/
+      ],
     );
   }
 
@@ -531,7 +857,7 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
   Widget body() {
     switch (sliding) {
       case 1:
-        return Text("asd");
+        return widgetPayment();
       default:
         return widgetDetail();
     }
@@ -549,6 +875,17 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
         onPressed: isEdit ? () => showOptionMenu(isEdit) : null,
         child: Text('Opsi'),
       );
+
+    return CupertinoButton(
+      minSize: 0,
+      padding: EdgeInsets.all(0.0),
+      onPressed:
+      sliding == 1 ? () => goToAddPayment() : () => null,
+      child: Icon(
+        Icons.add,
+        size: 24,
+      ),
+    );
   }
 
   @override

@@ -23,6 +23,7 @@ import 'package:posku/screen/pricegroup/add_customer_to_pg_screen.dart';
 import 'package:posku/screen/pricegroup/add_edit_pg_screen.dart';
 import 'package:posku/screen/pricegroup/pg_detail_screen.dart';
 import 'package:posku/screen/profile/profile_screen.dart';
+import 'package:posku/screen/purchase/add_payment_purchase.dart';
 import 'package:posku/screen/purchase/add_purchase_screen.dart';
 import 'package:posku/screen/purchase/edit_purchase_screen.dart';
 import 'package:posku/screen/purchase/list_purchase_screen.dart';
@@ -76,6 +77,7 @@ const addProductPurchase = "/AddProductPurchaseScreen";
 const purchaseCart = "/PurchaseCartScreen";
 const purchaseDetail = "/PurchaseDetailScreen";
 const editPurchaseScreen = "/EditPurchaseScreen";
+const addPaymentPurchaseScreen = "/AddPaymentPurchaseScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -292,12 +294,18 @@ class MyRouter {
           transition: Transition.rightToLeft,
           page: PurchaseDetailScreen(),
         );
-        case editPurchaseScreen:
-          return GetRouteBase(
-            settings: settings,
-            transition: Transition.rightToLeft,
-            page: EditPurchaseScreen(),
-          );
+      case editPurchaseScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: EditPurchaseScreen(),
+        );
+      case addPaymentPurchaseScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: AddPaymentPurchaseScreen(),
+        );
       default:
         return GetRouteBase(
             settings: settings,
