@@ -165,7 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <List<String>>[
                         [kIconSale, 'Pembelian', listPurchase],
-                        [kIconDelivery, 'Pengiriman', null],
+                        [kIconDelivery, 'Pengiriman', listSbAt],
                         [kIconPurchase, 'Pemesanan', null],
                         [kIconMaster, 'Master', null],
                       ].map((List<String> data) {

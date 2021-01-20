@@ -38,6 +38,7 @@ import 'package:posku/screen/salebooking/sb_cart_screen.dart';
 import 'package:posku/screen/salebooking/sb_detail_screen.dart';
 import 'package:posku/screen/salebooking/sb_item_screen.dart';
 import 'package:posku/screen/salebooking/sb_order_screen.dart';
+import 'package:posku/screen/salesbookingaksestoko/list_sb_at_screen.dart';
 import 'package:posku/screen/splash_screen.dart';
 
 const String root = "/";
@@ -78,6 +79,7 @@ const purchaseCart = "/PurchaseCartScreen";
 const purchaseDetail = "/PurchaseDetailScreen";
 const editPurchaseScreen = "/EditPurchaseScreen";
 const addPaymentPurchaseScreen = "/AddPaymentPurchaseScreen";
+const listSbAt = "/ListSbAtScreen";
 
 class MyRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -305,6 +307,12 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: AddPaymentPurchaseScreen(),
+        );
+      case listSbAt:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: ListSbAtScreen(),
         );
       default:
         return GetRouteBase(
