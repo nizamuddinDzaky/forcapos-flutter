@@ -22,6 +22,7 @@ class PurchaseItems {
   String unitCost;
   String realUnitCost;
   String quantityReceived;
+  String quantityReturn;
   Null supplierPartNo;
   String purchaseItemId;
   String productUnitId;

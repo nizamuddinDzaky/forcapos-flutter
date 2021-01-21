@@ -147,6 +147,33 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
                     ),
                   ],
                 ),
+                if(purchase.returnPurchaseRef != null)
+                SizedBox(
+                  height: 8,
+                ),
+                if(purchase.returnPurchaseRef != null)
+                Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Nomor Retur',
+                              style: TextStyle(color: MyColor.txtField,
+                                  fontSize: 16),
+                            ),
+                            Text(
+                              '${purchase?.returnPurchaseRef}',
+                                style: TextStyle(
+                                    color: MyColor.txtBlack,
+                                    fontWeight: FontWeight.bold, fontSize: 16)
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]
+                ),
                 SizedBox(
                   height: 8,
                 ),
@@ -865,9 +892,7 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
 
   Widget _actionButton() {
     var isEdit =
-        oldPo?.status != 'returned';
-    /*var isClose = (newPo ?? oldPo)?.status == 'returned';*/
-    /*var isEnable = isClose || !isEdit;*/
+        oldPo?.status != 'returned' && ((newPo ?? oldPo)?.status == 'received' && (newPo ?? oldPo)?.returnPurchaseRef == null);
     if (sliding == 0)
       return CupertinoButton(
         minSize: 0,

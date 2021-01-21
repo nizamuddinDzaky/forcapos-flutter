@@ -42,6 +42,7 @@ class ApiConfig {
   static String urlAddPurchase = '${path}Purchases/add_purchases';
   static String urlDetailPurchase = '${path}Purchases/detail_purchases';
   static String urlUpdatePurchase = '${path}Purchases/edit_purchase';
+  static String urlReturnPurchase = '${path}Purchases/return_purchases';
 
   //warehouse
   static String urlListWarehouse = '${path}warehouses/list_warehouses';

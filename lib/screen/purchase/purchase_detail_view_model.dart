@@ -162,21 +162,22 @@ abstract class PurchaseDetailViewModel extends State<PurchaseDetailScreen> {
       actions: <Widget>[
         if (isEdit)
           CupertinoActionSheetAction(
-            child: Text("Ubah Penjualan"),
+            child: Text("Ubah Pembelian"),
             onPressed: () {
               Get.back();
               /*Get.snackbar("title", "message");*/
               goToEditPurchase();
             },
           ),
-        /*if ((newSb ?? oldSB)?.saleStatus == 'reserved')
+        if ((newPo ?? oldPo)?.status == 'received' && (newPo ?? oldPo)?.returnPurchaseRef == null)
           CupertinoActionSheetAction(
-            child: Text("Tutup Penjualan"),
+            child: Text("Kembalikan Pembelian"),
             onPressed: () {
               Get.back();
-              actionClose();
+              goToReturnPurchase();
+              /*actionClose();*/
             },
-          ),*/
+          ),
       ],
       cancelButton: CupertinoActionSheetAction(
         child: Text("Batal"),
@@ -193,9 +194,26 @@ abstract class PurchaseDetailViewModel extends State<PurchaseDetailScreen> {
     var result = await Get.toNamed(
       editPurchaseScreen,
       arguments: {},
+    );  
+    if (result != null) {
+      if (result == 'editPurchase') {
+        purchaseItems = null;
+        customer = null;
+        warehouse = null;
+        supplier = null;
+        putArg(Get.arguments, 'result', 'editSales');
+      }
+      setState(() {});
+    }
+  }
+
+  goToReturnPurchase() async {
+    var result = await Get.toNamed(
+      returnPurchase,
+      arguments: {},
     );
     if (result != null) {
-      if (result == 'editSales') {
+      if (result == 'editPurchase') {
         purchaseItems = null;
         customer = null;
         warehouse = null;

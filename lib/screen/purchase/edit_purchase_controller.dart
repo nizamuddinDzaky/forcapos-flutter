@@ -116,10 +116,24 @@ class EditPurchaseController extends GetController {
     pi.quantityReceived = thresholdReceived(qty ?? qtyStr?.toDoubleID() ?? 0, pi.quantity.toDouble()).toString();
     refresh();
   }
+  qtyCustomReturned(PurchaseItems pi, {double qty, String qtyStr}) {
+    pi.quantityReturn = thresholdReceived(qty ?? qtyStr?.toDoubleID() ?? 0, pi.quantity.toDouble()).toString();
+    refresh();
+  }
+
+
+  qtyMinusReturned(PurchaseItems pi) {
+    pi.quantityReturn = thresholdReceived((pi.quantityReturn?.toDouble() ?? 0) - 1, pi.quantity.toDouble()).toString();
+    refresh();
+  }
+
+  qtyPlusReturned(PurchaseItems pi) {
+    pi.quantityReturn = thresholdReceived((pi.quantityReturn?.toDouble() ?? 0) + 1, pi.quantity.toDouble()).toString();
+    refresh();
+  }
 
   toEditItem(PurchaseItems sbi) async {
     editPI = sbi;
-    /*await Get.toNamed(editSBItemScreen);*/
     Get.snackbar("title", "message");
     editPI = null;
   }
@@ -138,6 +152,12 @@ class EditPurchaseController extends GetController {
   }
 
   qtyEditReceived(TextEditingController controller, {double qty, String qtyStr, PurchaseItems pi}) {
+    if (qtyStr.isEmpty) return;
+    var newQty = thresholdReceived(qty ?? qtyStr?.toDoubleID() ?? 0, pi.quantity.toDouble());
+    lastCursorEditText(controller, newQty);
+  }
+
+  qtyEditReturned(TextEditingController controller, {double qty, String qtyStr, PurchaseItems pi}) {
     if (qtyStr.isEmpty) return;
     var newQty = thresholdReceived(qty ?? qtyStr?.toDoubleID() ?? 0, pi.quantity.toDouble());
     lastCursorEditText(controller, newQty);
@@ -182,6 +202,53 @@ class EditPurchaseController extends GetController {
     );
   }
 
+  actionSubmitReturn() async {
+    formKey.currentState.save();
+    Map<String, dynamic> body = {
+      'date': purchase?.date,
+      "id_purchases" : purchase.id,
+      'products': purchaseItems?.map((sbi) => {
+        'product_id': sbi.productId,
+        'purchase_item_id' : sbi.id,
+        'quantity' : sbi.quantityReturn
+      })?.toList(),
+    };
+    debugPrint("body : ${body}");
+    actionPostReturnPurchase(body);
+  }
+
+  actionPostReturnPurchase(Map<String, dynamic> body) async {
+    /*var params = {
+      MyString.KEY_PURCHASE_ID: purchase.id,
+    };*/
+    var status = await ApiClient.methodPost(
+      ApiConfig.urlReturnPurchase,
+      body,
+      {},
+      onBefore: (status) {},
+      onSuccess: (data, _) {
+        Get.snackbar('Penjualan', 'Berhasil diperbaharui');
+        Get.back(result: 'editPurchase');
+      },
+      onFailed: (title, message) {
+        print(message);
+        var errorData = BaseResponse.fromJson(jsonDecode(message));
+        CustomDialog.showAlertDialog(Get.overlayContext,
+            title: title,
+            message: 'Kode error: ${errorData?.code}\n${errorData?.message}',
+            leftAction: CustomDialog.customAction());
+      },
+      onError: (title, message) {
+        CustomDialog.showAlertDialog(Get.overlayContext,
+            title: title,
+            message: message,
+            leftAction: CustomDialog.customAction());
+      },
+      onAfter: (status) {},
+    );
+    status.execute();
+  }
+
   actionSubmit() async {
     formKey.currentState.save();
     //await Future.delayed(Duration(seconds: 1));
@@ -207,10 +274,10 @@ class EditPurchaseController extends GetController {
       })?.toList(),
     };
     print('action put sales $body');
-    await actionPutSales(body);
+    await actionPutPurchase(body);
   }
 
-  actionPutSales(Map<String, dynamic> body) async {
+  actionPutPurchase(Map<String, dynamic> body) async {
     var params = {
       MyString.KEY_PURCHASE_ID: purchase.id,
     };
@@ -221,7 +288,7 @@ class EditPurchaseController extends GetController {
       onBefore: (status) {},
       onSuccess: (data, _) {
         Get.snackbar('Penjualan', 'Berhasil diperbaharui');
-        Get.back(result: 'editSales');
+        Get.back(result: 'editPurchase');
       },
       onFailed: (title, message) {
         print(message);
