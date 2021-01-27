@@ -52,22 +52,16 @@ class ListPurchaseScreen extends StatefulWidget {
 class _ListPurchaseScreenState extends ListPurchaseViewModel {
   /*PurchaseState purchaseState;*/
 
+
+  Future<bool> _willPopCallback(PurchaseState homeState) async {
+    if (homeState.isSearch == true) {
+      homeState.popBack();
+      return false;
+    }
+    return true;
+  }
   @override
   Widget build(BuildContext context) {
-    /*debugPrint("asdds => ${purchaseState.isBack}");*/
-    /*if (purchaseState.isBack) {
-      purchaseState.isBack = false;
-      cancelSearch(purchaseState: purchaseState, notify: false);
-    }*/
-    // TODO: implement build
-
-    Future<bool> _willPopCallback(PurchaseState homeState) async {
-      if (homeState.isSearch == true) {
-        homeState.popBack();
-        return false;
-      }
-      return true;
-    }
 
     return ChangeNotifierProvider(
       create: (_) => PurchaseState()..changeRole(MyPref.getRole()),
@@ -103,37 +97,29 @@ class _ListPurchaseScreenState extends ListPurchaseViewModel {
                                   heroTag: 'logoForcaPoS',
                                   middle: CupertinoSlidingSegmentedControl(
                                     children: {
-                                      0: Flexible(
-                                          child: Text(
-                                            'Menunggu',
-                                            style: TextStyle(fontSize: 16),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          )
+                                      0: Text(
+                                          'Menunggu',
+                                          style: TextStyle(fontSize: 16),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      1: Text(
+                                        'Diterima',
+                                        style: TextStyle(fontSize: 16),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
-                                      1: Flexible(
-                                          child: Text(
-                                            'Diterima',
-                                            style: TextStyle(fontSize: 16),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          )
+                                      2: Text(
+                                        'Sebagian',
+                                        style: TextStyle(fontSize: 16),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
-                                      2: Flexible(
-                                          child: Text(
-                                            'Sebagian',
-                                            style: TextStyle(fontSize: 16),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          )
-                                      ),
-                                      3: Flexible(
-                                          child: Text(
-                                            'Dikembalikan',
-                                            style: TextStyle(fontSize: 16),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          )
+                                      3: Text(
+                                        'Dikembalikan',
+                                        style: TextStyle(fontSize: 16),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
                                     },
                                     groupValue: sliding,

@@ -10,6 +10,7 @@ import 'package:posku/model/BaseResponse.dart';
 import 'package:posku/model/Purchase.dart';
 import 'package:posku/model/company.dart';
 import 'package:posku/model/customer.dart';
+import 'package:posku/model/payment.dart';
 import 'package:posku/model/purchase_items.dart';
 import 'package:posku/model/supplier.dart';
 import 'package:posku/model/warehouse.dart';
@@ -30,14 +31,17 @@ abstract class PurchaseDetailViewModel extends State<PurchaseDetailScreen> {
   List<PurchaseItems> purchaseItems;
   Purchase get purchase => newPo ?? oldPo;
 
+  List<Payment> listPayment;
+
   Future<Null> actionRefresh() async {
     if (sliding == 0) {
       purchaseItems = null;
       customer = null;
       warehouse = null;
       supplier = null;
+      /*purchase = null;*/
     } else if (sliding == 1) {
-      /*listPayment = null;*/
+      listPayment = null;
     } else if (sliding == 2) {
       /*listDelivery = null;*/
     }
@@ -52,6 +56,27 @@ abstract class PurchaseDetailViewModel extends State<PurchaseDetailScreen> {
     (ModalRoute.of(context) as CustomCupertinoPageRoute)?.resultPop =
         Get.arguments;
   }*/
+
+  Future<List<Payment>> getListPayment(String idPurchase) async {
+    if (listPayment != null) return listPayment;
+    var params = {
+      MyString.KEY_PURCHASES_ID: idPurchase,
+    };
+    var status = await ApiClient.methodGet(
+      ApiConfig.urlPaymentPurchase,
+      params: params,
+      onSuccess: (data, flag) {
+        var baseResponse = BaseResponse.fromJson(data);
+        listPayment = baseResponse?.data?.listPayment ?? [];
+        listPayment.sort((a, b) => b.date.compareTo(a.date));
+      },
+      onAfter: (status) {
+        setState(() {});
+      },
+    );
+    status.execute();
+    return null;
+  }
 
   Future<Customer> getDetailCustomer(String idCustomer) async {
     if (idCustomer == '1') {
@@ -140,8 +165,8 @@ abstract class PurchaseDetailViewModel extends State<PurchaseDetailScreen> {
       onSuccess: (data, flag) {
         var baseResponse = BaseResponse.fromJson(data);
         newPo = baseResponse?.data?.purchase ?? purchase;
-//        sb.paid = newSb.paid;
-//        sb.grandTotal = newSb.grandTotal;
+        /*purchase.paid = newPo.paid;
+        purchase.grandTotal = newPo.grandTotal;*/
         purchaseItems = baseResponse?.data?.purchaseItems ?? [];
         EditPurchaseController.to.purchase = newPo;
         EditPurchaseController.to.purchaseItems = purchaseItems;
@@ -230,22 +255,40 @@ abstract class PurchaseDetailViewModel extends State<PurchaseDetailScreen> {
     }
   }
 
-  goToEditPayment(){
+/*  goToEditPayment(){
     Get.toNamed(
       editPaymentScreen,
       arguments: {
-        /*'payment': payment.toJson(),*/
+        *//*'payment': payment.toJson(),*//*
       },
     );
+  }*/
+
+  goToAddPayment()async {
+    var result = await Get.toNamed(
+      addPaymentPurchaseScreen,
+      arguments: purchase.toJson(),
+    );
+    if (result == 'newPayment') {
+      purchaseItems = null;
+      sliding = 0;
+      actionRefresh();
+    }
   }
 
-  goToAddPayment(){
-    Get.toNamed(
-      addPaymentPurchaseScreen,
-      arguments: {
-        /*'payment': payment.toJson(),*/
-      },
-    );
+  goToEditPayment(int idx, {Payment payment}) async {
+    if (idx == 0) {
+      var result = await Get.toNamed(
+        editPaymentPurchaseScreen,
+        arguments: {
+          'payment': payment.toJson(),
+        },
+      );
+      if (result == 'editPayment') {
+        listPayment = null;
+        actionRefresh();
+      }
+    }
   }
 
   @override

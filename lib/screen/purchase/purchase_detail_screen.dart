@@ -271,13 +271,13 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
                             children: <Widget>[
                               Image.asset('assets/images/female_forca.png'),
                               SizedBox(height: 16),
-                              Text((sb.saleStatus == 'pending') ? 'Belum ada data' : 'Data kosong',
+                              Text((purchase.status == 'pending') ? 'Belum ada data' : 'Data kosong',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   )),
                               SizedBox(height: 16),
-                              Text((sb.saleStatus == 'pending') ? 'Pembayaran belum tersedia.\nPenjualan masih menunggu.' : 'Tarik ke bawah untuk memuat ulang'),
+                              Text((purchase.status == 'pending') ? 'Pembayaran belum tersedia.\nPenjualan masih menunggu.' : 'Tarik ke bawah untuk memuat ulang'),
                             ],
                           ),
                         ),
@@ -291,7 +291,7 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
         ]);
       },
     )
-        : */Column(
+        :*/ Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Container(
@@ -313,222 +313,9 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
                       .copyWith(color: Colors.black)),
             ],
           ),
-        ),Expanded(
-          child: ListView.separated(
-//            padding: EdgeInsets.symmetric(vertical: 12),
-            shrinkWrap: true,
-//                physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (buildContext, index) {
-              return Container(
-                color: Colors.white,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 16),
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            width: 64,
-                            height: 64,
-                            decoration: BoxDecoration(
-                              color: MyColor.blueDio,
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(8)),
-                            ),
-                            child: Center(
-                              child: Text('PoS',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      .copyWith(color: Colors.white)),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Expanded(
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.only(left: 8),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        'No Referensi',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: MyColor.txtField,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'POP/2021/01/0009',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: MyColor.txtField,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: <Widget>[
-                                          Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: <Widget>[
-                                              Text(
-                                                'Nominal',
-                                                textScaleFactor: 1.0,
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: MyColor
-                                                      .txtField,
-                                                  fontWeight:
-                                                  FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                MyNumber
-                                                    .toNumberRpStr(
-                                                    '40000'),
-                                                textScaleFactor: 1.0,
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: MyColor
-                                                      .txtField,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .start,
-                                            children: <Widget>[
-                                              Text(
-                                                'Tipe Pembayaran',
-                                                textScaleFactor: 1.0,
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: MyColor
-                                                      .txtField,
-                                                  fontWeight:
-                                                  FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                paidType(
-                                                    'cash')[0],
-                                                textScaleFactor: 1.0,
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: MyColor
-                                                      .txtField,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  child: PopupMenuButton<int>(
-                                    onSelected: (idx) =>
-                                        goToEditPayment(
-                                          /*idx,
-                                          payment: listPayment[index],*/
-                                        ),
-                                    child: Icon(Icons.more_vert),
-                                    itemBuilder:
-                                        (BuildContext context) =>
-                                    <PopupMenuEntry<int>>[
-                                      PopupMenuItem<int>(
-                                        height: 30,
-                                        child: const Text('Ubah'),
-                                        value: 0,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      height: 1,
-                      color: MyColor.txtField,
-                    ),
-                    InkWell(
-                      onTap: ()=>{},/*listPayment[index]?.attachment == null
-                          ? null
-                          : goToDetailPayment(listPayment[index])*/
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.access_time,
-                                  size: 16,
-                                  color: MyColor.txtField,
-                                ),
-                                Text(
-                                  ' 11/01/2021 18:32',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: MyColor.txtField),
-                                ),
-                              ],
-                            ),
-                          ),
-                          /*if (listPayment[index]?.attachment != null)
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16),
-                              child: Text(
-                                'Selengkapnya',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: MyColor.mainBlue),
-                              ),
-                            ),*/
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-            separatorBuilder: (buildContext, index) {
-              return MyDivider.lineDivider(
-                bottom: 12,
-                customColor: MyColor.txtField,
-              );
-            },
-            itemCount: 10,
-          ),
-        )
-        /*FutureBuilder(
-          future: getListPayment(sb.id),
+        ),
+        FutureBuilder(
+          future: getListPayment(purchase.id),
           builder: (buildContext, snapshot) {
             if (listPayment == null ||
                 snapshot.connectionState != ConnectionState.done) {
@@ -543,9 +330,227 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
               return Container();
             }
 
-            return ; //expanded
+            return Expanded(
+              child: ListView.separated(
+//            padding: EdgeInsets.symmetric(vertical: 12),
+                shrinkWrap: true,
+//                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (buildContext, index) {
+                  return Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                width: 64,
+                                height: 64,
+                                decoration: BoxDecoration(
+                                  color: MyColor.blueDio,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(8)),
+                                ),
+                                child: Center(
+                                  child: Text('PoS',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(color: Colors.white)),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Expanded(
+                                child: Stack(
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.only(left: 8),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            'No Referensi',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: MyColor.txtField,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            listPayment[index]
+                                                .referenceNo ??
+                                                '1234567890',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: MyColor.txtField,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: <Widget>[
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    'Nominal',
+                                                    textScaleFactor: 1.0,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: MyColor
+                                                          .txtField,
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    MyNumber
+                                                        .toNumberRpStr(
+                                                        listPayment[
+                                                        index]
+                                                            .amount),
+                                                    textScaleFactor: 1.0,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: MyColor
+                                                          .txtField,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    'Tipe Pembayaran',
+                                                    textScaleFactor: 1.0,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: MyColor
+                                                          .txtField,
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    paidType(
+                                                        listPayment[index]
+                                                            .paidBy)[0],
+                                                    textScaleFactor: 1.0,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: MyColor
+                                                          .txtField,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      child: PopupMenuButton<int>(
+                                        onSelected: (idx) =>
+                                            goToEditPayment(
+                                              idx,
+                                              payment: listPayment[index],
+                                            ),
+                                        child: Icon(Icons.more_vert),
+                                        itemBuilder:
+                                            (BuildContext context) =>
+                                        <PopupMenuEntry<int>>[
+                                          PopupMenuItem<int>(
+                                            height: 30,
+                                            child: const Text('Ubah'),
+                                            value: 0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          color: MyColor.txtField,
+                        ),
+                        InkWell(
+                          onTap: (){}/*listPayment[index]?.attachment == null
+                              ? null
+                              : goToDetailPayment(listPayment[index])*/,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.access_time,
+                                      size: 16,
+                                      color: MyColor.txtField,
+                                    ),
+                                    Text(
+                                      ' ${strToDate(listPayment[index]?.date)}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: MyColor.txtField),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              /*if (listPayment[index]?.attachment != null)
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: Text(
+                                    'Selengkapnya',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: MyColor.mainBlue),
+                                  ),
+                                ),*/
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (buildContext, index) {
+                  return MyDivider.lineDivider(
+                    bottom: 12,
+                    customColor: MyColor.txtField,
+                  );
+                },
+                itemCount: listPayment?.length ?? 0,
+              ),
+            );
           },
-        ),*/
+        ),
       ],
     );
   }
@@ -893,6 +898,8 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
   Widget _actionButton() {
     var isEdit =
         oldPo?.status != 'returned' && ((newPo ?? oldPo)?.status == 'received' && (newPo ?? oldPo)?.returnPurchaseRef == null);
+    var isPay = purchase.paid.toDouble() < purchase.grandTotal.toDouble();
+
     if (sliding == 0)
       return CupertinoButton(
         minSize: 0,
@@ -905,7 +912,7 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
       minSize: 0,
       padding: EdgeInsets.all(0.0),
       onPressed:
-      sliding == 1 ? () => goToAddPayment() : () => null,
+      (sliding == 1 && isPay) ? () => goToAddPayment() : null,
       child: Icon(
         Icons.add,
         size: 24,
@@ -915,7 +922,6 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: 'Balik',
@@ -928,7 +934,7 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
           onValueChanged: (newValue) {
             setState(() {
               sliding = newValue;
-//              if (isFirst[sliding]) actionRefresh();
+              actionRefresh();
             });
           },
         ),

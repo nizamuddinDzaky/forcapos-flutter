@@ -1,23 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
-import 'package:get/get.dart';
 import 'package:posku/helper/NumericTextFormater.dart';
 import 'package:posku/helper/loading_button.dart';
-import 'package:posku/util/my_number.dart';
 import 'package:posku/util/my_util.dart';
 import 'package:posku/util/payment_cons.dart';
 import 'package:posku/util/resource/my_color.dart';
 import 'package:posku/util/widget/my_divider.dart';
 
-import 'add_payment_purchase_view_model.dart';
+import 'edit_payment_purchase_view_model.dart';
 
-class AddPaymentPurchaseScreen extends StatefulWidget {
+class EditPaymentPurchaseScreen extends StatefulWidget {
   @override
-  _AddPaymentPurchaseScreenState createState() => _AddPaymentPurchaseScreenState();
+  _EditPaymentPurchaseScreenState createState() => _EditPaymentPurchaseScreenState();
 }
-class _AddPaymentPurchaseScreenState extends AddPaymentPurchaseViewModel {
-
+class _EditPaymentPurchaseScreenState extends EditPaymentPurchaseViewModel {
   Widget _body() {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 8),
@@ -32,7 +29,7 @@ class _AddPaymentPurchaseScreenState extends AddPaymentPurchaseViewModel {
                 padding: EdgeInsets.symmetric(horizontal: 14),
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
-                itemCount: /*listPaymentType.length*/2,
+                itemCount: listPaymentType.length,
                 itemBuilder: (ctx, idx) {
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 2),
@@ -114,19 +111,6 @@ class _AddPaymentPurchaseScreenState extends AddPaymentPurchaseViewModel {
                   SizedBox(
                     height: 8,
                   ),
-                  Text(
-                    'Catatan',
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  TextFormField(
-                    controller: noteController,
-                    decoration: new InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 8,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -134,26 +118,8 @@ class _AddPaymentPurchaseScreenState extends AddPaymentPurchaseViewModel {
               height: 16,
             ),
             LoadingButton(
-              onPressed: () async {
-                var amount = MyNumber.strIDToDouble(amountController.text);
-                if (amount > 0) {
-                  Map<String, String> body = {
-                    'amount': amount.toString(),
-                    'note': noteController.text,
-                    'date': date.toStr(),
-                    'paid_by': paymentType[1],
-                    'purchase_id' : purchase.id
-                  };
-                  //print('cek data $body');
-                  await actionPostPayment(body);
-                } else {
-                  Get.defaultDialog(
-                    title: 'Mohon Maaf',
-                    content: Text('Jumlah tidak boleh kosong/nol'),
-                  );
-                }
-              },
-              title: 'Tambah Pembayaran',
+              onPressed: submitChanges,
+              title: 'Kirim Pembaruan',
             ),
           ],
         ),
@@ -167,7 +133,7 @@ class _AddPaymentPurchaseScreenState extends AddPaymentPurchaseViewModel {
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: 'Dftr Byr',
         middle: Text(
-          'Tambah Pembayaran',
+          'Ubah Pembayaran',
           style: Theme.of(context).textTheme.headline6,
         ),
       ),

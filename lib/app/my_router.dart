@@ -25,6 +25,7 @@ import 'package:posku/screen/pricegroup/pg_detail_screen.dart';
 import 'package:posku/screen/profile/profile_screen.dart';
 import 'package:posku/screen/purchase/add_payment_purchase.dart';
 import 'package:posku/screen/purchase/add_purchase_screen.dart';
+import 'package:posku/screen/purchase/edit_payment_purchase_screen.dart';
 import 'package:posku/screen/purchase/edit_purchase_screen.dart';
 import 'package:posku/screen/purchase/list_purchase_screen.dart';
 import 'package:posku/screen/purchase/add_product_purchase_screen.dart';
@@ -80,6 +81,7 @@ const purchaseCart = "/PurchaseCartScreen";
 const purchaseDetail = "/PurchaseDetailScreen";
 const editPurchaseScreen = "/EditPurchaseScreen";
 const addPaymentPurchaseScreen = "/AddPaymentPurchaseScreen";
+const editPaymentPurchaseScreen = "/EditPaymentPurchaseScreen";
 const returnPurchase = "/ReturnPurchaseScreen";
 const listSbAt = "/ListSbAtScreen";
 
@@ -321,6 +323,12 @@ class MyRouter {
           settings: settings,
           transition: Transition.rightToLeft,
           page: ReturnPurchaseScreen(),
+        );
+      case editPaymentPurchaseScreen:
+        return GetRouteBase(
+          settings: settings,
+          transition: Transition.rightToLeft,
+          page: EditPaymentPurchaseScreen(),
         );
       default:
         return GetRouteBase(
