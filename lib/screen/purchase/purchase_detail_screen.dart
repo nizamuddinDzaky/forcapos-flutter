@@ -226,7 +226,7 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
   }
 
   Widget widgetPayment() {
-    return /*listPayment?.length == 0
+    return listPayment?.length == 0
         ? LayoutBuilder(
       builder:
           (BuildContext context, BoxConstraints viewportConstraints) {
@@ -291,7 +291,7 @@ class _PurchaseDetailState extends PurchaseDetailViewModel {
         ]);
       },
     )
-        :*/ Column(
+        : Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Container(

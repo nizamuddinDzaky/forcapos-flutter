@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:posku/api/api_config.dart';
 import 'package:posku/main.dart';
 import 'package:posku/util/my_pref.dart';
@@ -133,6 +134,8 @@ class ApiClient {
         if (statusCode == 405) {
           responseApi._setFailed(title, 'Akses informasi tidak valid.');
         } else if (statusCode == 404) {
+          responseApi._setSuccess({});
+        } else if (statusCode == 500) {
           responseApi._setSuccess({});
         } else if (statusCode == 400) {
           responseApi._setFailed(
