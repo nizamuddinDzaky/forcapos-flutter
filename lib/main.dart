@@ -8,7 +8,7 @@ import 'package:posku/api/api_client.dart';
 import 'package:posku/app/my_app.dart';
 import 'package:timeago/timeago.dart' as timeAGo;
 
-const isProd = kReleaseMode;
+const isProd = false;
 
 void main() async {
   Intl.defaultLocale = Intl.verifiedLocale(Platform.localeName, NumberFormat.localeExists,
